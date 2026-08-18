@@ -1254,8 +1254,8 @@ MPHJ GKE BUKIT HINDU`;
   const url=`https://wa.me/${cleanPhone(kkPhone)}?text=${encodeURIComponent(message)}`;
 
   return {
-    kkName: String(kk.nama ?? "").trim(),
-    url: url
+    kkName:String(kk.nama??"").trim(),
+    url
   };
 }
 function cleanPhone(phone){
@@ -1530,7 +1530,7 @@ ${pray} Tuhan memberkati dan menyertai keluarga ini selalu.
 Tanggal: *${anniversaryDateThisYear}*
 
 MPHJ GKE BUKIT HINDU`;
-  return {url:`https://web.whatsapp.com/send?phone=${cleanPhone(kkPhone)}&text=${encodeURIComponent(message)}`};
+  return {url:`https://wa.me/${cleanPhone(kkPhone)}?text=${encodeURIComponent(message)}`};
 }
 
 function renderMarriages(){
