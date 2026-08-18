@@ -1251,8 +1251,7 @@ MPHJ GKE BUKIT HINDU`;
   // ================================
   // WHATSAPP WEB
   // ================================
-  const url =
-    `https://web.whatsapp.com/send?phone=${cleanPhone(kkPhone)}&text=${encodeURIComponent(message)}`;
+  const url=`https://wa.me/${cleanPhone(kkPhone)}?text=${encodeURIComponent(message)}`;
 
   return {
     kkName: String(kk.nama ?? "").trim(),
