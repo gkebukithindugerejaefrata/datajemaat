@@ -18,7 +18,7 @@ h1{font-size:25px;color:#17324d}
 .card{padding:16px;text-align:center}
 .card .label{font-size:12px;color:#78909c;text-transform:uppercase}
 .card .value{font-size:26px;font-weight:800;color:#1976d2;margin-top:4px}
-nav{display:flex;gap:8px;overflow:auto;margin-bottom:14px}
+nav{display:flex;gap:8px;overflow:auto;margin-bottom:14px ;   justify-content: center;}
 nav button{border:0;background:#e8eef5;color:#34495e;padding:11px 16px;border-radius:10px;cursor:pointer;white-space:nowrap;font-weight:600}
 nav button.active{background:#1976d2;color:#fff}
 .panel{padding:16px;margin-bottom:14px}
@@ -73,6 +73,22 @@ tr:hover td{background:#f8fbff}.family-row td{background:#eaf3ff!important;color
 .birthday-card-row{display:flex;justify-content:space-between;gap:10px;margin-top:9px;color:#607d8b;font-size:12px}
 .birthday-card-row strong{color:#263238;font-size:13px}
 .birthday-card-hut{font-size:25px;font-weight:900;color:#1976d2}
+.birthday-wa-btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
+  margin-top:10px;
+  padding:8px 12px;
+  border-radius:9px;
+  background:#25D366;
+  color:#fff !important;
+  text-decoration:none !important;
+  font-weight:700;
+  font-size:12px;
+}
+.birthday-wa-btn:hover{filter:brightness(.94)}
+
 
 .hidden{display:none}
 .view-special-hidden{display:none!important}
@@ -944,7 +960,7 @@ table{min-width:800px}
 <div class="stats" id="stats"></div>
 <div class="age-groups" id="ageGroups"></div>
 
-<nav>
+<nav >
 <button class="active" data-view="all">👥 Semua Jemaat</button>
 <button data-view="birthday">🎂 Ulang Tahun</button>
 <button data-view="marriage">💍 Pernikahan</button>
@@ -1087,7 +1103,7 @@ if(lps.includes(current))select.value=current;
 function animateCounters(){
   document.querySelectorAll("#stats .value[data-target], #ageGroups .age-value[data-target]").forEach(el=>{
     const target=Number(el.dataset.target)||0;
-    const duration=2000;
+    const duration=850;
     const start=performance.now();
     const easeOut=t=>1-Math.pow(1-t,3);
     function step(now){
@@ -1161,6 +1177,88 @@ function getFamilyPhone(members){
   return phoneMember ? String(phoneMember.no_telp).trim() : "";
 }
 
+function getBirthdayFamilyInfo(birthdayMember){
+  const reg = String(birthdayMember.no_reg ?? "").trim();
+  if(!reg) return null;
+
+  // Cari seluruh anggota dalam keluarga yang sama
+  const familyMembers = allData.filter(r =>
+    String(r.no_reg ?? "").trim() === reg
+  );
+
+  // Kepala Keluarga = status "KK"
+  const kk = familyMembers.find(r =>
+    String(r.status ?? "").trim().toUpperCase() === "KK"
+  );
+
+  if(!kk) return null;
+
+  // Nomor WhatsApp Kepala Keluarga
+  const kkPhone = String(kk.no_telp ?? "").trim();
+  if(!kkPhone) return null;
+
+  // Data anggota yang berulang tahun
+  const birthdayName =
+    String(birthdayMember.nama ?? "").trim() || "-";
+
+  const birthdayAge = age(birthdayMember.tgl_lhr);
+
+  // ================================
+  // TANGGAL ULANG TAHUN TAHUN BERJALAN
+  // ================================
+  const birthDate = dateObj(birthdayMember.tgl_lhr);
+
+  if(!birthDate) return null;
+
+  const currentYear = new Date().getFullYear();
+
+  const birthdayThisYear = new Date(
+    currentYear,
+    birthDate.getMonth(),
+    birthDate.getDate()
+  );
+
+  const birthdayDateThisYear = birthdayThisYear.toLocaleDateString(
+    "id-ID",
+    {
+      day: "numeric",
+      month: "long",
+      year: "numeric"
+    }
+  );
+
+  // Emoji dibuat saat runtime agar aman dari masalah encoding
+  const cake = String.fromCodePoint(0x1F382);
+  const party = String.fromCodePoint(0x1F389);
+  const pray = String.fromCodePoint(0x1F64F);
+  const calendar = String.fromCodePoint(0x1F4C5);
+
+  // ================================
+  // TEMPLATE UCAPAN WHATSAPP
+  // ================================
+  const message =
+`${cake} *SELAMAT ULANG TAHUN* ${party}
+
+Selamat ulang tahun untuk *${birthdayName}* yang ke-${birthdayAge} tahun.
+
+Kiranya Tuhan senantiasa memberikan kesehatan, sukacita, damai sejahtera, serta berkat yang melimpah dalam setiap langkah kehidupan.
+
+${pray} Tuhan memberkati dan menyertai selalu.
+
+:: ${birthdayDateThisYear} ::
+MPHJ GKE BUKIT HINDU`;
+
+  // ================================
+  // WHATSAPP WEB
+  // ================================
+  const url =
+    `https://web.whatsapp.com/send?phone=${cleanPhone(kkPhone)}&text=${encodeURIComponent(message)}`;
+
+  return {
+    kkName: String(kk.nama ?? "").trim(),
+    url: url
+  };
+}
 function cleanPhone(phone){
   let p = String(phone || "").replace(/[^\d+]/g, "");
   if(p.startsWith("0")) p = "62" + p.substring(1);
@@ -1366,14 +1464,22 @@ return da.getDate()-db.getDate() ||
        String(a.nama||"").localeCompare(String(b.nama||""),"id");
 });
 
-const rowsHtml=rows.map(r=>`<tr>
+const rowsHtml=rows.map(r=>{
+  const wa=getBirthdayFamilyInfo(r);
+  return `<tr>
 <td data-label="NAMA">${esc(r.nama||"-")}</td>
 <td data-label="LP">${esc(r.ling_pel||"-")}</td>
 <td data-label="HUT KE" style="text-align:center">${age(r.tgl_lhr)}</td>
-<td data-label="TANGGAL" style="text-align:center">${dateID(r.tgl_lhr)}</td>
-</tr>`).join("");
+<td data-label="TANGGAL" style="text-align:center">
+  ${dateID(r.tgl_lhr)}
+  ${wa?`<br><a class="birthday-wa-btn" href="${esc(wa.url)}" target="_blank" rel="noopener"><i class="fa-brands fa-whatsapp"></i> Ucapkan ke KK</a>`:""}
+</td>
+</tr>`;
+}).join("");
 
-const mobileCards=rows.map(r=>`<div class="birthday-card">
+const mobileCards=rows.map(r=>{
+  const wa=getBirthdayFamilyInfo(r);
+  return `<div class="birthday-card">
 <div class="birthday-card-name">${esc(r.nama||"-")}</div>
 <div class="birthday-card-row">
 <span>LP: <strong>${esc(r.ling_pel||"-")}</strong></span>
@@ -1382,7 +1488,9 @@ const mobileCards=rows.map(r=>`<div class="birthday-card">
 <div class="birthday-card-row">
 <span>Tanggal lahir</span><strong>${dateID(r.tgl_lhr)}</strong>
 </div>
-</div>`).join("");
+${wa?`<a class="birthday-wa-btn" href="${esc(wa.url)}" target="_blank" rel="noopener"><i class="fa-brands fa-whatsapp"></i> Kirim Ucapan ke KK</a>`:""}
+</div>`;
+}).join("");
 
 $("birthdays").innerHTML=`
 <div class="celebration-heading"><span>🎂 Ulang Tahun Kelahiran</span><span>${selected<0?"Semua Bulan":monthNames[selected]} • ${rows.length} orang</span></div>
@@ -1395,6 +1503,35 @@ $("birthdays").innerHTML=`
 <div class="birthday-mobile-cards">
 ${mobileCards||'<div class="empty">Tidak ada data ulang tahun pada bulan yang dipilih.</div>'}
 </div>`;
+}
+
+function getMarriageFamilyInfo(group){
+  const reg=String(group[0]?.no_reg??"").trim();
+  let familyMembers=reg ? allData.filter(r=>String(r.no_reg??"").trim()===reg) : group;
+  const kk=familyMembers.find(r=>String(r.status??"").trim().toUpperCase()==="KK");
+  if(!kk)return null;
+  const kkPhone=String(kk.no_telp??"").trim();
+  if(!kkPhone)return null;
+  const d=dateObj(group[0]?.tgl_nkh);
+  if(!d)return null;
+  const currentYear=new Date().getFullYear();
+  const anniversaryThisYear=new Date(currentYear,d.getMonth(),d.getDate());
+  const anniversaryDateThisYear=anniversaryThisYear.toLocaleDateString("id-ID",{day:"numeric",month:"long",year:"numeric"});
+  const years=Math.max(0,currentYear-d.getFullYear()-((new Date().getMonth()<d.getMonth()||(new Date().getMonth()===d.getMonth()&&new Date().getDate()<d.getDate()))?1:0));
+  const names=group.map(r=>String(r.nama??"").trim()).filter(Boolean).join(" & ");
+  const ring=String.fromCodePoint(0x1F48D), party=String.fromCodePoint(0x1F389), pray=String.fromCodePoint(0x1F64F), calendar=String.fromCodePoint(0x1F4C5);
+  const message=`${ring} *SELAMAT ULANG TAHUN PERNIKAHAN* ${party}
+
+Selamat ulang tahun pernikahan ke-${years} untuk *${names}*.
+
+Kiranya Tuhan senantiasa memberkati keluarga anda, memberikan kasih, sukacita, kesehatan, damai sejahtera, dan kekuatan untuk terus berjalan bersama dalam kasih dan penyertaan-Nya.
+
+${pray} Tuhan memberkati dan menyertai keluarga ini selalu.
+
+Tanggal: *${anniversaryDateThisYear}*
+
+MPHJ GKE BUKIT HINDU`;
+  return {url:`https://web.whatsapp.com/send?phone=${cleanPhone(kkPhone)}&text=${encodeURIComponent(message)}`};
 }
 
 function renderMarriages(){
@@ -1430,13 +1567,14 @@ const years=Math.max(0,today.getFullYear()-d.getFullYear()-
 const names=group.map(r=>String(r.nama||"").trim()).filter(Boolean).join(" & ");
 const lp=String(group[0].ling_pel??"").trim() || "-";
 const address=String(group.find(r=>String(r.alamat??"").trim())?.alamat??"").trim() || "-";
-return {names,lp,years,date:dateID(group[0].tgl_nkh),address};
+const wa=getMarriageFamilyInfo(group);
+return {names,lp,years,date:dateID(group[0].tgl_nkh),address,wa};
 });
 
 const rowsHtml=pairData.map(x=>`<tr>
-<td>${esc(x.names)}</td><td style="text-align:center">${esc(x.lp)}</td>
-<td style="text-align:center">${x.years}</td><td style="text-align:center">${esc(x.date)}</td>
-<td>${esc(x.address)}</td></tr>`).join("");
+<td data-label="NAMA">${esc(x.names)}</td><td data-label="LP" style="text-align:center">${esc(x.lp)}</td>
+<td data-label="HUT KE" style="text-align:center">${x.years}</td><td data-label="TANGGAL" style="text-align:center">${esc(x.date)}${x.wa?`<br><a class="birthday-wa-btn" href="${esc(x.wa.url)}" target="_blank" rel="noopener"><i class="fa-brands fa-whatsapp"></i> Ucapkan ke KK</a>`:""}</td>
+<td data-label="ALAMAT">${esc(x.address)}</td></tr>`).join("");
 
 const mobileCards=pairData.map(x=>`<div class="birthday-card">
 <div class="birthday-card-name">${esc(x.names)}</div>
@@ -1450,6 +1588,7 @@ const mobileCards=pairData.map(x=>`<div class="birthday-card">
 <div class="birthday-card-row">
 <span>Alamat</span><strong style="text-align:right">${esc(x.address)}</strong>
 </div>
+${x.wa?`<a class="birthday-wa-btn" href="${esc(x.wa.url)}" target="_blank" rel="noopener"><i class="fa-brands fa-whatsapp"></i> Kirim Ucapan ke KK</a>`:""}
 </div>`).join("");
 
 $("marriages").innerHTML=`
