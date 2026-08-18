@@ -1087,7 +1087,7 @@ if(lps.includes(current))select.value=current;
 function animateCounters(){
   document.querySelectorAll("#stats .value[data-target], #ageGroups .age-value[data-target]").forEach(el=>{
     const target=Number(el.dataset.target)||0;
-    const duration=400;
+    const duration=2000;
     const start=performance.now();
     const easeOut=t=>1-Math.pow(1-t,3);
     function step(now){
