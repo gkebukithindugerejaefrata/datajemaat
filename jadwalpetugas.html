@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jadwal Pelayanan Gereja FINAL</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+<style>
+body{font-family: Arial;
+    font-size: 16px;
+    margin: 0;
+    background: #121212;
+    color: #edff00;}
+.header{background:#1f1f1f;color:#fff;padding:15px;text-align:center}
+.container{padding: 10px;
+    display: flex;
+    justify-content: space-around;
+    flex-direction: row;
+    flex-wrap: wrap;}
+.card{background: #1e1e1e;
+    /* padding: 10px; */
+    margin-bottom: 12px;
+    border-radius: 12px;
+    width: 46%;}
+.section{margin-top:5px;border-top:1px solid #333;padding-top:6px}
+.task{font-size:14px;color:#90caf9;margin-bottom: 2px;}
+select,input{width:100%;padding:4px;margin-bottom:6px;border-radius:6px;background:#2a2a2a;color:#fff;border:none}
+button{width:100%;padding:10px;border:none;border-radius:8px;margin-top:6px}
+.primary{background:#27ae60}
+.secondary{background:#3498db}
+.danger{background:#e74c3c}
+
+.stats {
+    position: fixed;
+    bottom: 20px; /* Jarak awal */
+    right: 20px;  /* Jarak awal */
+    background: #1e1e1e;
+    padding: 10px;
+    border-radius: 10px;
+    font-size: 11px;
+    max-height: 65vh;
+    overflow: auto;
+    width: 260px;
+    z-index: 999;
+    cursor: move; /* Menandakan elemen bisa dipindah */
+    user-select: none; /* Mencegah seleksi teks saat didrag */
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    border: 1px solid #333;
+}
+
+.stats.minimized{
+  width:auto;
+  max-height:none;
+  overflow:hidden;
+  padding:8px 12px;
+  cursor:pointer;
+}
+
+.stats.minimized #stats{
+  display:none;
+}
+
+#stats {
+    user-select: text; /* Memastikan teks di dalam bisa diblok/disalin */
+    -webkit-user-select: text; 
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">Jadwal Pelayanan Gereja</div>
+
+<div class="container">
+<input type="month" id="monthPicker" onchange="init()">
+<button class="secondary" onclick="copyText()">Copy WA</button>
+<button class="secondary" onclick="exportPDF()">Export PDF</button>
+
+<button class="secondary" onclick="addExtraService()">
+Tambah Ibadah Khusus
+</button>
+</div>
+
+<div class="container" id="app"></div>
+<button class="primary" onclick="saveData()">Simpan</button>
+
+<div class="stats minimized" id="statsBox" onclick="toggleStats()">
+<b id="statsTitle">📊 Statistik</b>
+<div id="stats"></div>
+</div>
+
+<script>
+
+// ===== DATA =====
+const groups={
+  pemandu:["MURAYYATI","KATRIN P","YEANNE RARUNG","FIRYAN R LAMPE","NAOMI MEGACITA","MIA ALVINA","HERIYANI INGGA","HENOCH R. K.","RHINO ALBERTO","YESIKA T. R.","MARTHA A. MAGANG","JHORGIA MELKY","JOANISA V. C."],
+  musik:["IMANUEL A. PRATAMA","MARCELL MAKARIOS","ANITA L. PANJAITAN","HENDRI"],
+  lcd:["RETNO D. SARI","CHRISTINE M. TONGGAL","ANDRI SETYA"],
+  wl:["APRILIANA","HENDRI","SHINTA DAMAYANTI","NIKA YUSTINA"],
+  band:["HOPE","FAITH","PRAY"]
+};
+
+// ===== STATE =====
+let state={};
+
+// ===== EXTRA SERVICE =====
+let extraServices=[];
+
+// ===== MINGGU =====
+function getSundays(y,m){
+  let d=new Date(y,m,1),r=[];
+  while(d.getMonth()===m){
+    if(d.getDay()===0) r.push(new Date(d));
+    d.setDate(d.getDate()+1);
+  }
+  return r;
+}
+
+// ===== LOAD EXTRA =====
+function loadExtra(){
+  let sel=monthPicker.value;
+  let saved=localStorage.getItem("extra_"+sel);
+
+  if(saved){
+    extraServices=JSON.parse(saved);
+  }else{
+    extraServices=[];
+  }
+}
+
+// ===== SAVE EXTRA =====
+function saveExtra(){
+  let sel=monthPicker.value;
+  localStorage.setItem("extra_"+sel,JSON.stringify(extraServices));
+}
+
+// ===== TAMBAH IBADAH =====
+function addExtraService(){
+
+  let tanggal=prompt("Tanggal (YYYY-MM-DD)");
+  if(!tanggal) return;
+
+  let jam=prompt("Jam Ibadah");
+  if(!jam) return;
+
+  let nama=prompt("Nama Ibadah");
+  if(!nama) return;
+
+  extraServices.push({
+    tanggal,
+    jam,
+    nama
+  });
+
+  saveExtra();
+  render();
+}
+
+// ===== INIT =====
+function init(){
+  let n=new Date();
+  let sel=monthPicker.value||n.toISOString().slice(0,7);
+  monthPicker.value=sel;
+
+  const [y,m]=sel.split('-');
+  const sundays=getSundays(+y,+m-1);
+
+  // LOAD DATA BULAN
+  let saved=localStorage.getItem("jadwal_"+sel);
+
+  if(saved){
+    state=JSON.parse(saved);
+  }else{
+    state={};
+    sundays.forEach((d,i)=>state[i]={});
+  }
+
+  // LOAD EXTRA
+  loadExtra();
+
+  render();
+}
+
+// ===== FILTER =====
+function getUsed(i){
+  let s=new Set();
+  Object.values(state[i]).forEach(v=>{
+    if(v && v!=='HENDRI') s.add(v);
+  });
+  return s;
+}
+
+// ===== SET VALUE =====
+function setVal(i,key,val){
+  state[i][key]=val;
+  render();
+}
+
+// ===== SELECT =====
+function sel(type,key,i,optional=false){
+  let used=getUsed(i);
+  let val=state[i][key]||"";
+  let html=`<select onchange="setVal(${i},'${key}',this.value)">`;
+  html+=`<option value="">-- pilih --</option>`;
+
+  groups[type].forEach(p=>{
+    if(!used.has(p)||p==='HENDRI'||p===val){
+      html+=`<option ${p===val?'selected':''}>${p}</option>`;
+    }
+  });
+
+  html+=`</select>`;
+  return html;
+}
+
+// ===== SECTION =====
+function section(t,i){
+  let html=`<div class='section'><b>${t}</b>
+  <div class='task'>Pemandu 1</div>${sel('pemandu',t+'1',i)}
+  <div class='task'>Pemandu 2</div>${sel('pemandu',t+'2',i)}`;
+
+  if(t==='17.00'){
+    html+=`
+    <div class='task'>Pemandu 3 (Opsional)</div>${sel('pemandu',t+'3',i,true)}
+    <div class='task'>Worship Leader</div>${sel('wl',t+'4',i)}
+    <div class='task'>Band</div>${sel('band',t+'5',i)}
+    <div class='task'>LCD</div>${sel('lcd',t+'6',i)}`;
+  }else{
+    html+=`
+    <div class='task'>Musik</div>${sel('musik',t+'3',i)}
+    <div class='task'>LCD</div>${sel('lcd',t+'4',i)}`;
+  }
+
+  html+='</div>';
+  return html;
+}
+
+// ===== CARD =====
+function card(d,i){
+  return `<div class='card'>
+    <b>${d.toLocaleDateString('id-ID')}</b>
+    ${["06.00","08.30","17.00"].map(t=>section(t,i)).join('')}
+  </div>`;
+}
+
+// ===== EXTRA CARD =====
+function extraCard(x){
+
+  return `
+  <div class='card'>
+    <b>${x.tanggal}</b>
+
+    <div class='section'>
+      <b>${x.jam}</b>
+
+      <div class='task'>
+        ${x.nama}
+      </div>
+    </div>
+
+  </div>
+  `;
+}
+
+// ===== RENDER =====
+function render(){
+
+  const [y,m]=monthPicker.value.split('-');
+  const sundays=getSundays(+y,+m-1);
+
+  let html='';
+
+  // MINGGU
+  html+=sundays.map((d,i)=>card(d,i)).join('');
+
+  // EXTRA
+  html+=extraServices.map(x=>extraCard(x)).join('');
+
+  app.innerHTML=html;
+
+  updateStats();
+}
+
+// ===== STATISTIK =====
+function updateStats(){
+
+  let roles={
+    pemandu:{},
+    musik:{},
+    wl:{},
+    lcd:{},
+    band:{}
+  };
+
+  // INIT SEMUA NAMA = 0
+  Object.keys(groups).forEach(r=>{
+    groups[r].forEach(n=>{
+      roles[r][n]=0;
+    });
+  });
+
+  // HITUNG
+  Object.values(state).forEach(day=>{
+
+    Object.entries(day).forEach(([k,v])=>{
+
+      if(!v) return;
+
+      // ===== 06.00 =====
+      if(k==="06.001" || k==="06.002"){
+        roles.pemandu[v]++;
+      }
+
+      if(k==="06.003"){
+        roles.musik[v]++;
+      }
+
+      if(k==="06.004"){
+        roles.lcd[v]++;
+      }
+
+      // ===== 08.30 =====
+      if(k==="08.301" || k==="08.302"){
+        roles.pemandu[v]++;
+      }
+
+      if(k==="08.303"){
+        roles.musik[v]++;
+      }
+
+      if(k==="08.304"){
+        roles.lcd[v]++;
+      }
+
+      // ===== 17.00 =====
+      if(
+        k==="17.001" ||
+        k==="17.002" ||
+        k==="17.003"
+      ){
+        roles.pemandu[v]++;
+      }
+
+      if(k==="17.004"){
+        roles.wl[v]++;
+      }
+
+      if(k==="17.005"){
+        roles.band[v]++;
+      }
+
+      if(k==="17.006"){
+        roles.lcd[v]++;
+      }
+
+    });
+
+  });
+
+  // RENDER
+  let html='';
+
+  Object.keys(roles).forEach(r=>{
+
+    html+=`<b>${r.toUpperCase()}</b><br>`;
+
+    Object.keys(roles[r]).forEach(n=>{
+      html+=`${n} (${roles[r][n]})<br>`;
+    });
+
+    html+='<br>';
+
+  });
+  
+  // Di dalam fungsi updateStats, tambahkan ini sebelum stats.innerHTML = html;
+html += `<button class="secondary" style="font-size:10px; padding:5px; margin-top:10px;" 
+         onclick="copyStats()">Salin Statistik</button>`;
+
+  stats.innerHTML=html;
+}
+
+// ===== TOGGLE STATISTIK =====
+function toggleStats(){
+
+  let box=document.getElementById("statsBox");
+
+  box.classList.toggle("minimized");
+
+}
+
+// ===== COPY WA =====
+function copyText(){
+
+  const [y,m]=monthPicker.value.split('-');
+
+  const sundays=getSundays(+y,+m-1);
+
+  let text=`JADWAL PELAYANAN GEREJA\n`;
+  text+=`${monthPicker.value}\n\n`;
+
+  sundays.forEach((d,i)=>{
+
+    text+=`====================\n`;
+    text+=`${d.toLocaleDateString('id-ID',{
+      weekday:'long',
+      day:'numeric',
+      month:'long',
+      year:'numeric'
+    })}\n`;
+    text+=`====================\n\n`;
+
+    ["06.00","08.30","17.00"].forEach(jam=>{
+
+      text+=`🕒 IBADAH ${jam}\n`;
+
+      // ===== 06 & 08 =====
+      if(jam!=="17.00"){
+
+        if(state[i][jam+'1'])
+          text+=`Pemandu 1 : ${state[i][jam+'1']}\n`;
+
+        if(state[i][jam+'2'])
+          text+=`Pemandu 2 : ${state[i][jam+'2']}\n`;
+
+        if(state[i][jam+'3'])
+          text+=`Musik : ${state[i][jam+'3']}\n`;
+
+        if(state[i][jam+'4'])
+          text+=`LCD : ${state[i][jam+'4']}\n`;
+
+      }
+
+      // ===== 17 =====
+      else{
+
+        if(state[i][jam+'1'])
+          text+=`Pemandu 1 : ${state[i][jam+'1']}\n`;
+
+        if(state[i][jam+'2'])
+          text+=`Pemandu 2 : ${state[i][jam+'2']}\n`;
+
+        if(state[i][jam+'3'])
+          text+=`Pemandu 3 : ${state[i][jam+'3']}\n`;
+
+        if(state[i][jam+'4'])
+          text+=`WL : ${state[i][jam+'4']}\n`;
+
+        if(state[i][jam+'5'])
+          text+=`Band : ${state[i][jam+'5']}\n`;
+
+        if(state[i][jam+'6'])
+          text+=`LCD : ${state[i][jam+'6']}\n`;
+
+      }
+
+      text+=`\n`;
+
+    });
+
+    text+=`\n`;
+
+  });
+
+  // EXTRA SERVICE
+  if(extraServices.length){
+
+    text+=`====================\n`;
+    text+=`IBADAH KHUSUS\n`;
+    text+=`====================\n\n`;
+
+    extraServices.forEach(x=>{
+
+      text+=`${x.tanggal}\n`;
+      text+=`🕒 ${x.jam}\n`;
+      text+=`${x.nama}\n\n`;
+
+    });
+
+  }
+
+  navigator.clipboard.writeText(text);
+  alert("Copied!");
+}
+
+// ===== PDF =====
+function exportPDF(){
+  html2pdf().from(document.body).save("jadwal.pdf");
+}
+
+// ===== SAVE =====
+function saveData(){
+  let sel=monthPicker.value;
+  localStorage.setItem("jadwal_"+sel,JSON.stringify(state));
+  alert("Sudah tersimpan");
+}
+
+// INIT
+init();
+
+// ===== DRAG & DROP STATS =====
+const statsBox = document.getElementById("statsBox");
+let isDragging = false;
+let offsetX, offsetY;
+
+statsBox.addEventListener("mousedown", (e) => {
+    // Hanya aktif jika bukan klik pada konten di dalam stats
+    if(e.target.id !== 'statsBox' && e.target.id !== 'statsTitle') return;
+    
+    isDragging = true;
+    offsetX = e.clientX - statsBox.offsetLeft;
+    offsetY = e.clientY - statsBox.offsetTop;
+});
+
+document.addEventListener("mousemove", (e) => {
+    if (!isDragging) return;
+    statsBox.style.left = (e.clientX - offsetX) + "px";
+    statsBox.style.top = (e.clientY - offsetY) + "px";
+    statsBox.style.bottom = "auto"; // Override posisi fixed bawaan
+    statsBox.style.right = "auto";
+});
+
+document.addEventListener("mouseup", () => {
+    isDragging = false;
+});
+
+function copyStats() {
+    const statsContent = document.getElementById("stats").innerText;
+    navigator.clipboard.writeText(statsContent).then(() => {
+        alert("Statistik berhasil disalin!");
+    });
+}
+
+</script>
+
+</body>
+</html>

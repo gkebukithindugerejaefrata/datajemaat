@@ -1,0 +1,1814 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Data Jemaat GKE Bukit Hindu</title>
+ <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;background:#f3f6fa;color:#263238;padding:14px}
+.container{max-width:1400px;margin:auto}
+header,.panel,.card,.table-wrap{background:#fff;border-radius:14px;box-shadow:0 3px 15px #00000012}
+header{padding:20px;margin-bottom:14px}
+h1{font-size:25px;color:#17324d}
+.subtitle{color:#78909c;font-size:13px;margin-top:5px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:14px}
+.card{padding:16px;text-align:center}
+.card .label{font-size:12px;color:#78909c;text-transform:uppercase}
+.card .value{font-size:26px;font-weight:800;color:#1976d2;margin-top:4px}
+nav{display:flex;gap:8px;overflow:auto;margin-bottom:14px}
+nav button{border:0;background:#e8eef5;color:#34495e;padding:11px 16px;border-radius:10px;cursor:pointer;white-space:nowrap;font-weight:600}
+nav button.active{background:#1976d2;color:#fff}
+.panel{padding:16px;margin-bottom:14px}
+.controls{display:flex;gap:10px;flex-wrap:wrap}
+input,select{padding:11px 13px;border:1px solid #ccd6df;border-radius:9px;font-size:14px;background:#fff}
+input{flex:1;min-width:220px}
+button.action{padding:11px 15px;border:0;border-radius:9px;background:#1976d2;color:white;cursor:pointer}
+button.action.secondary{background:#607d8b}
+.status{margin:10px 0;padding:10px;border-radius:8px;font-size:13px;display:none}
+.status.show{display:block}.status.loading{background:#e3f2fd;color:#1565c0}.status.error{background:#ffebee;color:#c62828}.status.success{background:#e8f5e9;color:#2e7d32}
+.table-wrap{overflow:auto}
+table{width:100%;border-collapse:collapse;min-width:850px}
+th,td{padding:11px 12px;border-bottom:1px solid #e8edf1;text-align:left;font-size:13px}
+th{background:#f7f9fb;color:#455a64;position:sticky;top:0;z-index:2}
+tr:hover td{background:#f8fbff}.family-row td{background:#eaf3ff!important;color:#174a7a;font-size:13px;border-top:2px solid #c9def3}.family-row .badge{float:right}
+.empty{text-align:center;padding:40px;color:#90a4ae}
+.pagination{display:flex;justify-content:center;gap:6px;flex-wrap:wrap;margin-top:12px}
+.pagination button{border:0;padding:8px 11px;border-radius:7px;background:#e4eaf0;cursor:pointer}
+.pagination button.active{background:#1976d2;color:#fff}
+.family-grid,.env-grid,.birthday-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px}
+.group{border:1px solid #e2e8ee;border-radius:12px;padding:14px;background:#fff}
+.group h3{font-size:16px;color:#263238;margin-bottom:7px}
+.group .meta{font-size:12px;color:#78909c;margin-bottom:10px}
+.member{padding:7px 0;border-top:1px solid #edf1f4;font-size:13px}
+.member b{display:block}
+.badge{display:inline-block;padding:3px 7px;border-radius:20px;background:#e8f2ff;color:#1565c0;font-size:11px}
+.section-title{font-size:18px;font-weight:750;margin-bottom:12px;color:#17324d}
+.month-title{font-size:14px;color:#546e7a;margin:15px 0 8px;font-weight:700}
+
+
+.age-groups{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:14px}
+.age-card{background:#fff;border-radius:12px;padding:9px 12px;box-shadow:0 3px 15px #00000012;border-left:4px solid #90caf9}
+.age-card:nth-child(2){border-left-color:#7e57c2}
+.age-card:nth-child(3){border-left-color:#ff8a00}
+.age-card:nth-child(4){border-left-color:#20c997}
+.age-card .age-label{font-size:11px;color:#607d8b;text-transform:uppercase}
+.age-card .age-value{font-size:16px;font-weight:800;color:#263238;margin-top:3px}
+.celebration-table-wrap{border:0;box-shadow:0 3px 15px #00000012}
+.celebration-table{border-collapse:separate;border-spacing:0;overflow:hidden;border-radius:12px}
+.celebration-table th{background:#eef5fb;color:#17324d;border-color:#d8e3ec;font-size:12px;letter-spacing:.3px}
+.celebration-table td{border-color:#e3ebf1;background:#fff}
+.celebration-table tbody tr:hover td{background:#f7fbff}
+.celebration-heading{display:flex;align-items:center;justify-content:space-between;gap:10px;background:#f7fbff;border-left:4px solid #1976d2;border-radius:10px;padding:9px 12px}
+.birthday-mobile-cards{display:none}
+.birthday-card{background: #fff;
+    border: 1px solid #e3eaf0;
+    border-radius: 14px;
+    padding: 13px 14px;
+    box-shadow: 0 3px 12px #00000010;
+    background: linear-gradient(135deg, rgb(255 255 255) 0%, rgb(255 227 147 / 56%) 100%), url(.jpg) center / cover no-repeat;}
+.birthday-card-name{font-weight:800;color:#17324d;font-size:16px;line-height:1.3}
+.birthday-card-row{display:flex;justify-content:space-between;gap:10px;margin-top:9px;color:#607d8b;font-size:12px}
+.birthday-card-row strong{color:#263238;font-size:13px}
+.birthday-card-hut{font-size:25px;font-weight:900;color:#1976d2}
+
+.hidden{display:none}
+.view-special-hidden{display:none!important}
+
+.celebration-table-wrap{overflow:auto;background:#fff;border-radius:12px;box-shadow:0 3px 12px #0000000d}
+.celebration-table{width:100%;min-width:720px;border-collapse:collapse}
+.celebration-table th,.celebration-table td{padding:8px 10px;border:1px solid #263238;text-align:left;font-size:13px;white-space:nowrap}
+.celebration-table th{text-align:center;background:#f7f9fb;font-weight:800}
+.celebration-table td:nth-child(2),.celebration-table td:nth-child(3){text-align:center}
+.birthday-pair-table{min-width:900px}
+.celebration-heading{font-size:16px;font-weight:800;margin:4px 0 8px;color:#17324d}
+.celebration-name{font-size:20px;font-weight:800;color:#17324d;line-height:1.3}
+.celebration-v{margin:10px auto;color:#78909c;font-weight:700;font-size:18px}
+.celebration-age{font-size:52px;line-height:1;font-weight:900;color:#1976d2;margin:4px 0 8px}
+.celebration-date{font-size:16px;font-weight:700;color:#37474f}
+.celebration-place{font-size:13px;color:#78909c;margin-top:9px}
+
+
+/* Modern celebration tables - desktop */
+.celebration-table-wrap{
+  position:relative;
+  overflow:auto;
+  background:linear-gradient(145deg,#ffffff,#f7fbff);
+  border:1px solid #dbe7f1;
+  border-radius:16px;
+  box-shadow:0 8px 24px rgba(23,50,77,.08),0 2px 6px rgba(23,50,77,.05);
+}
+.celebration-table{
+  width:100%;
+  border-collapse:separate;
+  border-spacing:0;
+  min-width:720px;
+  background:transparent;
+}
+.celebration-table th{
+  padding:13px 14px;
+  border:0;
+  border-bottom:2px solid #d9e6f0;
+  background:linear-gradient(180deg,#f8fbfe,#eef5fa);
+  color:#35566f;
+  font-size:12px;
+  font-weight:800;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  text-align:center;
+}
+.celebration-table th:first-child{border-top-left-radius:15px}
+.celebration-table th:last-child{border-top-right-radius:15px}
+.celebration-table td{
+  padding:13px 14px;
+  border:0;
+  border-bottom:1px solid #e7eef4;
+  background:rgba(255,255,255,.86);
+  color:#263238;
+  font-size:13px;
+  transition:background .18s ease,box-shadow .18s ease;
+}
+.celebration-table tbody tr:last-child td{border-bottom:0}
+.celebration-table tbody tr:hover td{
+  background:#f3f9ff;
+  box-shadow:inset 0 1px 0 #dcecf8,inset 0 -1px 0 #dcecf8;
+}
+.celebration-table tbody tr td:first-child{
+  font-weight:700;
+  color:#17324d;
+}
+.celebration-table tbody tr td:nth-child(2){
+  font-weight:800;
+  color:#1976d2;
+}
+.celebration-table tbody tr td:nth-child(3){
+  font-weight:900;
+  color:#1565c0;
+  font-size:15px;
+}
+.celebration-table tbody tr td:nth-child(4){
+  color:#455a64;
+  font-weight:600;
+}
+.celebration-heading{
+  display:flex;
+  align-items:center;
+  gap:9px;
+  margin:6px 0 10px;
+  padding:11px 14px;
+  border-radius:12px;
+  background:linear-gradient(135deg,#eef7ff,#f9fcff);
+  border:1px solid #dbeaf5;
+  box-shadow:0 4px 12px rgba(25,118,210,.06);
+  color:#17324d;
+  font-size:15px;
+  font-weight:800;
+}
+.celebration-heading::after{
+  content:"";
+  flex:1;
+  height:1px;
+  background:linear-gradient(90deg,#cfe1ee,transparent);
+}
+#view-birthday .panel,#view-marriage .panel{
+  border:1px solid #dbe7f1;
+  background:linear-gradient(145deg,#fff,#f8fbfd);
+}
+#birthMonth,#marriageMonth{
+  min-width:190px;
+  border-color:#cbdce9;
+  font-weight:600;
+  color:#35566f;
+}
+
+
+#statsScope{
+  margin: -4px 0 10px;
+  padding: 7px 11px;
+  border-radius: 9px;
+  background:#f3f8fc;
+  border:1px solid #dce9f2;
+  color:#557080;
+  font-size:12px;
+  font-weight:600;
+}
+
+
+.family-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  flex-wrap:wrap;
+}
+.family-phone{
+  display:flex;
+  align-items:center;
+  gap:7px;
+  flex-wrap:wrap;
+  color:#455a64;
+}
+.phone-btn,.wa-btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:6px 10px;
+  border-radius:8px;
+  text-decoration:none;
+  font-size:12px;
+  font-weight:700;
+  transition:.2s;
+}
+.phone-btn{
+  background:#eaf4ff;
+  color:#1565c0;
+  border:1px solid #c9e1f5;
+}
+.wa-btn{
+  background:#edf9f1;
+  color:#218838;
+  border:1px solid #ccebd5;
+}
+.phone-btn:hover,.wa-btn:hover{
+  transform:translateY(-1px);
+  box-shadow:0 3px 8px rgba(0,0,0,.08);
+}
+
+/* Main jemaat table: compact family cards on smartphones */
+
+/* ===== Mobile modern family/member cards ===== */
+
+
+@media(max-width:700px){
+  #view-birthday .celebration-table td.empty-celebration-cell,
+  #view-marriage .celebration-table td.empty-celebration-cell{
+    display:none !important;
+  }
+}
+
+@media(max-width:700px){
+  #view-all .member-row td.empty-cell{
+    display:none !important;
+  }
+
+  #view-all .member-row td.empty-cell + td{
+    border-top:0;
+  }
+}
+
+@media(max-width:700px){
+  body{
+    background:linear-gradient(180deg,#f4f8fc 0%,#eef4f8 100%);
+  }
+
+  #view-all .table-wrap{
+    overflow:visible;
+    background:transparent;
+    border:0;
+    box-shadow:none;
+  }
+
+  #view-all table{
+    width:100%;
+    min-width:0;
+    border-collapse:separate;
+    border-spacing:0 10px;
+  }
+
+  #view-all thead{display:none}
+  #view-all tbody,
+  #view-all tr,
+  #view-all td{
+    display:block;
+    width:100%;
+  }
+
+  #view-all .family-row{
+    margin:0 0 2px;
+  }
+
+  #view-all .family-row td{
+    padding:14px;
+    border:0;
+    border-radius:16px;
+    background:linear-gradient(135deg,#eaf5ff,#f8fbff);
+    box-shadow:0 7px 18px rgba(31,78,121,.10);
+    border-left:4px solid #1976d2;
+  }
+
+  #view-all .family-title{
+    display:flex;
+    flex-direction:column;
+    align-items:flex-start;
+    gap:7px;
+    color:#17324d;
+    line-height:1.3;
+  }
+
+  #view-all .family-title strong{
+    font-size:14px;
+  }
+
+  #view-all .badge{
+    margin:0;
+    padding:4px 8px;
+    border-radius:999px;
+    background:#dceeff;
+    color:#1565c0;
+    font-size:10px;
+  }
+
+  #view-all .family-address{
+    margin-top:9px;
+    padding:8px 10px;
+    border-radius:10px;
+    background:rgba(255,255,255,.72);
+    color:#546e7a;
+    font-size:11px;
+  }
+
+  #view-all .family-phone{
+    margin-top:9px;
+    padding:9px;
+    border-radius:11px;
+    background:rgba(255,255,255,.78);
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:6px;
+  }
+
+  #view-all .family-phone span{
+    grid-column:1 / -1;
+    font-size:12px;
+    color:#37474f;
+  }
+
+  #view-all .phone-btn,
+  #view-all .wa-btn{
+    min-width:0;
+    width:100%;
+    padding:8px 6px;
+    border-radius:9px;
+    font-size:11px;
+    box-sizing:border-box;
+  }
+
+  #view-all .member-row{
+    position:relative;
+    margin:0;
+    padding:11px 13px;
+    border:0;
+    border-radius:15px;
+    background:#fff;
+    box-shadow:0 4px 14px rgba(31,50,68,.07);
+    overflow:hidden;
+  }
+
+  #view-all .member-row::before{
+    content:"";
+    position:absolute;
+    left:0;
+    top:0;
+    bottom:0;
+    width:4px;
+    background:linear-gradient(180deg,#42a5f5,#7e57c2);
+  }
+
+  #view-all .member-row td{
+    position:relative;
+    min-height:18px;
+    padding:7px 0 7px 39%;
+    border:0;
+    border-bottom:1px solid #edf2f5;
+    font-size:12px;
+    line-height:1.35;
+    text-align:left!important;
+    white-space:normal;
+    overflow-wrap:anywhere;
+  }
+
+  #view-all .member-row td:last-child{
+    border-bottom:0;
+  }
+
+  #view-all .member-row td::before{
+    content:attr(data-label);
+    position:absolute;
+    left:0;
+    top:7px;
+    width:35%;
+    color:#78909c;
+    font-size:9px;
+    font-weight:800;
+    letter-spacing:.04em;
+    text-transform:uppercase;
+  }
+
+  /* Empty marriage fields never create empty visual space. */
+  #view-all .member-row td:empty{
+    display:none;
+  }
+
+  /* Modern mobile celebration cards */
+  #view-birthday .celebration-table-wrap,
+  #view-marriage .celebration-table-wrap{
+    overflow:visible;
+    background:transparent;
+    border:0;
+    box-shadow:none;
+  }
+
+  #view-birthday .celebration-table,
+  #view-marriage .celebration-table{
+    min-width:0;
+    width:100%;
+    border-collapse:separate;
+    border-spacing:0 10px;
+  }
+
+  #view-birthday .celebration-table thead,
+  #view-marriage .celebration-table thead{
+    display:none;
+  }
+
+  #view-birthday .celebration-table tbody,
+  #view-marriage .celebration-table tbody,
+  #view-birthday .celebration-table tr,
+  #view-marriage .celebration-table tr,
+  #view-birthday .celebration-table td,
+  #view-marriage .celebration-table td{
+    display:block;
+    width:100%;
+    box-sizing:border-box;
+  }
+
+  #view-birthday .celebration-table tr,
+  #view-marriage .celebration-table tr{
+    background:#fff;
+    border-radius:16px;
+    box-shadow:0 5px 16px rgba(31,50,68,.08);
+    overflow:hidden;
+    padding:8px 12px;
+  }
+
+  #view-birthday .celebration-table td,
+  #view-marriage .celebration-table td{
+    border:0;
+    border-bottom:1px solid #edf2f5;
+    padding:8px 0 8px 38%;
+    position:relative;
+    font-size:12px;
+    white-space:normal;
+  }
+
+  #view-birthday .celebration-table td:last-child,
+  #view-marriage .celebration-table td:last-child{
+    border-bottom:0;
+  }
+
+  #view-birthday .celebration-table td::before,
+  #view-marriage .celebration-table td::before{
+    content:attr(data-label);
+    position:absolute;
+    left:0;
+    top:8px;
+    width:34%;
+    color:#78909c;
+    font-size:9px;
+    font-weight:800;
+    text-transform:uppercase;
+  }
+
+  #view-birthday .celebration-heading,
+  #view-marriage .celebration-heading{
+    border-radius:14px;
+    box-shadow:0 5px 14px rgba(25,118,210,.08);
+  }
+}
+
+@media(max-width:900px){
+  #view-all .table-wrap{
+    overflow:visible;
+    background:transparent;
+    box-shadow:none;
+    border:0;
+  }
+
+  #view-all table{
+    min-width:0;
+    width:100%;
+    border-collapse:separate;
+    border-spacing:0 9px;
+  }
+
+  #view-all thead{
+    display:none;
+  }
+
+  #view-all tbody,
+  #view-all tr,
+  #view-all td{
+    display:block;
+    width:100%;
+  }
+
+  #view-all .family-row td{
+    padding:11px 12px;
+    border-radius:12px;
+    border:1px solid #d7e6f0;
+  }
+
+  #view-all .member-row{
+    background:#fff;
+    border:1px solid #e2eaf0;
+    border-radius:12px;
+    box-shadow:0 3px 10px rgba(23,50,77,.06);
+    padding:7px 11px;
+  }
+
+  #view-all .member-row td{
+    border:0;
+    border-bottom:1px solid #edf2f5;
+    padding:7px 0 7px 42%;
+    position:relative;
+    min-height:20px;
+    font-size:13px;
+    text-align:left!important;
+    white-space:normal;
+    overflow-wrap:anywhere;
+  }
+
+  #view-all .member-row td:last-child{
+    border-bottom:0;
+  }
+
+  #view-all .member-row td::before{
+    content:attr(data-label);
+    position:absolute;
+    left:0;
+    top:7px;
+    width:38%;
+    color:#607d8b;
+    font-size:11px;
+    font-weight:800;
+    text-transform:uppercase;
+  }
+
+  #view-all .family-header{
+    gap:7px;
+  }
+
+  #view-all .family-title{
+    width:100%;
+  }
+
+  #view-all .family-address{
+    width:100%;
+    font-size:12px;
+    line-height:1.35;
+  }
+
+  #view-all .family-phone{
+    width:100%;
+    gap:6px;
+  }
+
+  #view-all .phone-btn,
+  #view-all .wa-btn{
+    flex:1;
+    min-width:0;
+  }
+
+  #view-all .badge{
+    display:inline-block;
+    margin-left:5px;
+  }
+}
+
+@media(max-width:900px){
+  .family-header{
+    align-items:flex-start;
+    flex-direction:column;
+    gap:8px;
+  }
+  .family-phone{
+    width:100%;
+  }
+  .phone-btn,.wa-btn{
+    flex:1;
+    min-width:110px;
+  }
+}
+
+@media(max-width:900px){
+body{padding:6px;font-size:14px}
+.container{width:100%;max-width:none}
+header{padding:14px 12px;margin-bottom:10px}
+h1{font-size:19px;line-height:1.25}
+.subtitle{font-size:12px;line-height:1.35}
+.stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin-bottom:10px}
+.card{padding:11px 7px}
+.card .label{font-size:10px}
+.card .value{font-size:20px}
+nav{gap:6px;margin-bottom:10px;padding-bottom:2px;-webkit-overflow-scrolling:touch}
+nav button{padding:9px 11px;font-size:12px;flex:0 0 auto}
+.panel{padding:10px;margin-bottom:10px}
+.controls{display:grid;grid-template-columns:1fr;gap:7px}
+.controls input,.controls select,.controls button{width:100%;min-width:0;font-size:14px}
+.section-title{font-size:16px;margin-bottom:9px}
+.month-title{font-size:13px}
+.table-wrap,.celebration-table-wrap{width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
+table{min-width:700px}
+.celebration-table{min-width:600px}
+.celebration-table th,.celebration-table td{padding:7px 8px;font-size:12px}
+.celebration-heading{font-size:14px;line-height:1.35;margin:4px 0 7px}
+.pagination{gap:4px}
+.pagination button{padding:7px 9px;font-size:12px}
+.family-grid,.birthday-grid{grid-template-columns:1fr}
+
+.age-groups{grid-template-columns:repeat(2,1fr);gap:7px}
+.age-card{padding:8px 10px}
+.age-card .age-label{font-size:9px}
+.age-card .age-value{font-size:14px}
+.birthday-desktop{display:none}
+.birthday-mobile-cards{display:grid;grid-template-columns:1fr;gap:9px}
+.celebration-heading{font-size:13px;align-items:flex-start}
+.celebration-heading span:last-child{white-space:nowrap;font-size:11px}
+}
+}
+@media(min-width:701px) and (max-width:1000px){
+.table-wrap,.celebration-table-wrap{overflow-x:auto}
+table{min-width:800px}
+}
+
+
+/* LOGIN SCREEN STYLES */
+.login-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.5s ease-out, visibility 0.5s ease-out;
+}
+
+.login-overlay.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.login-card {
+  background: white;
+  padding: 2.5rem;
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  max-width: 380px;
+  animation: slideIn 0.6s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+}
+
+.login-card.fade-out {
+  animation: fadeOut 0.5s ease-out forwards;
+}
+
+.login-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.login-header h1 {
+  font-size: 28px;
+  color: #333;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.login-header p {
+  color: #666;
+  font-size: 14px;
+}
+
+.login-form-group {
+  margin-bottom: 1.5rem;
+}
+
+.login-form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #333;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.login-password-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.login-form-group input {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+  transition: all 0.2s;
+}
+
+.login-password-wrapper input {
+  padding-right: 40px;
+}
+
+.login-form-group input:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  background-color: #f9fafb;
+}
+
+.login-form-group input::placeholder {
+  color: #999;
+}
+
+.login-toggle-password {
+  position: absolute;
+  right: 12px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #667eea;
+  font-size: 16px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  transition: color 0.2s;
+}
+
+.login-toggle-password:hover {
+  color: #764ba2;
+}
+
+.login-error-message {
+  color: #dc2626;
+  font-size: 13px;
+  margin-top: 0.4rem;
+  display: none;
+}
+
+.login-error-message.show {
+  display: block;
+}
+
+.login-button {
+  width: 100%;
+  padding: 11px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.login-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+}
+
+.login-button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.login-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.login-cooldown-message {
+  text-align: center;
+  margin-top: 1rem;
+  padding: 1rem;
+  background: #fef3c7;
+  border-radius: 6px;
+  color: #92400e;
+  font-size: 13px;
+  display: none;
+}
+
+.login-cooldown-message.show {
+  display: block;
+}
+
+.login-cooldown-timer {
+  font-weight: 600;
+  font-size: 18px;
+  color: #d97706;
+  margin-top: 0.5rem;
+}
+
+.login-success-message {
+  text-align: center;
+  color: #059669;
+  font-size: 14px;
+  font-weight: 600;
+  display: none;
+}
+
+.login-success-message.show {
+  display: block;
+}
+
+/* SESSION TIMEOUT WARNING */
+.session-timeout-warning {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease-out, visibility 0.3s ease-out;
+}
+
+.session-timeout-warning.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+.timeout-warning-content {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  max-width: 360px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  animation: slideIn 0.4s ease-out;
+}
+
+.timeout-warning-icon {
+  font-size: 48px;
+  margin-bottom: 1rem;
+}
+
+.timeout-warning-text h3 {
+  font-size: 18px;
+  color: #333;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.timeout-warning-text p {
+  font-size: 14px;
+  color: #666;
+  margin: 0;
+}
+
+#warningTimer {
+  font-weight: 700;
+  color: #d97706;
+}
+
+.timeout-warning-btn {
+  margin-top: 1.5rem;
+  padding: 11px 24px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  width: 100%;
+}
+
+.timeout-warning-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+}
+
+.timeout-warning-btn:active {
+  transform: translateY(0);
+}
+</style>
+</head>
+<body>
+<div class="container">
+<header>
+<h1>📋 Data Jemaat GKE Bukit Hindu</h1>
+<div class="subtitle">Dashboard data jemaat • seluruh data dimuat bertahap dari Supabase</div>
+</header>
+
+<div class="stats" id="stats"></div>
+<div class="age-groups" id="ageGroups"></div>
+
+<nav>
+<button class="active" data-view="all">👥 Semua Jemaat</button>
+<button data-view="birthday">🎂 Ulang Tahun</button>
+<button data-view="marriage">💍 Pernikahan</button>
+</nav>
+
+<div class="panel">
+<div class="controls" role="search" onsubmit="return false;">
+<input id="search" placeholder="Cari nama, no registrasi, alamat..." autocomplete="off">
+<select id="lpFilter" aria-label="Filter Lingkungan Pelayanan"><option value="">Semua LP</option></select>
+<button class="action secondary" onclick="resetFilters()">Reset</button>
+<button class="action" onclick="loadAllData()">🔄 Refresh</button>
+</div>
+<div id="status" class="status"></div>
+</div>
+
+<section id="view-all">
+<div class="section-title">Daftar Jemaat</div>
+<div class="table-wrap">
+<table><thead id="thead"></thead><tbody id="tbody"></tbody></table>
+<div id="empty" class="empty hidden">Tidak ada data.</div>
+</div>
+<div id="pagination" class="pagination"></div>
+</section>
+
+
+
+
+<section id="view-birthday" class="hidden">
+<div class="section-title">🎂 Ulang Tahun Kelahiran</div>
+<div class="panel" style="padding:12px;margin-bottom:12px">
+<div class="controls">
+<select id="birthMonth" aria-label="Pilih bulan ulang tahun kelahiran"></select>
+</div>
+</div>
+<div id="birthdays"></div>
+</section>
+
+<section id="view-marriage" class="hidden">
+<div class="section-title">💍 Ulang Tahun Pernikahan</div>
+<div class="panel" style="padding:12px;margin-bottom:12px">
+<div class="controls">
+<select id="marriageMonth" aria-label="Pilih bulan ulang tahun pernikahan"></select>
+</div>
+</div>
+<div id="marriages"></div>
+</section>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+(function(){
+"use strict";
+
+const SUPABASE_URL="https://gpgjgplqsvyexumoljyo.supabase.co";
+const SUPABASE_KEY="sb_publishable_JaVgg3CuVmI9SczGkoaRZQ_EaYoV9z9";
+const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+
+let allData=[];
+let filtered=[];
+let page=1;
+const PER_PAGE=25;
+let currentView="all";
+
+const labels={
+id:"ID",no_reg:"No. Registrasi",nama:"Nama",jk:"JK",
+tpt_lhr:"Tempat Lahir",tgl_lhr:"Tanggal Lahir",
+tpt_nkh:"Tempat Nikah",tgl_nkh:"Tanggal Nikah",
+alamat:"Alamat",ling_pel:"Lingkungan Pelayanan",status:"Status"
+};
+
+const $=id=>document.getElementById(id);
+
+function showStatus(msg,type="success"){
+const el=$("status");el.textContent=msg;el.className="status show "+type;
+}
+function esc(v){
+const d=document.createElement("div");d.textContent=v==null?"":String(v);return d.innerHTML;
+}
+function dateObj(v){
+if(v==null||String(v).trim()==="")return null;
+let x=String(v).trim();
+if(x==="0000-00-00"||x==="0000-00-00 00:00:00")return null;
+let m;
+if((m=x.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/))) return new Date(Number(m[1]),Number(m[2])-1,Number(m[3]));
+if((m=x.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/))) return new Date(Number(m[3]),Number(m[2])-1,Number(m[1]));
+const d=new Date(x);
+return isNaN(d)?null:d;
+}
+function dateID(v){
+const d=dateObj(v);return d?d.toLocaleDateString("id-ID",{day:"2-digit",month:"long",year:"numeric"}):"-";
+}
+function age(v){
+const d=dateObj(v);if(!d)return "-";
+const n=new Date();let a=n.getFullYear()-d.getFullYear();
+const m=n.getMonth()-d.getMonth();
+if(m<0||(m===0&&n.getDate()<d.getDate()))a--;
+return a;
+}
+
+/* Supabase REST/PostgREST biasanya mengembalikan maksimal 1000 baris.
+   Kita ambil bertahap menggunakan range() sampai batch terakhir. */
+async function loadAllData(){
+showStatus("Memuat seluruh data jemaat...","loading");
+allData=[];
+let from=0,batch=1000;
+try{
+while(true){
+const {data,error}=await db.from("jemaat")
+.select("*").order("id",{ascending:true}).range(from,from+batch-1);
+if(error)throw error;
+const rows=data||[];
+allData.push(...rows);
+showStatus("Memuat data... "+allData.length+" data","loading");
+if(rows.length<batch)break;
+from+=batch;
+}
+filtered=[...allData];page=1;
+updateStats();
+updateLPFilter();
+renderAll();
+
+renderBirthdays();
+renderMarriages();
+showStatus("Berhasil memuat "+allData.length.toLocaleString("id-ID")+" data.","success");
+}catch(e){
+console.error(e);
+showStatus("Gagal memuat data: "+e.message,"error");
+}
+}
+
+function updateLPFilter(){
+const select=$("lpFilter");
+const current=select.value;
+const lps=[...new Set(allData.map(r=>String(r.ling_pel??"").trim()).filter(Boolean))]
+.sort((a,b)=>a.localeCompare(b,"id"));
+select.innerHTML='<option value="">Semua LP</option>'+lps.map(lp=>`<option value="${esc(lp)}">${esc(lp)}</option>`).join("");
+if(lps.includes(current))select.value=current;
+}
+
+function updateStats(sourceData=allData){
+const data=sourceData||[];
+const total=data.length;
+const l=data.filter(x=>String(x.jk||"").toUpperCase()==="L").length;
+const p=data.filter(x=>String(x.jk||"").toUpperCase()==="P").length;
+const env=new Set(data.map(x=>String(x.ling_pel||"").trim()).filter(Boolean)).size;
+
+const ageGroups=[
+{label:"0-13 TH",min:0,max:13},
+{label:"14-24 TH",min:14,max:24},
+{label:"25-59 TH",min:25,max:59},
+{label:"> 60 TH",min:60,max:Infinity}
+];
+
+const ageCounts=ageGroups.map(g=>data.filter(r=>{
+const a=age(r.tgl_lhr);
+return a!=="-" && a>=g.min && a<=g.max;
+}).length);
+
+$("stats").innerHTML=
+`<div class="card"><div class="label">Total Jemaat</div><div class="value">${total.toLocaleString("id-ID")}</div></div>
+<div class="card"><div class="label">Laki-laki</div><div class="value">${l.toLocaleString("id-ID")}</div></div>
+<div class="card"><div class="label">Perempuan</div><div class="value">${p.toLocaleString("id-ID")}</div></div>
+<div class="card"><div class="label">Lingkungan</div><div class="value">${env}</div></div>`;
+
+$("ageGroups").innerHTML=ageGroups.map((g,i)=>
+`<div class="age-card"><div class="age-label">${g.label}</div><div class="age-value">${ageCounts[i].toLocaleString("id-ID")} jiwa</div></div>`
+).join("");
+}
+function applyFilters(){
+const q=$("search").value.toLowerCase().trim();
+const lp=$("lpFilter").value;
+
+filtered=allData.filter(row=>{
+const okQ=!q||Object.values(row).some(v=>String(v??"").toLowerCase().includes(q));
+const okLP=!lp||String(row.ling_pel??"").trim()===lp;
+return okQ&&okLP;
+});
+
+page=1;
+updateStats(filtered);
+
+const scope=$("statsScope");
+if(scope)scope.textContent=lp
+  ? `📊 Statistik: ${lp}${q?` • Pencarian: "${q}"`:""}`
+  : q
+    ? `📊 Statistik: Semua Lingkungan • Pencarian: "${q}"`
+    : "📊 Statistik: Semua Lingkungan Pelayanan";
+
+renderAll();
+}
+
+function getFamilyPhone(members){
+  const phoneMember = members.find(r =>
+    String(r.no_telp ?? "").trim() !== ""
+  );
+  return phoneMember ? String(phoneMember.no_telp).trim() : "";
+}
+
+function cleanPhone(phone){
+  let p = String(phone || "").replace(/[^\d+]/g, "");
+  if(p.startsWith("0")) p = "62" + p.substring(1);
+  return p;
+}
+
+function renderAll(){
+const rows=filtered;
+if(!rows.length){
+$("thead").innerHTML="";
+$("tbody").innerHTML="";
+$("empty").classList.remove("hidden");
+$("pagination").innerHTML="";
+return;
+}
+
+$("empty").classList.add("hidden");
+
+const hiddenColumns=new Set(["id","no_reg","alamat"]);
+const headers=Object.keys(rows[0]).filter(h=>!hiddenColumns.has(h));
+
+$("thead").innerHTML=headers.map(h=>`<th>${esc(labels[h]||h)}</th>`).join("");
+
+const familyGroups=[];
+const familyMap=new Map();
+
+rows.forEach(r=>{
+const key=familyKey(r);
+if(!familyMap.has(key)){
+const group=[];
+familyMap.set(key,group);
+familyGroups.push(group);
+}
+familyMap.get(key).push(r);
+});
+
+const pages=[];
+let current=[];
+let count=0;
+
+familyGroups.forEach(group=>{
+if(current.length && count+group.length>PER_PAGE){
+pages.push(current);
+current=[];
+count=0;
+}
+current.push(group);
+count+=group.length;
+});
+if(current.length)pages.push(current);
+
+const totalPages=pages.length;
+if(page>totalPages)page=totalPages;
+
+const groupsForPage=pages[page-1]||[];
+let htmlRows="";
+
+groupsForPage.forEach(members=>{
+const family=familyKey(members[0]);
+const phone=getFamilyPhone(members);
+const phoneClean=cleanPhone(phone);
+const addressMember=members.find(r=>String(r.alamat??"").trim()!=="");
+const familyAddress=addressMember ? String(addressMember.alamat).trim() : "";
+
+let phoneHtml="";
+if(phone){
+phoneHtml=`
+<div class="family-phone">
+<a href="tel:${esc(phoneClean)}" class="phone-btn"><span style="font-size: 1.5em; color: blue;"><i class="fa-solid fa-phone"></i></span></a>
+<a href="https://wa.me/${esc(phoneClean)}" target="_blank" rel="noopener" class="wa-btn"><span style="font-size: 2em; color: green;">
+ <i class="fa-brands fa-square-whatsapp"></i>
+</span></a>
+</div>`;
+}
+
+htmlRows+=`
+<tr class="family-row">
+<td colspan="${headers.length}">
+<div class="family-header">
+<div class="family-title">
+<strong>👨‍👩‍👧‍👦 Keluarga / No. Registrasi: ${esc(family)}</strong>
+<span class="badge">Anggota: ${members.length}</span>
+</div>
+${phoneHtml}
+${familyAddress?`<div class="family-address">📍 ${esc(familyAddress)}</div>`:""}
+</div>
+</td>
+</tr>`;
+
+members.forEach(r=>{
+htmlRows+=`
+<tr class="member-row">
+${headers.map(h=>{
+const v=r[h];
+const empty=v==null || String(v).trim()==="" || v==="0000-00-00";
+const label=labels[h]||h;
+const display=empty ? "-" : (h.includes("tgl_") ? dateID(v) : v);
+return `<td data-label="${esc(label)}"${empty?' class="empty-cell"':''}>${esc(display)}</td>`;
+}).join("")}
+</tr>`;
+});
+});
+
+$("tbody").innerHTML=htmlRows;
+renderPagination(totalPages);
+}
+function renderPagination(total){
+let html="";
+if(total<=1){$("pagination").innerHTML="";return}
+html+=`<button onclick="gotoPage(1)">«</button><button onclick="gotoPage(${Math.max(1,page-1)})">‹</button>`;
+let s=Math.max(1,page-2),e=Math.min(total,page+2);
+for(let i=s;i<=e;i++)html+=`<button class="${i===page?"active":""}" onclick="gotoPage(${i})">${i}</button>`;
+html+=`<button onclick="gotoPage(${Math.min(total,page+1)})">›</button><button onclick="gotoPage(${total})">»</button>`;
+$("pagination").innerHTML=html;
+}
+window.gotoPage=function(n){
+const groups=[];
+const map=new Map();
+
+filtered.forEach(r=>{
+const key=familyKey(r);
+if(!map.has(key)){
+const group=[];
+map.set(key,group);
+groups.push(group);
+}
+map.get(key).push(r);
+});
+
+let total=0;
+let count=0;
+groups.forEach(group=>{
+if(count>0 && count+group.length>PER_PAGE){
+total++;
+count=0;
+}
+count+=group.length;
+});
+if(count>0)total++;
+
+if(n<1||n>total)return;
+page=n;
+renderAll();
+window.scrollTo({top:0,behavior:"smooth"});
+};
+
+/* Keluarga dikelompokkan berdasarkan No. Registrasi.
+   Anggota dengan nomor registrasi yang sama dianggap satu keluarga. */
+function familyKey(r){
+const reg=String(r.no_reg??"").trim();
+if(!reg)return "Belum ada nomor registrasi";
+return reg;
+}
+function renderFamilies(){
+const map=new Map();
+allData.forEach(r=>{const k=familyKey(r);if(!map.has(k))map.set(k,[]);map.get(k).push(r)});
+const arr=[...map.entries()].sort((a,b)=>a[0].localeCompare(b[0],"id"));
+$("familyInfo").textContent=`Ditemukan ${arr.length.toLocaleString("id-ID")} kelompok keluarga. Dasar pengelompokan: No. Registrasi.`;
+
+$("families").innerHTML=arr.map(([k,members])=>{
+const headers=Object.keys(members[0]);
+return `<div class="group">
+<h3>👨‍👩‍👧‍👦 No. Registrasi: ${esc(k)}</h3>
+<div class="meta">${members.length} anggota</div>
+<div class="table-wrap" style="box-shadow:none;border:1px solid #e7edf2">
+<table><thead><tr>${headers.map(h=>`<th>${esc(labels[h]||h)}</th>`).join("")}</tr></thead>
+<tbody>${members.map(m=>`<tr>${headers.map(h=>{
+const v=m[h];
+return `<td>${v==null||v===""||v==="0000-00-00"?"-":esc(h.includes("tgl_")?dateID(v):v)}</td>`;
+}).join("")}</tr>`).join("")}</tbody></table>
+</div></div>`;
+}).join("");
+}
+const monthNames=["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
+
+function setupMonthFilters(){
+const birth=$("birthMonth"), marriage=$("marriageMonth");
+const currentMonth=new Date().getMonth();
+const options='<option value="-1">Semua Bulan</option>'+monthNames.map((m,i)=>`<option value="${i}">${m}</option>`).join("");
+birth.innerHTML=options;
+marriage.innerHTML=options;
+birth.value=String(currentMonth);
+marriage.value=String(currentMonth);
+birth.addEventListener("change",renderBirthdays);
+marriage.addEventListener("change",renderMarriages);
+}
+
+function renderBirthdays(){
+const selected=Number($("birthMonth").value);
+let rows=allData.filter(r=>dateObj(r.tgl_lhr));
+if(selected>=0)rows=rows.filter(r=>dateObj(r.tgl_lhr).getMonth()===selected);
+
+rows.sort((a,b)=>{
+const da=dateObj(a.tgl_lhr),db=dateObj(b.tgl_lhr);
+return da.getDate()-db.getDate() ||
+       String(a.nama||"").localeCompare(String(b.nama||""),"id");
+});
+
+const rowsHtml=rows.map(r=>`<tr>
+<td data-label="NAMA">${esc(r.nama||"-")}</td>
+<td data-label="LP">${esc(r.ling_pel||"-")}</td>
+<td data-label="HUT KE" style="text-align:center">${age(r.tgl_lhr)}</td>
+<td data-label="TANGGAL" style="text-align:center">${dateID(r.tgl_lhr)}</td>
+</tr>`).join("");
+
+const mobileCards=rows.map(r=>`<div class="birthday-card">
+<div class="birthday-card-name">${esc(r.nama||"-")}</div>
+<div class="birthday-card-row">
+<span>LP: <strong>${esc(r.ling_pel||"-")}</strong></span>
+<span class="birthday-card-hut">${age(r.tgl_lhr)}</span>
+</div>
+<div class="birthday-card-row">
+<span>Tanggal lahir</span><strong>${dateID(r.tgl_lhr)}</strong>
+</div>
+</div>`).join("");
+
+$("birthdays").innerHTML=`
+<div class="celebration-heading"><span>🎂 Ulang Tahun Kelahiran</span><span>${selected<0?"Semua Bulan":monthNames[selected]} • ${rows.length} orang</span></div>
+<div class="celebration-table-wrap birthday-desktop">
+<table class="celebration-table">
+<thead><tr><th>NAMA</th><th>LP</th><th>HUT KE</th><th>TANGGAL</th></tr></thead>
+<tbody>${rowsHtml||'<tr><td colspan="4" class="empty">Tidak ada data ulang tahun pada bulan yang dipilih.</td></tr>'}</tbody>
+</table>
+</div>
+<div class="birthday-mobile-cards">
+${mobileCards||'<div class="empty">Tidak ada data ulang tahun pada bulan yang dipilih.</div>'}
+</div>`;
+}
+
+function renderMarriages(){
+const selected=Number($("marriageMonth").value);
+const groups=new Map();
+
+allData.forEach(r=>{
+const d=dateObj(r.tgl_nkh);
+if(!d)return;
+if(selected>=0 && d.getMonth()!==selected)return;
+const reg=String(r.no_reg??"").trim();
+const dateKey=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+const key=reg ? `${reg}|${dateKey}` : `__DATE_ONLY__|${dateKey}`;
+if(!groups.has(key))groups.set(key,[]);
+groups.get(key).push(r);
+});
+
+const pairs=[...groups.values()]
+.filter(group=>group.length>=2)
+.sort((a,b)=>{
+const da=dateObj(a[0].tgl_nkh),db=dateObj(b[0].tgl_nkh);
+return da.getDate()-db.getDate() ||
+da.getMonth()-db.getMonth() ||
+String(a[0].nama||"").localeCompare(String(b[0].nama||""),"id");
+});
+
+const pairData=pairs.map(group=>{
+const d=dateObj(group[0].tgl_nkh);
+const today=new Date();
+const years=Math.max(0,today.getFullYear()-d.getFullYear()-
+(today.getMonth()<d.getMonth()||
+(today.getMonth()===d.getMonth()&&today.getDate()<d.getDate())?1:0));
+const names=group.map(r=>String(r.nama||"").trim()).filter(Boolean).join(" & ");
+const lp=String(group[0].ling_pel??"").trim() || "-";
+const address=String(group.find(r=>String(r.alamat??"").trim())?.alamat??"").trim() || "-";
+return {names,lp,years,date:dateID(group[0].tgl_nkh),address};
+});
+
+const rowsHtml=pairData.map(x=>`<tr>
+<td>${esc(x.names)}</td><td style="text-align:center">${esc(x.lp)}</td>
+<td style="text-align:center">${x.years}</td><td style="text-align:center">${esc(x.date)}</td>
+<td>${esc(x.address)}</td></tr>`).join("");
+
+const mobileCards=pairData.map(x=>`<div class="birthday-card">
+<div class="birthday-card-name">${esc(x.names)}</div>
+<div class="birthday-card-row">
+<span>LP: <strong>${esc(x.lp)}</strong></span>
+<span class="birthday-card-hut">${x.years}</span>
+</div>
+<div class="birthday-card-row">
+<span>Tanggal</span><strong>${esc(x.date)}</strong>
+</div>
+<div class="birthday-card-row">
+<span>Alamat</span><strong style="text-align:right">${esc(x.address)}</strong>
+</div>
+</div>`).join("");
+
+$("marriages").innerHTML=`
+<div class="celebration-heading"><span>💍 Ulang Tahun Pernikahan</span><span>${selected<0?"Semua Bulan":monthNames[selected]} • ${pairData.length} pasangan</span></div>
+<div class="celebration-table-wrap birthday-desktop">
+<table class="celebration-table">
+<thead><tr><th>NAMA</th><th>LP</th><th>HUT KE</th><th>TANGGAL</th><th>ALAMAT</th></tr></thead>
+<tbody>${rowsHtml||'<tr><td colspan="5" class="empty">Tidak ada pasangan yang memiliki tanggal pernikahan yang sama pada bulan yang dipilih.</td></tr>'}</tbody>
+</table>
+</div>
+<div class="birthday-mobile-cards">
+${mobileCards||'<div class="empty">Tidak ada pasangan yang memiliki tanggal pernikahan yang sama pada bulan yang dipilih.</div>'}
+</div>`;
+}
+
+function switchView(view){
+currentView=view;
+document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("active",b.dataset.view===view));
+["all","birthday","marriage"].forEach(v=>$("view-"+v).classList.toggle("hidden",v!==view));
+$("search").closest(".panel").classList.toggle("view-special-hidden",view==="birthday"||view==="marriage");
+if(view==="all")applyFilters();
+}
+
+document.querySelectorAll("nav button").forEach(b=>b.addEventListener("click",()=>switchView(b.dataset.view)));
+$("search").addEventListener("input",applyFilters);
+setupMonthFilters();
+$("lpFilter").addEventListener("change",applyFilters);
+window.resetFilters=function(){
+$("search").value="";
+$("lpFilter").value="";
+applyFilters();
+};
+window.loadAllData=loadAllData;
+
+loadAllData();
+})();
+</script>
+
+<!-- LOGIN SCREEN OVERLAY -->
+<div class="login-overlay" id="loginOverlay">
+  <div class="login-card" id="loginCard">
+    <div class="login-header">
+      <h1>Login</h1>
+      <p>Masuk ke sistem Jemaat</p>
+    </div>
+
+    <form id="loginForm">
+      <div class="login-form-group">
+        <label for="username">Username</label>
+        <input 
+          type="text" 
+          id="username" 
+          placeholder="Masukkan username"
+          autocomplete="off"
+        />
+      </div>
+
+      <div class="login-form-group">
+        <label for="password">Password</label>
+        <div class="login-password-wrapper">
+          <input 
+            type="password" 
+            id="password" 
+            placeholder="Masukkan password"
+            autocomplete="off"
+          />
+          <button type="button" class="login-toggle-password" id="togglePassword">
+            <i class="fas fa-eye"></i>
+          </button>
+        </div>
+        <div class="login-error-message" id="errorMessage"></div>
+      </div>
+
+      <button type="submit" class="login-button" id="loginBtn">
+        Login
+      </button>
+    </form>
+
+    <div class="login-cooldown-message" id="cooldownMessage">
+      <p>⏱️ Silakan tunggu sebelum mencoba login ulang</p>
+      <div class="login-cooldown-timer" id="cooldownTimer">0:00</div>
+    </div>
+
+    <div class="login-success-message" id="successMessage">
+      ✓ Login berhasil! Mengalihkan...
+    </div>
+  </div>
+</div>
+
+<!-- SESSION TIMEOUT WARNING -->
+<div class="session-timeout-warning" id="sessionTimeoutWarning">
+  <div class="timeout-warning-content">
+    <div class="timeout-warning-icon">⚠️</div>
+    <div class="timeout-warning-text">
+      <h3>Sesi Anda akan berakhir</h3>
+      <p>Anda akan secara otomatis logout dalam <span id="warningTimer">1:30</span></p>
+    </div>
+    <button type="button" class="timeout-warning-btn" id="extendSessionBtn">
+      Lanjutkan Sesi
+    </button>
+  </div>
+</div>
+
+<script>
+(function() {
+  // Dapatkan tanggal hari ini dalam format ddbulan (misal: 18agustus)
+  function getTodayDate() {
+    const today = new Date();
+    const day = String(today.getDate()).padStart(2, '0');
+    const monthNames = ["januari", "februari", "maret", "april", "mei", "juni", 
+                       "juli", "agustus", "september", "oktober", "november", "desember"];
+    const month = monthNames[today.getMonth()];
+    return `${day}${month}`;
+  }
+
+  const correctPassword = `efrata${getTodayDate()}`;
+  const COOLDOWN_DURATION = 30; // detik
+  const SESSION_TIMEOUT = 30 * 60 * 1000; // 30 menit dalam ms
+  const WARNING_TIME = 2 * 60 * 1000; // Tampilkan warning 2 menit sebelum logout
+  const STORAGE_KEY = 'lastLoginAttempt';
+  const SESSION_START_KEY = 'sessionStartTime';
+
+  const form = document.getElementById('loginForm');
+  const usernameInput = document.getElementById('username');
+  const passwordInput = document.getElementById('password');
+  const togglePasswordBtn = document.getElementById('togglePassword');
+  const loginBtn = document.getElementById('loginBtn');
+  const errorMessage = document.getElementById('errorMessage');
+  const cooldownMessage = document.getElementById('cooldownMessage');
+  const cooldownTimer = document.getElementById('cooldownTimer');
+  const successMessage = document.getElementById('successMessage');
+  const loginCard = document.getElementById('loginCard');
+  const loginOverlay = document.getElementById('loginOverlay');
+  const sessionTimeoutWarning = document.getElementById('sessionTimeoutWarning');
+  const warningTimer = document.getElementById('warningTimer');
+  const extendSessionBtn = document.getElementById('extendSessionBtn');
+
+  let cooldownInterval = null;
+  let sessionTimeoutInterval = null;
+  let warningTimeoutInterval = null;
+
+  // Toggle show/hide password
+  togglePasswordBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    const icon = togglePasswordBtn.querySelector('i');
+    
+    if (passwordInput.type === 'password') {
+      passwordInput.type = 'text';
+      icon.classList.remove('fa-eye');
+      icon.classList.add('fa-eye-slash');
+    } else {
+      passwordInput.type = 'password';
+      icon.classList.remove('fa-eye-slash');
+      icon.classList.add('fa-eye');
+    }
+  });
+
+  // Cek apakah user sudah login
+  function isUserLoggedIn() {
+    return sessionStorage.getItem('loginSuccess') === 'true';
+  }
+
+  // Cek apakah session masih valid
+  function isSessionValid() {
+    const startTime = parseInt(sessionStorage.getItem(SESSION_START_KEY) || '0');
+    if (!startTime) return false;
+    
+    const elapsed = Date.now() - startTime;
+    return elapsed < SESSION_TIMEOUT;
+  }
+
+  // Hitung sisa waktu session
+  function getRemainingSessionTime() {
+    const startTime = parseInt(sessionStorage.getItem(SESSION_START_KEY) || '0');
+    if (!startTime) return SESSION_TIMEOUT;
+    
+    const elapsed = Date.now() - startTime;
+    return Math.max(0, SESSION_TIMEOUT - elapsed);
+  }
+
+  // Logout user
+  function logoutUser() {
+    sessionStorage.removeItem('loginSuccess');
+    sessionStorage.removeItem(SESSION_START_KEY);
+    loginOverlay.classList.remove('hidden');
+    sessionTimeoutWarning.classList.remove('show');
+    form.style.display = 'block';
+    successMessage.classList.remove('show');
+    loginCard.classList.remove('fade-out');
+    usernameInput.value = '';
+    passwordInput.value = '';
+    errorMessage.textContent = 'Sesi Anda telah berakhir. Silakan login kembali.';
+    errorMessage.classList.add('show');
+    
+    if (sessionTimeoutInterval) clearInterval(sessionTimeoutInterval);
+    if (warningTimeoutInterval) clearInterval(warningTimeoutInterval);
+  }
+
+  // Mulai session timeout
+  function startSessionTimeout() {
+    // Reset timeout sebelumnya jika ada
+    if (sessionTimeoutInterval) clearInterval(sessionTimeoutInterval);
+    if (warningTimeoutInterval) clearInterval(warningTimeoutInterval);
+
+    // Simpan waktu mulai session
+    sessionStorage.setItem(SESSION_START_KEY, Date.now().toString());
+
+    // Warning ditampilkan 2 menit sebelum logout
+    const warningShowTime = SESSION_TIMEOUT - WARNING_TIME;
+    
+    warningTimeoutInterval = setTimeout(() => {
+      sessionTimeoutWarning.classList.add('show');
+      
+      // Timer countdown di warning
+      let remainingMs = WARNING_TIME;
+      warningTimeoutInterval = setInterval(() => {
+        remainingMs -= 1000;
+        const minutes = Math.floor(remainingMs / 60000);
+        const seconds = Math.floor((remainingMs % 60000) / 1000);
+        warningTimer.textContent = `${minutes}:${String(seconds).padStart(2, '0')}`;
+
+        if (remainingMs <= 0) {
+          clearInterval(warningTimeoutInterval);
+        }
+      }, 1000);
+    }, warningShowTime);
+
+    // Logout setelah 30 menit
+    sessionTimeoutInterval = setTimeout(() => {
+      logoutUser();
+    }, SESSION_TIMEOUT);
+  }
+
+  // Extend session
+  extendSessionBtn.addEventListener('click', () => {
+    sessionTimeoutWarning.classList.remove('show');
+    startSessionTimeout();
+  });
+
+  // Cek apakah ada cooldown yang masih berlaku
+  function checkCooldown() {
+    const lastAttempt = localStorage.getItem(STORAGE_KEY);
+    if (!lastAttempt) return null;
+
+    const lastTime = parseInt(lastAttempt);
+    const now = Date.now();
+    const elapsed = Math.floor((now - lastTime) / 1000);
+    const remaining = COOLDOWN_DURATION - elapsed;
+
+    if (remaining > 0) {
+      return remaining;
+    } else {
+      localStorage.removeItem(STORAGE_KEY);
+      return null;
+    }
+  }
+
+  // Update tampilan cooldown
+  function updateCooldownDisplay(remaining) {
+    const minutes = Math.floor(remaining / 60);
+    const seconds = remaining % 60;
+    cooldownTimer.textContent = `${minutes}:${String(seconds).padStart(2, '0')}`;
+  }
+
+  // Mulai cooldown
+  function startCooldown() {
+    localStorage.setItem(STORAGE_KEY, Date.now().toString());
+    cooldownMessage.classList.add('show');
+    loginBtn.disabled = true;
+    form.style.opacity = '0.5';
+    form.style.pointerEvents = 'none';
+
+    let remaining = COOLDOWN_DURATION;
+
+    cooldownInterval = setInterval(() => {
+      remaining--;
+      updateCooldownDisplay(remaining);
+
+      if (remaining <= 0) {
+        clearInterval(cooldownInterval);
+        cooldownMessage.classList.remove('show');
+        loginBtn.disabled = false;
+        form.style.opacity = '1';
+        form.style.pointerEvents = 'auto';
+        errorMessage.classList.remove('show');
+      }
+    }, 1000);
+  }
+
+  // Handle form submit
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    
+    const username = usernameInput.value.trim();
+    const password = passwordInput.value;
+
+    errorMessage.classList.remove('show');
+
+    // Validasi input
+    if (!username || !password) {
+      errorMessage.textContent = 'Username dan password harus diisi';
+      errorMessage.classList.add('show');
+      return;
+    }
+
+    // Cek cooldown
+    const cooldownRemaining = checkCooldown();
+    if (cooldownRemaining) {
+      updateCooldownDisplay(cooldownRemaining);
+      startCooldown();
+      errorMessage.textContent = `Terlalu banyak percobaan login. Coba lagi dalam ${cooldownRemaining} detik`;
+      errorMessage.classList.add('show');
+      return;
+    }
+
+    // Validasi password
+    if (password !== correctPassword) {
+      errorMessage.textContent = 'Username atau password salah';
+      errorMessage.classList.add('show');
+      startCooldown();
+      return;
+    }
+
+    // Login berhasil
+    successMessage.classList.add('show');
+    loginCard.classList.add('fade-out');
+    form.style.display = 'none';
+    cooldownMessage.classList.remove('show');
+    loginBtn.disabled = true;
+
+    // Simpan status login
+    sessionStorage.setItem('loginSuccess', 'true');
+
+    // Mulai session timeout
+    setTimeout(() => {
+      startSessionTimeout();
+      loginOverlay.classList.add('hidden');
+    }, 1500);
+  });
+
+  // Cek session saat halaman dimuat
+  window.addEventListener('load', () => {
+    // Jika sudah login
+    if (isUserLoggedIn()) {
+      // Cek apakah session masih valid
+      if (isSessionValid()) {
+        loginOverlay.classList.add('hidden');
+        
+        // Hitung sisa waktu dan mulai timeout
+        const remaining = getRemainingSessionTime();
+        startSessionTimeout();
+      } else {
+        // Session sudah expired
+        logoutUser();
+      }
+      return;
+    }
+
+    // Cek cooldown untuk login gagal
+    const remainingCooldown = checkCooldown();
+    if (remainingCooldown) {
+      updateCooldownDisplay(remainingCooldown);
+      loginBtn.disabled = true;
+      form.style.opacity = '0.5';
+      form.style.pointerEvents = 'none';
+      cooldownMessage.classList.add('show');
+
+      let remaining = remainingCooldown;
+      cooldownInterval = setInterval(() => {
+        remaining--;
+        updateCooldownDisplay(remaining);
+
+        if (remaining <= 0) {
+          clearInterval(cooldownInterval);
+          cooldownMessage.classList.remove('show');
+          loginBtn.disabled = false;
+          form.style.opacity = '1';
+          form.style.pointerEvents = 'auto';
+        }
+      }, 1000);
+    }
+  });
+})();
+</script>
+
+</body>
+</html>
