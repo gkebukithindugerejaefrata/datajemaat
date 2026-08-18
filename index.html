@@ -938,7 +938,7 @@ table{min-width:800px}
 <div class="container">
 <header>
 <h1>📋 Data Jemaat GKE Bukit Hindu</h1>
-<div class="subtitle">Dashboard data jemaat • seluruh data dimuat bertahap dari Supabase</div>
+<div class="subtitle">• Dashboard data jemaat •</div>
 </header>
 
 <div class="stats" id="stats"></div>
@@ -1084,6 +1084,23 @@ select.innerHTML='<option value="">Semua LP</option>'+lps.map(lp=>`<option value
 if(lps.includes(current))select.value=current;
 }
 
+function animateCounters(){
+  document.querySelectorAll("#stats .value[data-target], #ageGroups .age-value[data-target]").forEach(el=>{
+    const target=Number(el.dataset.target)||0;
+    const duration=850;
+    const start=performance.now();
+    const easeOut=t=>1-Math.pow(1-t,3);
+    function step(now){
+      const progress=Math.min(1,(now-start)/duration);
+      const value=Math.round(target*easeOut(progress));
+      el.textContent=value.toLocaleString("id-ID")+(el.classList.contains("age-value")?" jiwa":"");
+      if(progress<1)requestAnimationFrame(step);
+    }
+    el.textContent="0"+(el.classList.contains("age-value")?" jiwa":"");
+    requestAnimationFrame(step);
+  });
+}
+
 function updateStats(sourceData=allData){
 const data=sourceData||[];
 const total=data.length;
@@ -1104,14 +1121,15 @@ return a!=="-" && a>=g.min && a<=g.max;
 }).length);
 
 $("stats").innerHTML=
-`<div class="card"><div class="label">Total Jemaat</div><div class="value">${total.toLocaleString("id-ID")}</div></div>
-<div class="card"><div class="label">Laki-laki</div><div class="value">${l.toLocaleString("id-ID")}</div></div>
-<div class="card"><div class="label">Perempuan</div><div class="value">${p.toLocaleString("id-ID")}</div></div>
-<div class="card"><div class="label">Lingkungan</div><div class="value">${env}</div></div>`;
+`<div class="card"><div class="label">Total Jemaat</div><div class="value" data-target="${total}">0</div></div>
+<div class="card"><div class="label">Laki-laki</div><div class="value" data-target="${l}">0</div></div>
+<div class="card"><div class="label">Perempuan</div><div class="value" data-target="${p}">0</div></div>
+<div class="card"><div class="label">Lingkungan</div><div class="value" data-target="${env}">0</div></div>`;
 
 $("ageGroups").innerHTML=ageGroups.map((g,i)=>
-`<div class="age-card"><div class="age-label">${g.label}</div><div class="age-value">${ageCounts[i].toLocaleString("id-ID")} jiwa</div></div>`
+`<div class="age-card"><div class="age-label">${g.label}</div><div class="age-value" data-target="${ageCounts[i]}">0 jiwa</div></div>`
 ).join("");
+animateCounters();
 }
 function applyFilters(){
 const q=$("search").value.toLowerCase().trim();
@@ -1202,6 +1220,8 @@ let htmlRows="";
 
 groupsForPage.forEach(members=>{
 const family=familyKey(members[0]);
+const kepalaKeluarga=members.find(r=>String(r.status??"").trim().toUpperCase()==="KK");
+const namaKepalaKeluarga=kepalaKeluarga ? String(kepalaKeluarga.nama??"").trim() : "";
 const phone=getFamilyPhone(members);
 const phoneClean=cleanPhone(phone);
 const addressMember=members.find(r=>String(r.alamat??"").trim()!=="");
@@ -1223,7 +1243,12 @@ htmlRows+=`
 <td colspan="${headers.length}">
 <div class="family-header">
 <div class="family-title">
-<strong>👨‍👩‍👧‍👦 Keluarga / No. Registrasi: ${esc(family)}</strong>
+<strong>👨‍👩‍👧‍👦 Keluarga${(() => {
+          const kepala = members.find(r => String(r.status ?? "").trim().toUpperCase() === "KK");
+          return kepala && String(kepala.nama ?? "").trim()
+            ? ` (${esc(String(kepala.nama).trim())})`
+            : "";
+        })()} / No. Registrasi: ${esc(family)}</strong>
 <span class="badge">Anggota: ${members.length}</span>
 </div>
 ${phoneHtml}
