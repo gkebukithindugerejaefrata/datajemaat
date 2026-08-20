@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard Perjamuan Jemaat</title>
+<meta name="theme-color" content="#1e3a8a">
+
+<style>
+:root{
+  --primary:#1e3a8a;
+  --primary2:#2563eb;
+  --gold:#d4a72c;
+  --bg:#f4f7fb;
+  --card:#ffffff;
+  --text:#172033;
+  --muted:#6b7280;
+  --border:#e5e7eb;
+  --success:#15803d;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  background:var(--bg);
+  color:var(--text);
+}
+.header{
+  background:linear-gradient(135deg,var(--primary),var(--primary2));
+  color:white;
+  padding:28px 18px 70px;
+}
+.header-inner{max-width:1100px;margin:auto}
+.eyebrow{
+  font-size:.78rem;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  opacity:.8;
+}
+h1{margin:7px 0 5px;font-size:clamp(1.65rem,4vw,2.5rem)}
+.subtitle{margin:0;opacity:.85}
+.container{
+  max-width:1100px;
+  margin:-45px auto 40px;
+  padding:0 16px;
+}
+.toolbar{
+  background:white;
+  border:1px solid rgba(255,255,255,.7);
+  border-radius:18px;
+  padding:14px;
+  box-shadow:0 10px 30px rgba(15,23,42,.12);
+  display:flex;
+  gap:12px;
+  align-items:center;
+  flex-wrap:wrap;
+}
+label{font-size:.85rem;font-weight:700;color:var(--muted)}
+select{
+  width:100%;
+  max-width:220px;
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:11px 13px;
+  background:#fff;
+  color:var(--text);
+  font-size:1rem;
+  outline:none;
+}
+.status{margin-left:auto;font-size:.8rem;color:var(--muted)}
+.cards{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:14px;
+  margin:18px 0;
+}
+.card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:17px;
+  padding:18px;
+  box-shadow:0 5px 18px rgba(15,23,42,.05);
+}
+.card-title{font-size:.82rem;color:var(--muted);margin-bottom:7px}
+.card-value{font-size:1.65rem;font-weight:800;color:var(--primary)}
+.card-note{font-size:.76rem;color:var(--muted);margin-top:5px}
+.panel{
+  background:white;
+  border:1px solid var(--border);
+  border-radius:18px;
+  overflow:hidden;
+  box-shadow:0 5px 18px rgba(15,23,42,.05);
+}
+.panel-head{
+  padding:18px 18px 12px;
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  align-items:center;
+}
+.panel-title{font-size:1.05rem;font-weight:800}
+.panel-sub{font-size:.8rem;color:var(--muted);margin-top:3px}
+.table-wrap{overflow-x:auto}
+table{
+  width:100%;
+  border-collapse:collapse;
+  min-width:650px;
+}
+th{
+  background:#f8fafc;
+  color:#475569;
+  font-size:.78rem;
+  text-transform:uppercase;
+  letter-spacing:.04em;
+  padding:13px 14px;
+  text-align:right;
+  border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+}
+th:first-child,td:first-child{text-align:left}
+td{
+  padding:14px;
+  border-bottom:1px solid #eef0f3;
+  text-align:right;
+  font-size:.92rem;
+}
+tbody tr:hover{background:#f8fbff}
+.average{
+  background:#fffaf0!important;
+  font-weight:800;
+}
+.average td:first-child{color:#9a6b00}
+.badge{
+  display:inline-block;
+  padding:5px 9px;
+  border-radius:999px;
+  background:#eff6ff;
+  color:var(--primary2);
+  font-size:.76rem;
+  font-weight:700;
+}
+.footer{
+  text-align:center;
+  color:var(--muted);
+  font-size:.75rem;
+  padding:22px 10px;
+}
+.error{
+  padding:25px;
+  color:#b91c1c;
+  background:#fef2f2;
+  margin:16px;
+  border-radius:12px;
+}
+@media(max-width:700px){
+  .header{padding:23px 15px 62px}
+  .container{padding:0 10px;margin-top:-42px}
+  .toolbar{padding:13px;display:block}
+  select{max-width:none;margin-top:6px}
+  .status{display:block;margin-top:10px}
+  .cards{grid-template-columns:1fr;gap:10px}
+  .card{padding:15px}
+  .card-value{font-size:1.4rem}
+  .panel-head{padding:15px}
+  table{min-width:600px}
+  td,th{padding:12px 10px}
+}
+</style>
+</head>
+
+<body>
+<header class="header">
+  <div class="header-inner">
+    <div class="eyebrow">Dashboard Jemaat GKE Bukit Hindu</div>
+    <h1>Rata-Rata Hadir Jemaat saat Perjamuan Kudus</h1>
+    <p class="subtitle">Per Jam Ibadah Perjamuan • 2023–2026</p>
+  </div>
+</header>
+
+<main class="container">
+  <section class="toolbar">
+    <label for="year">Pilih Tahun</label>
+    <select id="year"></select>
+    <span class="status" id="status">Membaca data.csv...</span>
+  </section>
+
+  <section class="cards">
+    <div class="card">
+      <div class="card-title">Total Rata-rata</div>
+      <div class="card-value" id="totalAverage">-</div>
+      <div class="card-note">Akumulasi rata-rata Ibadah I–III</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Rata-rata Ibadah I</div>
+      <div class="card-value" id="avg1">-</div>
+      <div class="card-note">Kehadiran rata-rata</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Rata-rata Ibadah II</div>
+      <div class="card-value" id="avg2">-</div>
+      <div class="card-note">Kehadiran rata-rata</div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="panel-head">
+      <div>
+        <div class="panel-title">Data Perjamuan</div>
+        <div class="panel-sub" id="panelSub">-</div>
+      </div>
+      <span class="badge" id="yearBadge">-</span>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Perjamuan</th>
+            <th>Ibadah I</th>
+            <th>Ibadah II</th>
+            <th>Ibadah III</th>
+            <th>Jumlah</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <div class="footer">
+    Sumber data: data.csv • Dashboard Perjamuan Jemaat
+  </div>
+</main>
+
+<script>
+let allData=[];
+
+function parseCSV(text){
+  const lines=text.trim().split(/\r?\n/);
+  const headers=lines.shift().split(",").map(x=>x.trim());
+  return lines.map(line=>{
+    const values=line.split(",");
+    const obj={};
+    headers.forEach((h,i)=>obj[h]=(values[i]??"").trim());
+    return obj;
+  });
+}
+
+function number(value){
+  if(value==="" || value===null || value===undefined) return "-";
+  const n=Number(value);
+  if(Number.isNaN(n)) return value;
+  return n.toLocaleString("id-ID",{maximumFractionDigits:2});
+}
+
+function loadYears(){
+  const years=[...new Set(allData.map(x=>x.tahun))].sort((a,b)=>Number(a)-Number(b));
+  const select=document.getElementById("year");
+  select.innerHTML=years.map(y=>`<option value="${y}">${y}</option>`).join("");
+  if(years.length) select.value=years[years.length-1];
+  render();
+}
+
+function render(){
+  const year=document.getElementById("year").value;
+  const rows=allData.filter(x=>x.tahun===year);
+  const average=rows.find(x=>x.perjamuan.toUpperCase()==="RATA RATA");
+
+  document.getElementById("yearBadge").textContent="TAHUN "+year;
+  document.getElementById("panelSub").textContent=
+    "Rata-rata hadir jemaat per jam ibadah Perjamuan tahun "+year;
+
+  document.getElementById("avg1").textContent=number(average?.ibadah_1);
+  document.getElementById("avg2").textContent=number(average?.ibadah_2);
+
+  const vals=[
+    Number(average?.ibadah_1)||0,
+    Number(average?.ibadah_2)||0,
+    Number(average?.ibadah_3)||0
+  ];
+  const total=vals.reduce((a,b)=>a+b,0);
+  document.getElementById("totalAverage").textContent=number(total);
+
+  document.getElementById("tableBody").innerHTML=rows.map(row=>{
+    const isAverage=row.perjamuan.toUpperCase()==="RATA RATA";
+    return `<tr class="${isAverage?'average':''}">
+      <td>${row.perjamuan}</td>
+      <td>${number(row.ibadah_1)}</td>
+      <td>${number(row.ibadah_2)}</td>
+      <td>${number(row.ibadah_3)}</td>
+      <td>${number(row.jumlah)}</td>
+    </tr>`;
+  }).join("");
+}
+
+async function init(){
+  try{
+    const response=await fetch("data.csv",{cache:"no-store"});
+    if(!response.ok) throw new Error("data.csv tidak ditemukan");
+    const text=await response.text();
+    allData=parseCSV(text);
+    loadYears();
+    document.getElementById("status").textContent=
+      allData.length+" baris data berhasil dimuat";
+  }catch(error){
+    document.getElementById("status").textContent="Gagal membaca data";
+    document.getElementById("tableBody").innerHTML=
+      `<tr><td colspan="5"><div class="error">
+      Tidak dapat membaca <b>data.csv</b>.<br>
+      Pastikan file <b>index.html</b> dan <b>data.csv</b> berada dalam folder yang sama
+      dan website dijalankan melalui server/hosting.
+      </div></td></tr>`;
+  }
+}
+
+document.getElementById("year").addEventListener("change",render);
+init();
+</script>
+</body>
+</html>
