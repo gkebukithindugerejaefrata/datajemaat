@@ -200,6 +200,11 @@ tbody tr:hover{background:#f8fbff}
       <div class="card-value" id="avg2">-</div>
       <div class="card-note">Kehadiran rata-rata</div>
     </div>
+    <div class="card">
+      <div class="card-title">Rata-rata Ibadah II</div>
+      <div class="card-value" id="avg3">-</div>
+      <div class="card-note">Kehadiran rata-rata</div>
+    </div>
   </section>
 
   <section class="panel">
@@ -272,6 +277,7 @@ function render(){
 
   document.getElementById("avg1").textContent=number(average?.ibadah_1);
   document.getElementById("avg2").textContent=number(average?.ibadah_2);
+ document.getElementById("avg3").textContent=number(average?.ibadah_3);
 
   const vals=[
     Number(average?.ibadah_1)||0,
