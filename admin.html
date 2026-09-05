@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Data Jemaat GKE Bukit Hindu</title>
+ <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;background:#f3f6fa;color:#263238;padding:14px}
+.container{max-width:1400px;margin:auto}
+header,.panel,.card,.table-wrap{background:#fff;border-radius:14px;box-shadow:0 3px 15px #00000012}
+header{padding:20px;margin-bottom:14px}
+h1{font-size:25px;color:#17324d}
+.subtitle{color:#78909c;font-size:13px;margin-top:5px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:14px}
+.card{padding:16px;text-align:center}
+.card .label{font-size:12px;color:#78909c;text-transform:uppercase}
+.card .value{font-size:26px;font-weight:800;color:#1976d2;margin-top:4px}
+nav{display:flex;gap:8px;overflow:auto;margin-bottom:14px ;}
+nav button{border:0;background:#e8eef5;color:#34495e;padding:11px 16px;border-radius:10px;cursor:pointer;white-space:nowrap;font-weight:600}
+nav button.active{background:#1976d2;color:#fff}
+.panel{padding:16px;margin-bottom:14px}
+.controls{display:flex;gap:10px;flex-wrap:wrap}
+input,select{padding:11px 13px;border:1px solid #ccd6df;border-radius:9px;font-size:14px;background:#fff}
+input{flex:1;min-width:220px}
+button.action{padding:11px 15px;border:0;border-radius:9px;background:#1976d2;color:white;cursor:pointer}
+button.action.secondary{background:#607d8b}
+.status{margin:10px 0;padding:10px;border-radius:8px;font-size:13px;display:none}
+.status.show{display:block}.status.loading{background:#e3f2fd;color:#1565c0}.status.error{background:#ffebee;color:#c62828}.status.success{background:#e8f5e9;color:#2e7d32}
+.table-wrap{overflow:auto}
+table{width:100%;border-collapse:collapse;min-width:850px}
+th,td{padding:11px 12px;border-bottom:1px solid #e8edf1;text-align:left;font-size:13px}
+th{background:#f7f9fb;color:#455a64;position:sticky;top:0;z-index:2}
+tr:hover td{background:#f8fbff}.family-row td{background:#eaf3ff!important;color:#174a7a;font-size:13px;border-top:2px solid #c9def3}.family-row .badge{float:right}
+.empty{text-align:center;padding:40px;color:#90a4ae}
+.pagination{display:flex;justify-content:center;gap:6px;flex-wrap:wrap;margin-top:12px}
+.pagination button{border:0;padding:8px 11px;border-radius:7px;background:#e4eaf0;cursor:pointer}
+.pagination button.active{background:#1976d2;color:#fff}
+
+.family-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  flex-wrap:wrap;
+}
+.family-phone{
+  display:flex;
+  align-items:center;
+  gap:7px;
+  flex-wrap:wrap;
+  color:#455a64;
+}
+.phone-btn,.wa-btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+}
+.family-address{
+  font-size:12px;
+  color:#546e7a;
+}
+.age-groups,.family-grid,.env-grid,.birthday-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px}
+.group{border:1px solid #e2e8ee;border-radius:12px;padding:14px;background:#fff}
+.group h3{font-size:16px;color:#263238;margin-bottom:7px}
+.group .meta{font-size:12px;color:#78909c;margin-bottom:10px}
+.member{padding:7px 0;border-top:1px solid #edf1f4;font-size:13px}
+.member b{display:block}
+.badge{display:inline-block;padding:3px 7px;border-radius:20px;background:#e8f2ff;color:#1565c0;font-size:11px}
+.section-title{font-size:18px;font-weight:750;margin-bottom:12px;color:#17324d}
+.month-title{font-size:14px;color:#546e7a;margin:15px 0 8px;font-weight:700}
+
+.age-groups{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:14px}
+.age-card{background:#fff;border-radius:12px;padding:9px 12px;box-shadow:0 3px 15px #00000012;border-left:4px solid #90caf9}
+.age-card:nth-child(2){border-left-color:#7e57c2}
+.age-card:nth-child(3){border-left-color:#ff8a00}
+.age-card:nth-child(4){border-left-color:#20c997}
+.age-card .age-label{font-size:11px;color:#607d8b;text-transform:uppercase}
+.age-card .age-value{font-size:16px;font-weight:800;color:#263238;margin-top:3px}
+
+.hidden{display:none}
+.view-special-hidden{display:none!important}
+
+#statsScope{
+  margin: -4px 0 10px;
+  padding: 7px 11px;
+  border-radius: 9px;
+  background:#f3f8fc;
+  border:1px solid #dce9f2;
+  color:#557080;
+  font-size:12px;
+  font-weight:600;
+}
+
+/* EDIT MODAL */
+.edit-btn{
+  padding:7px 10px;
+  border:0;
+  border-radius:7px;
+  background:#1976d2;
+  color:#fff;
+  cursor:pointer;
+  font-weight:700;
+  font-size:12px;
+  transition: all 0.2s;
+}
+.edit-btn:hover{
+  background:#1565c0;
+  transform: translateY(-1px);
+}
+
+.edit-modal{
+  position:fixed;
+  inset:0;
+  background:#0008;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:16px;
+  z-index:20000;
+}
+.edit-modal.show{
+  display:flex;
+}
+.edit-card{
+  width:min(760px,100%);
+  max-height:92vh;
+  overflow:auto;
+  background:#fff;
+  border-radius:16px;
+  padding:20px;
+  box-shadow:0 20px 60px #0005;
+}
+.edit-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:14px;
+}
+.edit-head h2{
+  font-size:20px;
+  color:#17324d;
+}
+.edit-close{
+  border:0;
+  background:#eef2f7;
+  width:36px;
+  height:36px;
+  border-radius:50%;
+  font-size:20px;
+  cursor:pointer;
+  transition: all 0.2s;
+}
+.edit-close:hover{
+  background:#dfe7f1;
+}
+.edit-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+.edit-field{
+  display:flex;
+  flex-direction:column;
+}
+.edit-field label{
+  font-size:11px;
+  font-weight:800;
+  color:#546e7a;
+  margin-bottom:4px;
+}
+.edit-field input{
+  width:100%;
+  padding:10px;
+  border:1px solid #ccd6df;
+  border-radius:9px;
+  font-size:13px;
+  font-family:inherit;
+}
+.edit-field input:focus{
+  outline:none;
+  border-color:#1976d2;
+  box-shadow:0 0 0 3px #1976d214;
+}
+.edit-actions{
+  display:flex;
+  justify-content:flex-end;
+  gap:8px;
+  margin-top:16px;
+}
+.edit-actions button{
+  padding:10px 15px;
+  border:0;
+  border-radius:9px;
+  cursor:pointer;
+  font-weight:700;
+  transition: all 0.2s;
+}
+.edit-cancel{
+  background:#e8eef5;
+  color:#34495e;
+}
+.edit-cancel:hover{
+  background:#dae3ed;
+}
+.edit-save{
+  background:#1976d2;
+  color:#fff;
+}
+.edit-save:hover:not(:disabled){
+  background:#1565c0;
+  transform: translateY(-1px);
+}
+.edit-save:disabled{
+  opacity:0.6;
+  cursor:not-allowed;
+}
+.edit-note{
+  font-size:11px;
+  color:#78909c;
+  margin-top:8px;
+}
+.edit-error{
+  margin-top:10px;
+  padding:9px;
+  border-radius:8px;
+  background:#ffebee;
+  color:#c62828;
+  font-size:12px;
+  display:none;
+  border-left:3px solid #c62828;
+}
+.edit-error.show{
+  display:block;
+}
+.edit-success{
+  margin-top:10px;
+  padding:9px;
+  border-radius:8px;
+  background:#e8f5e9;
+  color:#2e7d32;
+  font-size:12px;
+  display:none;
+  border-left:3px solid #2e7d32;
+}
+.edit-success.show{
+  display:block;
+}
+
+@media(max-width:700px){
+  .edit-grid{grid-template-columns:1fr}
+  .edit-card{padding:15px}
+}
+</style>
+</head>
+<body>
+<div class="container">
+<header>
+<h1>📋 Data Jemaat GKE Bukit Hindu</h1>
+<div class="subtitle">• Dashboard data jemaat •</div>
+</header>
+
+<div class="stats" id="stats"></div>
+<div class="age-groups" id="ageGroups"></div>
+
+<nav>
+<button class="active" data-view="all">👥 Semua Jemaat</button>
+<button data-view="birthday">🎂 Ulang Tahun</button>
+<button data-view="marriage">💍 Pernikahan</button>
+<button type="button" onclick="window.location.href='perjamuanstats.html'">📊 Statistik Perjamuan</button>
+</nav>
+
+<div class="panel">
+<div class="controls" role="search" onsubmit="return false;">
+<input id="search" placeholder="Cari nama, no registrasi, alamat..." autocomplete="off">
+<select id="lpFilter" aria-label="Filter Lingkungan Pelayanan"><option value="">Semua LP</option></select>
+<button class="action secondary" onclick="resetFilters()">Reset</button>
+<button class="action" onclick="loadAllData()">🔄 Refresh</button>
+</div>
+<div id="status" class="status"></div>
+</div>
+
+<section id="view-all">
+<div class="section-title">Daftar Jemaat</div>
+<div class="table-wrap">
+<table><thead id="thead"></thead><tbody id="tbody"></tbody></table>
+<div id="empty" class="empty hidden">Tidak ada data.</div>
+</div>
+<div id="pagination" class="pagination"></div>
+</section>
+</div>
+
+<!-- EDIT MODAL -->
+<div class="edit-modal" id="editModal">
+  <div class="edit-card">
+    <div class="edit-head">
+      <h2>✏️ Edit Data Jemaat</h2>
+      <button class="edit-close" type="button" onclick="closeEdit()">×</button>
+    </div>
+    <form id="editForm" onsubmit="saveEdit(event)">
+      <input type="hidden" id="editId">
+      <div class="edit-grid" id="editFields"></div>
+      <div class="edit-note">Perubahan akan disimpan langsung ke database Supabase.</div>
+      <div class="edit-success" id="editSuccess"></div>
+      <div class="edit-error" id="editError"></div>
+      <div class="edit-actions">
+        <button type="button" class="edit-cancel" onclick="closeEdit()">Batal</button>
+        <button type="submit" class="edit-save" id="editSaveBtn">💾 Simpan</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+(function(){
+"use strict";
+
+const SUPABASE_URL="https://gpgjgplqsvyexumoljyo.supabase.co";
+const SUPABASE_KEY="sb_publishable_JaVgg3CuVmI9SczGkoaRZQ_EaYoV9z9";
+const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+
+let allData=[];
+let filtered=[];
+let page=1;
+const PER_PAGE=25;
+let currentView="all";
+
+const labels={
+  id:"ID",
+  no_reg:"No. Registrasi",
+  nama:"Nama",
+  jk:"JK",
+  tpt_lhr:"Tempat Lahir",
+  tgl_lhr:"Tanggal Lahir",
+  tpt_nkh:"Tempat Nikah",
+  tgl_nkh:"Tanggal Nikah",
+  alamat:"Alamat",
+  ling_pel:"Lingkungan Pelayanan",
+  status:"Status",
+  no_telp:"No. Telepon"
+};
+
+const $=id=>document.getElementById(id);
+
+function showStatus(msg,type="success"){
+  const el=$("status");
+  el.textContent=msg;
+  el.className="status show "+type;
+}
+
+function esc(v){
+  const d=document.createElement("div");
+  d.textContent=v==null?"":String(v);
+  return d.innerHTML;
+}
+
+function dateObj(v){
+  if(v==null||String(v).trim()==="")return null;
+  let x=String(v).trim();
+  if(x==="0000-00-00"||x==="0000-00-00 00:00:00")return null;
+  let m;
+  if((m=x.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/))) return new Date(Number(m[1]),Number(m[2])-1,Number(m[3]));
+  if((m=x.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/))) return new Date(Number(m[3]),Number(m[2])-1,Number(m[1]));
+  const d=new Date(x);
+  return isNaN(d)?null:d;
+}
+
+function dateToISO(d){
+  if(!d)return "";
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+
+function dateID(v){
+  const d=dateObj(v);
+  return d?d.toLocaleDateString("id-ID",{day:"2-digit",month:"long",year:"numeric"}):"-";
+}
+
+function age(v){
+  const d=dateObj(v);
+  if(!d)return "-";
+  const n=new Date();
+  let a=n.getFullYear()-d.getFullYear();
+  const m=n.getMonth()-d.getMonth();
+  if(m<0||(m===0&&n.getDate()<d.getDate()))a--;
+  return a;
+}
+
+function cleanPhone(phone){
+  if(!phone)return "";
+  let p=String(phone).replace(/\D/g,"");
+  if(p.startsWith("0"))p="62"+p.slice(1);
+  if(!p.startsWith("62"))p="62"+p;
+  return p;
+}
+
+async function loadAllData(){
+  showStatus("Memuat seluruh data jemaat...","loading");
+  allData=[];
+  let from=0,batch=1000;
+  try{
+    while(true){
+      const {data,error}=await db.from("jemaat")
+        .select("*")
+        .order("id",{ascending:true})
+        .range(from,from+batch-1);
+      if(error)throw error;
+      const rows=data||[];
+      allData.push(...rows);
+      showStatus("Memuat data... "+allData.length+" data","loading");
+      if(rows.length<batch)break;
+      from+=batch;
+    }
+    filtered=[...allData];
+    page=1;
+    updateStats();
+    updateLPFilter();
+    renderAll();
+    showStatus("Berhasil memuat "+allData.length.toLocaleString("id-ID")+" data.","success");
+  }catch(e){
+    console.error(e);
+    showStatus("Gagal memuat data: "+e.message,"error");
+  }
+}
+
+function updateLPFilter(){
+  const select=$("lpFilter");
+  const current=select.value;
+  const lps=[...new Set(allData.map(r=>String(r.ling_pel??"").trim()).filter(Boolean))]
+    .sort((a,b)=>a.localeCompare(b,"id"));
+  select.innerHTML='<option value="">Semua LP</option>'+lps.map(lp=>`<option value="${esc(lp)}">${esc(lp)}</option>`).join("");
+  if(lps.includes(current))select.value=current;
+}
+
+function updateStats(sourceData=allData){
+  const data=sourceData||[];
+  const total=data.length;
+  const l=data.filter(x=>String(x.jk||"").toUpperCase()==="L").length;
+  const p=data.filter(x=>String(x.jk||"").toUpperCase()==="P").length;
+  const env=new Set(data.map(x=>String(x.ling_pel||"").trim()).filter(Boolean)).size;
+
+  const ageGroups=[
+    {label:"0-13 TH",min:0,max:13},
+    {label:"14-24 TH",min:14,max:24},
+    {label:"25-59 TH",min:25,max:59},
+    {label:"> 60 TH",min:60,max:Infinity}
+  ];
+
+  const ageCounts=ageGroups.map(g=>data.filter(r=>{
+    const a=age(r.tgl_lhr);
+    return a!=="-" && a>=g.min && a<=g.max;
+  }).length);
+
+  $("stats").innerHTML=
+    `<div class="card"><div class="label">Total Jemaat</div><div class="value">${total}</div></div>
+     <div class="card"><div class="label">Laki-laki</div><div class="value">${l}</div></div>
+     <div class="card"><div class="label">Perempuan</div><div class="value">${p}</div></div>
+     <div class="card"><div class="label">Lingkungan</div><div class="value">${env}</div></div>`;
+
+  $("ageGroups").innerHTML=ageGroups.map((g,i)=>
+    `<div class="age-card"><div class="age-label">${g.label}</div><div class="age-value">${ageCounts[i]} jiwa</div></div>`
+  ).join("");
+}
+
+function applyFilters(){
+  const q=$("search").value.toLowerCase().trim();
+  const lp=$("lpFilter").value;
+
+  filtered=allData.filter(row=>{
+    const okQ=!q||Object.values(row).some(v=>String(v??"").toLowerCase().includes(q));
+    const okLP=!lp||String(row.ling_pel??"").trim()===lp;
+    return okQ&&okLP;
+  });
+
+  page=1;
+  updateStats(filtered);
+  renderAll();
+}
+
+function getFamilyPhone(members){
+  const phoneMember = members.find(r =>
+    String(r.no_telp ?? "").trim() !== ""
+  );
+  return phoneMember ? String(phoneMember.no_telp).trim() : "";
+}
+
+function renderAll(){
+  const familyKey=r=>String(r.no_reg??"").trim()||"Belum ada nomor registrasi";
+  
+  const map=new Map();
+  filtered.forEach(r=>{
+    const k=familyKey(r);
+    if(!map.has(k)){
+      map.set(k,[]);
+    }
+    map.get(k).push(r);
+  });
+
+  const familyGroups=[...map.values()];
+  
+  if(familyGroups.length===0){
+    $("empty").classList.remove("hidden");
+    $("tbody").innerHTML="";
+    $("pagination").innerHTML="";
+    return;
+  }
+  $("empty").classList.add("hidden");
+
+  const displayHeaders=["no_reg","nama","jk","tpt_lhr","tgl_lhr","tpt_nkh","tgl_nkh","alamat","ling_pel","status","no_telp"];
+  const headers=[...displayHeaders,"id"];
+
+  const pages=[];
+  let current=[];
+  let count=0;
+
+  familyGroups.forEach(group=>{
+    if(current.length && count+group.length>PER_PAGE){
+      pages.push(current);
+      current=[];
+      count=0;
+    }
+    current.push(group);
+    count+=group.length;
+  });
+  if(current.length)pages.push(current);
+
+  const totalPages=pages.length;
+  if(page>totalPages)page=totalPages;
+
+  const groupsForPage=pages[page-1]||[];
+  let htmlRows="";
+
+  groupsForPage.forEach(members=>{
+    const family=familyKey(members[0]);
+    const kepalaKeluarga=members.find(r=>String(r.status??"").trim().toUpperCase()==="KK");
+    const namaKepalaKeluarga=kepalaKeluarga ? String(kepalaKeluarga.nama??"").trim() : "";
+    const phone=getFamilyPhone(members);
+    const phoneClean=cleanPhone(phone);
+    const addressMember=members.find(r=>String(r.alamat??"").trim()!=="");
+    const familyAddress=addressMember ? String(addressMember.alamat).trim() : "";
+
+    let phoneHtml="";
+    if(phone){
+      phoneHtml=`
+        <div class="family-phone">
+          <a href="tel:${esc(phoneClean)}" class="phone-btn"><i class="fa-solid fa-phone"></i></a>
+          <a href="https://wa.me/${esc(phoneClean)}" target="_blank" rel="noopener" class="wa-btn"><i class="fa-brands fa-whatsapp"></i></a>
+        </div>`;
+    }
+
+    htmlRows+=`
+      <tr class="family-row">
+        <td colspan="${displayHeaders.length+1}">
+          <div class="family-header">
+            <div>
+              <strong>👨‍👩‍👧‍👦 Keluarga${namaKepalaKeluarga?` (${esc(namaKepalaKeluarga)})`:" "} / No. Registrasi: ${esc(family)}</strong>
+              <span class="badge">Anggota: ${members.length}</span>
+            </div>
+            ${phoneHtml}
+            ${familyAddress?`<div class="family-address">📍 ${esc(familyAddress)}</div>`:""}
+          </div>
+        </td>
+      </tr>`;
+
+    members.forEach(r=>{
+      htmlRows+=`
+        <tr class="member-row">
+          ${displayHeaders.map(h=>{
+            const v=r[h];
+            const empty=v==null || String(v).trim()==="" || v==="0000-00-00";
+            const label=labels[h]||h;
+            const display=empty ? "-" : (h.includes("tgl_") ? dateID(v) : v);
+            return `<td data-label="${esc(label)}"${empty?' class="empty-cell"':''}>${esc(display)}</td>`;
+          }).join("")}
+          <td data-label="AKSI"><button class="edit-btn" type="button" onclick="openEditById(${JSON.stringify(r.id)})">✏️ Edit</button></td>
+        </tr>`;
+    });
+  });
+
+  $("tbody").innerHTML=htmlRows;
+  renderPagination(totalPages);
+}
+
+function renderPagination(total){
+  let html="";
+  if(total<=1){
+    $("pagination").innerHTML="";
+    return;
+  }
+  html+=`<button onclick="gotoPage(1)">«</button><button onclick="gotoPage(${Math.max(1,page-1)})">‹</button>`;
+  let s=Math.max(1,page-2),e=Math.min(total,page+2);
+  for(let i=s;i<=e;i++)html+=`<button class="${i===page?"active":""}" onclick="gotoPage(${i})">${i}</button>`;
+  html+=`<button onclick="gotoPage(${Math.min(total,page+1)})">›</button><button onclick="gotoPage(${total})">»</button>`;
+  $("pagination").innerHTML=html;
+}
+
+window.gotoPage=function(n){
+  const familyKey=r=>String(r.no_reg??"").trim()||"Belum ada nomor registrasi";
+  const groups=[];
+  const map=new Map();
+
+  filtered.forEach(r=>{
+    const key=familyKey(r);
+    if(!map.has(key)){
+      const group=[];
+      map.set(key,group);
+      groups.push(group);
+    }
+    map.get(key).push(r);
+  });
+
+  let total=0;
+  let count=0;
+
+  groups.forEach(group=>{
+    if(count>0 && count+group.length>PER_PAGE){
+      total++;
+      count=0;
+    }
+    count+=group.length;
+  });
+  if(count>0)total++;
+
+  if(n<1||n>total)return;
+  page=n;
+  renderAll();
+  window.scrollTo({top:0,behavior:"smooth"});
+};
+
+function switchView(view){
+  currentView=view;
+  document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("active",b.dataset.view===view));
+  ["all"].forEach(v=>$("view-"+v).classList.toggle("hidden",v!==view));
+  $("search").closest(".panel").classList.toggle("view-special-hidden",view!=="all");
+  if(view==="all")applyFilters();
+}
+
+document.querySelectorAll("nav button").forEach(b=>b.addEventListener("click",()=>switchView(b.dataset.view)));
+$("search").addEventListener("input",applyFilters);
+$("lpFilter").addEventListener("change",applyFilters);
+
+window.resetFilters=function(){
+  $("search").value="";
+  $("lpFilter").value="";
+  applyFilters();
+};
+
+window.loadAllData=loadAllData;
+
+// EDIT FUNCTIONALITY
+const editFields=[
+  ['no_reg','No. Registrasi','text'],
+  ['nama','Nama','text'],
+  ['jk','JK','text'],
+  ['tpt_lhr','Tempat Lahir','text'],
+  ['tgl_lhr','Tanggal Lahir','date'],
+  ['tpt_nkh','Tempat Nikah','text'],
+  ['tgl_nkh','Tanggal Nikah','date'],
+  ['alamat','Alamat','text'],
+  ['ling_pel','Lingkungan Pelayanan','text'],
+  ['status','Status','text'],
+  ['no_telp','No. Telepon','text']
+];
+
+window.openEditById=function(id){
+  const row=allData.find(r=>String(r.id)===String(id));
+  if(!row){
+    console.error("Data tidak ditemukan");
+    return;
+  }
+
+  $("editId").value=row.id;
+  $("editError").classList.remove('show');
+  $("editSuccess").classList.remove('show');
+
+  $("editFields").innerHTML=editFields.map(([k,l,t])=>{
+    let v=row[k]??'';
+    if(t==='date'){
+      const d=dateObj(v);
+      v=d?dateToISO(d):'';
+    }
+    return `<div class="edit-field">
+      <label for="edit_${k}">${esc(l)}</label>
+      <input id="edit_${k}" type="${t}" value="${esc(v)}">
+    </div>`;
+  }).join('');
+
+  $("editModal").classList.add('show');
+};
+
+window.closeEdit=function(){
+  $("editModal").classList.remove('show');
+};
+
+window.saveEdit=async function(e){
+  e.preventDefault();
+  
+  const id=$("editId").value;
+  const btn=$("editSaveBtn");
+  const errorEl=$("editError");
+  const successEl=$("editSuccess");
+
+  if(!id){
+    errorEl.textContent='ID data tidak valid';
+    errorEl.classList.add('show');
+    return false;
+  }
+
+  const payload={};
+  editFields.forEach(([k,_,t])=>{
+    let val=$("edit_"+k).value.trim()||null;
+    
+    // Handle date conversion
+    if(t==='date' && val){
+      const d=dateObj(val);
+      if(d){
+        val=dateToISO(d);
+      }
+    }
+    
+    payload[k]=val;
+  });
+
+  btn.disabled=true;
+  btn.textContent='⏳ Menyimpan...';
+  errorEl.classList.remove('show');
+  successEl.classList.remove('show');
+
+  try{
+    console.log("Saving payload:", payload);
+    
+    const {data, error}=await db.from('jemaat')
+      .update(payload)
+      .eq('id',id)
+      .select();
+    
+    if(error){
+      console.error("Supabase error:", error);
+      throw new Error(error.message || 'Gagal menyimpan data');
+    }
+
+    successEl.textContent='✓ Data berhasil disimpan ke Supabase!';
+    successEl.classList.add('show');
+    
+    console.log("Update berhasil:", data);
+    
+    setTimeout(() => {
+      closeEdit();
+      loadAllData();
+    }, 1500);
+
+  }catch(x){
+    console.error("Error:", x);
+    errorEl.textContent='❌ Gagal menyimpan: '+(x?.message||String(x));
+    errorEl.classList.add('show');
+  }finally{
+    btn.disabled=false;
+    btn.textContent='💾 Simpan';
+  }
+
+  return false;
+};
+
+// Close modal when clicking outside
+$("editModal").addEventListener('click',e=>{
+  if(e.target===$("editModal"))closeEdit();
+});
+
+// Load data saat halaman dimuat
+loadAllData();
+
+})();
+</script>
+
+</body>
+</html>
