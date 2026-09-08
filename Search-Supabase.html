@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aplikasi Data Jemaat - Supabase</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 10px; }
+        .container { max-width: 900px; margin: 0 auto; }
+        header { background: white; padding: 20px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        h1 { color: #333; margin-bottom: 15px; font-size: 24px; }
+        .search-container { display: grid; grid-template-columns: 1fr auto; gap: 12px; margin-bottom: 12px; }
+        @media (max-width: 768px) { .search-container { grid-template-columns: 1fr; } }
+        input { padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 14px; font-family: inherit; }
+        input:focus { outline: none; border-color: #667eea; }
+        .button-group { display: flex; gap: 10px; flex-wrap: wrap; }
+        button { padding: 12px 20px; border: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; }
+        .btn-primary { background: #667eea; color: white; } .btn-primary:hover { background: #5568d3; }
+        .btn-secondary { background: #f0f0f0; color: #333; }
+        .status-info { font-size: 12px; color: #666; margin-top: 8px; }
+        .results { display: grid; gap: 12px; margin-top: 20px; }
+        .result-card { background: white; border-radius: 10px; padding: 16px 18px; box-shadow: 0 2px 4px rgba(0,0,0,0.08); display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+        .result-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.12); }
+        .result-name { font-weight: 700; color: #333; font-size: 15px; }
+        .result-sub { font-size: 12px; color: #777; margin-top: 3px; }
+        .btn-small { padding: 8px 14px; font-size: 12px; border-radius: 6px; white-space: nowrap; cursor: pointer; border: none; font-weight: 600; }
+        .btn-detail { background: #e0e7ff; color: #4f46e5; }
+        .no-results, .empty-state { text-align: center; padding: 40px 20px; background: white; border-radius: 12px; color: #999; }
+        .no-results-icon, .empty-state-icon { font-size: 42px; margin-bottom: 12px; }
+        .modal { display: none; position: fixed; top:0; left:0; right:0; bottom:0; background: rgba(0,0,0,0.5); z-index:1000; padding:16px; }
+        .modal.active { display:flex; align-items:center; justify-content:center; }
+        .modal-content { background: white; border-radius:12px; padding:20px; max-width:700px; width:100%; max-height:90vh; overflow-y:auto; }
+        .modal-header { font-size:16px; font-weight:700; margin-bottom:14px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #eee; padding-bottom:10px; }
+        .modal-close { background:none; border:none; font-size:24px; cursor:pointer; color:#999; }
+        .family-info-box { background:#f5f3ff; border:1px solid #ddd6fe; border-radius:8px; padding:12px; font-size:13px; margin-bottom:16px; line-height:1.5; }
+        .member-section { border:1px solid #e5e7eb; border-radius:10px; padding:14px; margin-bottom:14px; background:#fafafa; }
+        .member-title { display:flex; align-items:center; gap:10px; margin-bottom:10px; padding-bottom:8px; border-bottom:1px solid #eee; }
+        .member-name { font-weight:700; color:#222; font-size:14px; }
+        .badge { font-size:10px; background:#fef3c7; color:#92400e; padding:2px 6px; border-radius:10px; margin-left:6px; border:1px solid #fde68a; }
+        .detail-grid { display:grid; grid-template-columns:110px 1fr; gap:6px 10px; font-size:12.5px; }
+        .detail-label { color:#6b7280; font-weight:600; } .detail-value { color:#111827; word-break:break-word; }
+        .error-section { background:#fffbeb; border:1px solid #fde68a; border-radius:8px; padding:12px; margin-top:16px; }
+        textarea { width:100%; min-height:70px; padding:10px; border:1.5px solid #e5e7eb; border-radius:8px; font-family:inherit; font-size:13px; }
+        .loading { text-align:center; padding:20px; color:white; font-weight:600; }
+    </style>
+</head>
+<body>
+<div class="container">
+<header>
+<h1>📖 Data Jemaat - Supabase</h1>
+<div class="search-container">
+<input type="text" id="searchNama" placeholder="Ketik nama jemaat, lalu tekan Cari..." />
+<div class="button-group">
+<button class="btn-primary" id="btnCari" onclick="handleSearch()">🔍 Cari</button>
+<button class="btn-secondary" onclick="handleReset()">↻ Reset</button>
+</div>
+</div>
+<div id="statusInfo" class="status-info">Menghubungkan ke Supabase...</div>
+</header>
+<div class="results" id="results">
+<div class="empty-state"><div class="empty-state-icon">🔍</div><p><b>Silakan ketik nama dan tekan tombol Cari</b><br><span style="font-size:12px">Data tidak akan tampil sebelum pencarian</span></p></div>
+</div>
+</div>
+<div class="modal" id="detailModal">
+<div class="modal-content">
+<div class="modal-header"><span id="modalTitle">Detail Keluarga</span><button class="modal-close" onclick="closeDetailModal()">×</button></div>
+<div id="detailContent"></div>
+<div class="error-section"><div style="font-size:13px; font-weight:600; margin-bottom:6px;">📝 Lapor Kesalahan Data</div><textarea id="errorMessage" placeholder="Tuliskan kesalahan data di keluarga ini..."></textarea><button class="btn-primary btn-small" style="width:100%; margin-top:8px; background:#25D366;" onclick="reportViaWhatsApp()">📱 Lapor via WhatsApp</button></div>
+</div>
+</div>
+<script>
+const SUPABASE_URL = "https://gpgjgplqsvyexumoljyo.supabase.co";
+const SUPABASE_KEY = "sb_publishable_JaVgg3CuVmI9SczGkoaRZQ_EaYoV9z9";
+const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+let TABLE_NAME = "jemaat";
+async function detectTable() {
+    const candidates = ["jemaat", "jemaat_rows", "jemaat_data", "jemaat_rows_csv"];
+    for (let t of candidates) {
+        const { data, error } = await db.from(t).select("id").limit(1);
+        if (!error) {
+            TABLE_NAME = t;
+            document.getElementById('statusInfo').textContent = `Terhubung ke tabel: ${TABLE_NAME}. Silakan cari nama.`;
+            return t;
+        }
+    }
+    document.getElementById('statusInfo').textContent = `Gagal deteksi tabel. Pastikan tabel ada dan RLS aktif.`;
+    return null;
+}
+function showInitialState(){
+ document.getElementById('results').innerHTML=`<div class="empty-state"><div class="empty-state-icon">🔍</div><p><b>Silakan ketik nama dan tekan tombol Cari</b><br><span style="font-size:12px">Data tidak akan tampil sebelum pencarian</span></p></div>`;
+}
+async function handleSearch(){
+ const term = document.getElementById('searchNama').value.trim();
+ if(!term){ showInitialState(); return; }
+ const btn = document.getElementById('btnCari');
+ btn.textContent = '⏳ Mencari...'; btn.disabled = true;
+ document.getElementById('results').innerHTML = `<div class="loading">Mencari "${term}" di Supabase...</div>`;
+ try {
+   const { data: matched, error } = await db.from(TABLE_NAME).select("*").ilike("nama", `%${term}%`).limit(100).order("nama", { ascending: true });
+   if (error) throw error;
+   if (!matched || matched.length === 0) {
+     document.getElementById('results').innerHTML = `<div class="no-results"><div class="no-results-icon">😕</div><p>Tidak ada nama yang mengandung "<b>${term}</b>"</p></div>`;
+     document.getElementById('statusInfo').textContent = `Tidak ada hasil untuk "${term}"`;
+     return;
+   }
+   let html = `<div style="font-size:12px; color:#fff; margin-bottom:8px; background: rgba(0,0,0,0.3); padding:6px 10px; border-radius:6px; display:inline-block;">Ditemukan ${matched.length} nama mengandung "${term}" - klik Detail untuk lihat 1 keluarga utuh (no_reg sama)</div>`;
+   matched.forEach(row => {
+     const safeNoReg = (row.no_reg || '').replace(/'/g, "\\'");
+     const safeNama = (row.nama || '').replace(/</g, "&lt;");
+     html += `<div class="result-card"><div><div class="result-name">${safeNama}</div><div class="result-sub">No Reg: ${row.no_reg || '-'} • Status: ${row.status || '-'} • Sektor: ${row.ling_pel || '-'}</div></div><button class="btn-small btn-detail" onclick="showDetailModal('${safeNoReg}')">👁️ Detail Keluarga</button></div>`;
+   });
+   document.getElementById('results').innerHTML = html;
+   document.getElementById('statusInfo').textContent = `${matched.length} hasil untuk "${term}"`;
+ } catch (err) {
+   document.getElementById('results').innerHTML = `<div class="no-results" style="color:#b91c1c; background:#fef2f2; border:1px solid #fecaca;">Error Supabase: ${err.message}<br><small>Cek nama tabel (${TABLE_NAME}) dan policy RLS</small></div>`;
+   document.getElementById('statusInfo').textContent = `Error: ${err.message}`;
+ } finally {
+   btn.textContent = '🔍 Cari'; btn.disabled = false;
+ }
+}
+function handleReset(){ document.getElementById('searchNama').value=''; showInitialState(); }
+async function showDetailModal(noReg){
+ if(!noReg) return;
+ document.getElementById('modalTitle').textContent = `Memuat keluarga ${noReg}...`;
+ document.getElementById('detailContent').innerHTML = `<div style="text-align:center; padding:20px;">⏳ Mengambil data keluarga...</div>`;
+ document.getElementById('detailModal').classList.add('active');
+ try {
+   const { data: members, error } = await db.from(TABLE_NAME).select("*").eq("no_reg", noReg).order("status", { ascending: true });
+   if (error) throw error;
+   if (!members || members.length === 0) throw new Error("Keluarga tidak ditemukan: " + noReg);
+   let kk = members.find(m => (m.status||'').toUpperCase() === 'KK') || members[0];
+   document.getElementById('modalTitle').textContent = `Detail Keluarga - ${noReg} (${members.length} anggota)`;
+   let html = `<div class="family-info-box"><b>No Registrasi:</b> ${noReg}<br><b>Kepala Keluarga:</b> ${kk.nama}<br><b>Jumlah Anggota:</b> ${members.length} orang</div>`;
+   const order = {'KK':0,'IST':1,'AK':2,'ANK':3,'KPNK':4};
+   members.sort((a,b) => (order[(a.status||'').toUpperCase()]??9) - (order[(b.status||'').toUpperCase()]??9));
+   members.forEach(mem => {
+     const isKK = mem.nama === kk.nama;
+     html += `<div class="member-section"><div class="member-title"><div class="member-name">${mem.nama} ${isKK?'<span class="badge">Kepala Keluarga</span>':`<span class="badge">${mem.status||''}</span>`}</div></div><div class="detail-grid"><div class="detail-label">ID</div><div class="detail-value">${mem.id ?? '-'}</div><div class="detail-label">No Reg</div><div class="detail-value">${mem.no_reg ?? '-'}</div><div class="detail-label">Nama Lengkap</div><div class="detail-value"><b>${mem.nama ?? '-'}</b></div><div class="detail-label">JK</div><div class="detail-value">${mem.jk === 'L' ? 'Laki-laki' : mem.jk === 'P' ? 'Perempuan' : mem.jk ?? '-'}</div><div class="detail-label">Tempat Lahir</div><div class="detail-value">${mem.tpt_lhr ?? '-'}</div><div class="detail-label">Tanggal Lahir</div><div class="detail-value">${mem.tgl_lhr ?? '-'}</div><div class="detail-label">Tempat Nikah</div><div class="detail-value">${mem.tpt_nkh ?? '-'}</div><div class="detail-label">Tanggal Nikah</div><div class="detail-value">${mem.tgl_nkh ?? '-'}</div><div class="detail-label">Alamat</div><div class="detail-value">${mem.alamat ?? '-'}</div><div class="detail-label">Lingk. Pelayanan</div><div class="detail-value">${mem.ling_pel ?? '-'}</div><div class="detail-label">Status</div><div class="detail-value">${mem.status ?? '-'}</div><div class="detail-label">No Telepon</div><div class="detail-value">${mem.no_telp ?? '-'}</div></div></div>`;
+   });
+   document.getElementById('detailContent').innerHTML = html;
+   document.getElementById('errorMessage').dataset.noReg = noReg;
+   document.getElementById('errorMessage').dataset.kk = kk.nama;
+ } catch (err) {
+   document.getElementById('detailContent').innerHTML = `<div style="color:#b91c1c; background:#fef2f2; padding:12px; border-radius:8px;">Gagal load keluarga: ${err.message}</div>`;
+ }
+}
+function closeDetailModal(){ document.getElementById('detailModal').classList.remove('active'); document.getElementById('errorMessage').value=''; }
+function reportViaWhatsApp(){
+ const msg=document.getElementById('errorMessage').value.trim();
+ const noReg=document.getElementById('errorMessage').dataset.noReg;
+ const kk=document.getElementById('errorMessage').dataset.kk;
+ if(!msg){ alert('Tuliskan kesalahan dulu'); return; }
+ const admin='6281234567890';
+ const text=encodeURIComponent(`🔔 Laporan Kesalahan Data Jemaat\n\n👤 KK: ${kk}\n🆔 No Reg: ${noReg}\n\n📝 Kesalahan:\n${msg}`);
+ window.open(`https://wa.me/${admin}?text=${text}`,'_blank');
+ closeDetailModal();
+}
+document.getElementById('searchNama').addEventListener('keydown', e=>{ if(e.key==='Enter') handleSearch(); });
+document.getElementById('detailModal').addEventListener('click', e=>{ if(e.target.id==='detailModal') closeDetailModal(); });
+window.addEventListener('DOMContentLoaded', detectTable);
+</script>
+</body>
+</html>
