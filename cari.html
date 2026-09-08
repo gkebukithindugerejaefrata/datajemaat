@@ -198,7 +198,7 @@ async function handleSearch(){
    matched.forEach(row => {
      const safeNoReg = (row.no_reg || '').replace(/'/g, "\\'");
      const safeNama = (row.nama || '').replace(/</g, "&lt;");
-     html += `<div class="result-card"><div><div class="result-name">${safeNama}</div><div class="result-sub">No Reg: ${row.no_reg || '-'} • Status: ${row.status || '-'} • Sektor: ${row.ling_pel || '-'}</div></div><button class="btn-small btn-detail" onclick="showDetailModal('${safeNoReg}')">👁️ Detail Keluarga</button></div>`;
+     html += `<div class="result-card"><div><div class="result-name">${safeNama}</div><div class="result-sub">No Reg: ${row.no_reg || '-'} • Status: ${row.status || '-'} • LP: ${row.ling_pel || '-'}</div></div><button class="btn-small btn-detail" onclick="showDetailModal('${safeNoReg}')">👁️ Detail Keluarga</button></div>`;
    });
    document.getElementById('results').innerHTML = html;
    document.getElementById('statusInfo').textContent = `${matched.length} hasil untuk "${term}"`;
