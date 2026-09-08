@@ -3,16 +3,99 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aplikasi Data Jemaat - Supabase</title>
+    <title>DATA JEMAAT GKE BUKIT HINDU</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 10px; }
         .container { max-width: 900px; margin: 0 auto; }
-        header { background: white; padding: 20px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        h1 { color: #333; margin-bottom: 15px; font-size: 24px; }
-        .search-container { display: grid; grid-template-columns: 1fr auto; gap: 12px; margin-bottom: 12px; }
-        @media (max-width: 768px) { .search-container { grid-template-columns: 1fr; } }
+        header.hero-header {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            position: relative;
+            padding: 0;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+        .hero-image-wrap {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 2/1;
+            overflow: hidden;
+            background: #e5e7eb;
+            flex-shrink: 0;
+        }
+        .hero-image-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center 35%;
+            display: block;
+        }
+        .hero-image-wrap::after {
+            content: '';
+            position: absolute;
+            left: 0; right: 0; bottom: 0;
+            height: 55%;
+            background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,0.55) 45%, rgba(255,255,255,0.95) 78%, white 100%);
+            pointer-events: none;
+        }
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            padding: 16px 20px 18px 20px;
+            background: white;
+            margin-top: -12px;
+        }
+        .hero-title {
+            color: #111827;
+            font-size: 26px;
+            font-weight: 900;
+            letter-spacing: 0.6px;
+            line-height: 1.15;
+            margin-bottom: 3px;
+            text-transform: uppercase;
+        }
+        .hero-subtitle {
+            color: #6b7280;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1.4px;
+            margin-bottom: 14px;
+            text-transform: uppercase;
+        }
+        .search-container { display: grid; grid-template-columns: 1fr auto; gap: 12px; margin-bottom: 10px; }
+        @media (max-width: 768px) {
+            .search-container { grid-template-columns: 1fr; }
+            header.hero-header { border-radius: 12px; }
+            .hero-image-wrap {
+                aspect-ratio: 16/9;
+                max-height: 220px;
+            }
+            .hero-image-wrap img {
+                object-position: center 30%;
+            }
+            .hero-title { font-size: 20px; line-height: 1.2; }
+            .hero-subtitle { font-size: 10px; margin-bottom: 10px; }
+            .hero-content { padding: 14px 14px 14px 14px; margin-top: -10px; }
+            .result-card { flex-direction: column; align-items: stretch; padding: 14px; }
+            .result-card .btn-detail { width: 100%; text-align: center; }
+            input { font-size: 16px; }
+            .search-container { gap: 10px; }
+        }
+        @media (max-width: 480px) {
+            .hero-image-wrap {
+                aspect-ratio: 16/10;
+                max-height: 200px;
+            }
+            .hero-title { font-size: 18px; }
+            .hero-subtitle { font-size: 9px; letter-spacing: 1px; }
+            body { padding: 8px; }
+            .hero-content { padding: 12px 12px 12px 12px; }
+        }
         input { padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 14px; font-family: inherit; }
         input:focus { outline: none; border-color: #667eea; }
         .button-group { display: flex; gap: 10px; flex-wrap: wrap; }
@@ -48,8 +131,13 @@
 </head>
 <body>
 <div class="container">
-<header>
-<h1>📖 Data Jemaat - Supabase</h1>
+<header class="hero-header">
+<div class="hero-image-wrap">
+<img src="efrata.jpg" alt="GKE Bukit Hindu" loading="eager" onerror="this.style.display='none'">
+</div>
+<div class="hero-content">
+<div class="hero-title">DATA JEMAAT GKE BUKIT HINDU</div>
+<div class="hero-subtitle">Gereja Kalimantan Evangelis • Palangka Raya</div>
 <div class="search-container">
 <input type="text" id="searchNama" placeholder="Ketik nama jemaat, lalu tekan Cari..." />
 <div class="button-group">
@@ -58,6 +146,7 @@
 </div>
 </div>
 <div id="statusInfo" class="status-info">Menghubungkan ke Supabase...</div>
+</div>
 </header>
 <div class="results" id="results">
 <div class="empty-state"><div class="empty-state-icon">🔍</div><p><b>Silakan ketik nama dan tekan tombol Cari</b><br><span style="font-size:12px">Data tidak akan tampil sebelum pencarian</span></p></div>
