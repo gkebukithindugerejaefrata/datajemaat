@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Data Jemaat GKE Bukit Hindu</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;background:#f3f6fa;color:#263238;padding:14px}
+.container{max-width:1400px;margin:auto}
+header,.panel,.card,.table-wrap{background:#fff;border-radius:14px;box-shadow:0 3px 15px #00000012}
+header{padding:20px;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center}
+h1{font-size:25px;color:#17324d}
+.subtitle{color:#78909c;font-size:13px;margin-top:5px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:14px}
+.card{padding:16px;text-align:center}
+.card .label{font-size:12px;color:#78909c;text-transform:uppercase}
+.card .value{font-size:26px;font-weight:800;color:#1976d2;margin-top:4px}
+nav{display:flex;gap:8px;overflow:auto;margin-bottom:14px;flex-wrap:wrap}
+nav button{border:0;background:#e8eef5;color:#34495e;padding:11px 16px;border-radius:10px;cursor:pointer;white-space:nowrap;font-weight:600;font-size:14px}
+nav button.active{background:#1976d2;color:#fff}
+.panel{padding:16px;margin-bottom:14px}
+.controls{display:flex;gap:10px;flex-wrap:wrap}
+input,select{padding:11px 13px;border:1px solid #ccd6df;border-radius:9px;font-size:14px;background:#fff}
+input{flex:1;min-width:220px}
+button.action{padding:11px 15px;border:0;border-radius:9px;background:#1976d2;color:white;cursor:pointer;font-weight:600}
+button.action.secondary{background:#607d8b}
+.logout-btn{background:#dc3545;padding:10px 15px;border:0;border-radius:9px;color:white;cursor:pointer;font-weight:600}
+.logout-btn:hover{background:#c82333}
+.status{margin:10px 0;padding:10px;border-radius:8px;font-size:13px;display:none}
+.status.show{display:block}.status.loading{background:#e3f2fd;color:#1565c0}.status.error{background:#ffebee;color:#c62828}.status.success{background:#e8f5e9;color:#2e7d32}
+.table-wrap{overflow:auto}
+table{width:100%;border-collapse:collapse;min-width:850px}
+th,td{padding:11px 12px;border-bottom:1px solid #e8edf1;text-align:left;font-size:13px}
+th{background:#f7f9fb;color:#455a64;position:sticky;top:0;z-index:2}
+tr:hover td{background:#f8fbff}
+.family-row td{background:#eaf3ff!important;color:#174a7a;font-size:13px;border-top:2px solid #c9def3}
+.family-row .badge{float:right}
+.empty{text-align:center;padding:40px;color:#90a4ae}
+.pagination{display:flex;justify-content:center;gap:6px;flex-wrap:wrap;margin-top:12px}
+.pagination button{border:0;padding:8px 11px;border-radius:7px;background:#e4eaf0;cursor:pointer}
+.pagination button.active{background:#1976d2;color:#fff}
+.family-header{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+.family-phone{display:flex;align-items:center;gap:7px;flex-wrap:wrap;color:#455a64}
+.phone-btn,.wa-btn{display:inline-flex;align-items:center;justify-content:center;padding:6px 10px;border-radius:8px;text-decoration:none;font-size:12px;font-weight:700;transition:.2s}
+.phone-btn{background:#eaf4ff;color:#1565c0;border:1px solid #c9e1f5}
+.wa-btn{background:#edf9f1;color:#218838;border:1px solid #ccebd5}
+.phone-btn:hover,.wa-btn:hover{transform:translateY(-1px);box-shadow:0 3px 8px rgba(0,0,0,.08)}
+.family-address{font-size:12px;color:#546e7a}
+.age-groups{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:14px}
+.age-card{background:#fff;border-radius:12px;padding:9px 12px;box-shadow:0 3px 15px #00000012;border-left:4px solid #90caf9}
+.age-card:nth-child(2){border-left-color:#7e57c2}
+.age-card:nth-child(3){border-left-color:#ff8a00}
+.age-card:nth-child(4){border-left-color:#20c997}
+.age-card .age-label{font-size:11px;color:#607d8b;text-transform:uppercase}
+.age-card .age-value{font-size:16px;font-weight:800;color:#263238;margin-top:3px}
+
+.celebration-table-wrap{position:relative;overflow:auto;background:linear-gradient(145deg,#ffffff,#f7fbff);border:1px solid #dbe7f1;border-radius:16px;box-shadow:0 8px 24px rgba(23,50,77,.08)}
+.celebration-table{width:100%;border-collapse:separate;border-spacing:0;min-width:720px;background:transparent}
+.celebration-table th{padding:13px 14px;border:0;border-bottom:2px solid #d9e6f0;background:linear-gradient(180deg,#f8fbfe,#eef5fa);color:#35566f;font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;text-align:center}
+.celebration-table th:first-child{border-top-left-radius:15px}
+.celebration-table th:last-child{border-top-right-radius:15px}
+.celebration-table td{padding:13px 14px;border:0;border-bottom:1px solid #e7eef4;background:rgba(255,255,255,.86);color:#263238;font-size:13px;transition:background .18s ease}
+.celebration-table tbody tr:last-child td{border-bottom:0}
+.celebration-table tbody tr:hover td{background:#f3f9ff;box-shadow:inset 0 1px 0 #dcecf8}
+.celebration-table tbody tr td:first-child{font-weight:700;color:#17324d}
+.celebration-table tbody tr td:nth-child(2){font-weight:800;color:#1976d2}
+.celebration-table tbody tr td:nth-child(3){font-weight:900;color:#1565c0;font-size:15px}
+.celebration-heading{display:flex;align-items:center;gap:9px;margin:6px 0 10px;padding:11px 14px;border-radius:12px;background:linear-gradient(135deg,#eef7ff,#f9fcff);border:1px solid #dbeaf5;box-shadow:0 4px 12px rgba(25,118,210,.06);color:#17324d;font-size:15px;font-weight:800}
+
+.hidden{display:none}
+.view-special-hidden{display:none!important}
+.section-title{font-size:18px;font-weight:750;margin-bottom:12px;color:#17324d}
+.birthday-wa-btn{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;background:#25d366;color:white;border:none;border-radius:8px;font-size:12px;font-weight:700;text-decoration:none;cursor:pointer;transition:all 0.2s;margin-top:6px}
+.birthday-wa-btn:hover{background:#1eaa50;transform:translateY(-1px);box-shadow:0 3px 8px rgba(0,0,0,.15)}
+
+#statsScope{margin:-4px 0 10px;padding:7px 11px;border-radius:9px;background:#f3f8fc;border:1px solid #dce9f2;color:#557080;font-size:12px;font-weight:600}
+
+.edit-btn{padding:7px 10px;border:0;border-radius:7px;background:#1976d2;color:#fff;cursor:pointer;font-weight:700;font-size:12px;transition:all 0.2s}
+.edit-btn:hover{background:#1565c0;transform:translateY(-1px)}
+.edit-modal{position:fixed;inset:0;background:#0008;display:none;align-items:center;justify-content:center;padding:16px;z-index:20000}
+.edit-modal.show{display:flex}
+.edit-card{width:min(760px,100%);max-height:92vh;overflow:auto;background:#fff;border-radius:16px;padding:20px;box-shadow:0 20px 60px #0005}
+.edit-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.edit-head h2{font-size:20px;color:#17324d}
+.edit-close{border:0;background:#eef2f7;width:36px;height:36px;border-radius:50%;font-size:20px;cursor:pointer;transition:all 0.2s}
+.edit-close:hover{background:#dfe7f1}
+.edit-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.edit-field{display:flex;flex-direction:column}
+.edit-field label{font-size:11px;font-weight:800;color:#546e7a;margin-bottom:4px}
+.edit-field input{width:100%;padding:10px;border:1px solid #ccd6df;border-radius:9px;font-size:13px;font-family:inherit}
+.edit-field input:focus{outline:none;border-color:#1976d2;box-shadow:0 0 0 3px #1976d214}
+.edit-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:16px}
+.edit-actions button{padding:10px 15px;border:0;border-radius:9px;cursor:pointer;font-weight:700;transition:all 0.2s}
+.edit-cancel{background:#e8eef5;color:#34495e}
+.edit-cancel:hover{background:#dae3ed}
+.edit-save{background:#1976d2;color:#fff}
+.edit-save:hover:not(:disabled){background:#1565c0;transform:translateY(-1px)}
+.edit-save:disabled{opacity:0.6;cursor:not-allowed}
+.edit-note{font-size:11px;color:#78909c;margin-top:8px}
+.edit-error,.edit-success{margin-top:10px;padding:9px;border-radius:8px;font-size:12px;display:none;border-left:3px solid}
+.edit-error{background:#ffebee;color:#c62828;border-left-color:#c62828}
+.edit-success{background:#e8f5e9;color:#2e7d32;border-left-color:#2e7d32}
+.edit-error.show,.edit-success.show{display:block}
+
+/* LOGIN STYLES */
+.login-overlay{position:fixed;inset:0;background:#c6c6c6c7;display:flex;align-items:center;justify-content:center;z-index:10000;padding:16px;backdrop-filter:blur(10px)}
+.login-overlay.hidden{display:none}
+.login-card{background:linear-gradient(135deg,#eef7ff,#f9fcff);border:1px solid #dbeaf5;border-radius:20px;padding:40px;width:min(420px,100%);box-shadow:0 20px 60px rgba(23,50,77,.15)}
+.login-card.fade-out{animation:fadeOut 0.5s ease forwards}
+@keyframes fadeOut{0%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(0.9)}}
+.login-header{text-align:center;margin-bottom:30px}
+.login-header h2{font-size:28px;color:#17324d;margin-bottom:8px}
+.login-header p{color:#78909c;font-size:14px}
+.login-form{display:block}
+.login-group{margin-bottom:16px}
+.login-group label{display:block;font-size:13px;font-weight:700;color:#546e7a;margin-bottom:6px}
+.login-group input{width:100%;padding:12px;border:1px solid #ccd6df;border-radius:10px;font-size:14px;font-family:inherit}
+.login-group input:focus{outline:none;border-color:#1976d2;box-shadow:0 0 0 3px #1976d214}
+.login-error,.login-success,.cooldown-message{padding:12px;border-radius:10px;margin-bottom:16px;font-size:13px;display:none}
+.login-error{background:#ffebee;color:#c62828;border-left:3px solid #c62828}
+.login-success{background:#e8f5e9;color:#2e7d32;border-left:3px solid #2e7d32}
+.cooldown-message{background:#fff3cd;color:#856404;border-left:3px solid #ffc107;text-align:center}
+.login-error.show,.login-success.show,.cooldown-message.show{display:block}
+.login-btn{width:100%;padding:12px;background:#1976d2;color:white;border:0;border-radius:10px;font-weight:700;font-size:15px;cursor:pointer;transition:all 0.2s}
+.login-btn:hover:not(:disabled){background:#1565c0;transform:translateY(-2px)}
+.login-btn:disabled{opacity:0.6;cursor:not-allowed}
+.session-timeout-warning{position:fixed;bottom:20px;right:20px;background:#fff;border:1px solid #ffc107;border-radius:12px;padding:20px;box-shadow:0 8px 24px rgba(0,0,0,.15);z-index:9999;display:none;max-width:320px}
+.session-timeout-warning.show{display:block;animation:slideIn 0.3s ease}
+@keyframes slideIn{from{transform:translateX(400px);opacity:0}to{transform:translateX(0);opacity:1}}
+.session-timeout-warning h3{color:#856404;margin-bottom:10px}
+.session-timeout-warning .timer{font-size:24px;font-weight:900;color:#1976d2;text-align:center;margin:10px 0}
+.extend-session-btn{width:100%;padding:10px;background:#1976d2;color:white;border:0;border-radius:8px;cursor:pointer;font-weight:700;margin-top:10px}
+.extend-session-btn:hover{background:#1565c0}
+
+/* MOBILE RESPONSIVE DARI INDEX.HTML */
+@media(max-width:900px){
+  #view-all .table-wrap{overflow:visible;background:transparent;box-shadow:none;border:0}
+  #view-all table{min-width:0;width:100%;border-collapse:separate;border-spacing:0 9px}
+  #view-all thead{display:none}
+  #view-all tbody,#view-all tr,#view-all td{display:block;width:100%}
+  #view-all .family-row td{padding:11px 12px;border-radius:12px;border:1px solid #d7e6f0}
+  #view-all .member-row{background:#fff;border:1px solid #e2eaf0;border-radius:12px;box-shadow:0 3px 10px rgba(23,50,77,.06);padding:7px 11px}
+  #view-all .member-row td{border:0;border-bottom:1px solid #edf2f5;padding:7px 0 7px 42%;position:relative;font-size:12px;white-space:normal}
+  #view-all .member-row td::before{content:attr(data-label);position:absolute;left:0;top:7px;width:40%;color:#78909c;font-size:9px;font-weight:800;text-transform:uppercase}
+  #view-all .member-row td:last-child{border-bottom:0}
+  
+  #view-birthday .celebration-table-wrap,#view-marriage .celebration-table-wrap{overflow:visible;background:transparent;border:0;box-shadow:none}
+  #view-birthday .celebration-table,#view-marriage .celebration-table{min-width:0;width:100%;border-collapse:separate;border-spacing:0 10px}
+  #view-birthday .celebration-table thead,#view-marriage .celebration-table thead{display:none}
+  #view-birthday .celebration-table tbody,#view-marriage .celebration-table tbody,
+  #view-birthday .celebration-table tr,#view-marriage .celebration-table tr,
+  #view-birthday .celebration-table td,#view-marriage .celebration-table td{display:block;width:100%;box-sizing:border-box}
+  #view-birthday .celebration-table tr,#view-marriage .celebration-table tr{background:#fff;border-radius:16px;box-shadow:0 5px 16px rgba(31,50,68,.08);overflow:hidden;padding:8px 12px;margin-bottom:8px}
+  #view-birthday .celebration-table td,#view-marriage .celebration-table td{border:0;border-bottom:1px solid #edf2f5;padding:8px 0 8px 38%;position:relative;font-size:12px;white-space:normal}
+  #view-birthday .celebration-table td:last-child,#view-marriage .celebration-table td:last-child{border-bottom:0}
+  #view-birthday .celebration-table td::before,#view-marriage .celebration-table td::before{content:attr(data-label);position:absolute;left:0;top:8px;width:34%;color:#78909c;font-size:9px;font-weight:800;text-transform:uppercase}
+}
+
+@media(max-width:700px){
+  body{background:linear-gradient(180deg,#f4f8fc 0%,#eef4f8 100%)}
+  header{flex-direction:column;gap:10px;align-items:flex-start}
+  .logout-btn{align-self:flex-end}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .age-groups{grid-template-columns:1fr 1fr}
+  nav{gap:6px}
+  nav button{padding:9px 12px;font-size:12px}
+  .controls{gap:8px}
+  input,select{font-size:13px;padding:9px 11px}
+  .edit-grid{grid-template-columns:1fr}
+  .edit-card{padding:15px}
+  .celebration-heading{font-size:14px;padding:9px 12px}
+}
+
+@media(max-width:600px){
+  .stats{grid-template-columns:1fr 1fr}
+  .card .value{font-size:22px}
+  nav button{padding:8px 10px;font-size:11px}
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN OVERLAY -->
+<div class="login-overlay" id="loginOverlay">
+  <div class="login-card" id="loginCard">
+    <div class="login-header">
+      <h2>🔐 Akses Data Jemaat</h2>
+      <p>Silakan masukkan kredensial Anda</p>
+    </div>
+    <form class="login-form" id="loginForm" onsubmit="return false;">
+      <div class="login-error" id="loginErrorMessage"></div>
+      <div class="cooldown-message" id="cooldownMessage">
+        Terlalu banyak percobaan login. Coba lagi dalam <span id="cooldownTimer">00:00</span>
+      </div>
+      <div class="login-group">
+        <label for="usernameInput">Username</label>
+        <input type="text" id="usernameInput" placeholder="Masukkan username" autocomplete="off">
+      </div>
+      <div class="login-group">
+        <label for="passwordInput">Password</label>
+        <input type="password" id="passwordInput" placeholder="Masukkan password" autocomplete="off">
+      </div>
+      <button type="submit" class="login-btn" id="loginBtn">🔓 Login</button>
+      <div class="login-success" id="loginSuccessMessage">✓ Login berhasil! Memuat data...</div>
+    </form>
+  </div>
+</div>
+
+<!-- SESSION TIMEOUT WARNING -->
+<div class="session-timeout-warning" id="sessionTimeoutWarning">
+  <h3>⏰ Sesi Anda akan berakhir</h3>
+  <p>Sisa waktu:</p>
+  <div class="timer" id="warningTimer">02:00</div>
+  <button class="extend-session-btn" id="extendSessionBtn">Lanjutkan Sesi</button>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="container" id="mainContent">
+<header>
+  <div>
+    <h1>📋 Data Jemaat GKE Bukit Hindu</h1>
+    <div class="subtitle">• Dashboard data jemaat •</div>
+  </div>
+  <button class="logout-btn" onclick="logoutUser()">🚪 Logout</button>
+</header>
+
+<div class="stats" id="stats"></div>
+<div class="age-groups" id="ageGroups"></div>
+
+<nav>
+  <button class="active" data-view="all">👥 Semua Jemaat</button>
+  <button data-view="birthday">🎂 Ulang Tahun Kelahiran</button>
+  <button data-view="marriage">💍 Ulang Tahun Pernikahan</button>
+  <button type="button" onclick="window.location.href='perjamuanstats.html'">📊 Statistik Perjamuan</button>
+</nav>
+
+<!-- VIEW ALL -->
+<section id="view-all">
+  <div class="panel">
+    <div class="controls" role="search" onsubmit="return false;">
+      <input id="search" placeholder="Cari nama, no registrasi, alamat..." autocomplete="off">
+      <select id="lpFilter" aria-label="Filter Lingkungan Pelayanan"><option value="">Semua LP</option></select>
+      <button class="action secondary" onclick="resetFilters()">Reset</button>
+      <button class="action" onclick="loadAllData()">🔄 Refresh</button>
+    </div>
+    <div id="status" class="status"></div>
+  </div>
+  <div class="section-title">Daftar Jemaat</div>
+  <div class="table-wrap">
+    <table><thead id="thead"></thead><tbody id="tbody"></tbody></table>
+  </div>
+  <div class="empty hidden" id="empty">Data kosong</div>
+  <div class="pagination" id="pagination"></div>
+</section>
+
+<!-- VIEW BIRTHDAY -->
+<section id="view-birthday" class="hidden">
+  <div class="section-title">🎂 Ulang Tahun Kelahiran</div>
+  <div class="panel">
+    <div class="controls">
+      <select id="birthMonth" aria-label="Pilih bulan"><option value="">Semua Bulan</option></select>
+      <button class="action" onclick="loadBirthdayData()">🔄 Refresh</button>
+    </div>
+  </div>
+  <div id="birthdayContent"></div>
+</section>
+
+<!-- VIEW MARRIAGE -->
+<section id="view-marriage" class="hidden">
+  <div class="section-title">💍 Ulang Tahun Pernikahan</div>
+  <div class="panel">
+    <div class="controls">
+      <select id="marriageMonth" aria-label="Pilih bulan"><option value="">Semua Bulan</option></select>
+      <button class="action" onclick="loadMarriageData()">🔄 Refresh</button>
+    </div>
+  </div>
+  <div id="marriageContent"></div>
+</section>
+</div>
+
+<!-- EDIT MODAL -->
+<div class="edit-modal" id="editModal">
+  <div class="edit-card">
+    <div class="edit-head">
+      <h2>✏️ Edit Data Jemaat</h2>
+      <button class="edit-close" type="button" onclick="closeEdit()">×</button>
+    </div>
+    <form id="editForm" onsubmit="return saveEdit(event)">
+      <input type="hidden" id="editId">
+      <div class="edit-grid" id="editFields"></div>
+      <div class="edit-note">Perubahan akan disimpan langsung ke database Supabase.</div>
+      <div class="edit-success" id="editSuccess"></div>
+      <div class="edit-error" id="editError"></div>
+      <div class="edit-actions">
+        <button type="button" class="edit-cancel" onclick="closeEdit()">Batal</button>
+        <button type="submit" class="edit-save" id="editSaveBtn">💾 Simpan</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+(function(){
+"use strict";
+
+const SUPABASE_URL="https://gpgjgplqsvyexumoljyo.supabase.co";
+const SUPABASE_KEY="sb_publishable_JaVgg3CuVmI9SczGkoaRZQ_EaYoV9z9";
+const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+
+const correctPassword = "12345";
+const COOLDOWN_DURATION = 30;
+const SESSION_TIMEOUT = 30 * 60 * 1000;
+const WARNING_TIME = 2 * 60 * 1000;
+const STORAGE_KEY = 'loginAttemptTime';
+const SESSION_START_KEY = 'sessionStartTime';
+
+let allData = [];
+let filtered = [];
+let page = 1;
+const PER_PAGE = 25;
+let currentView = 'all';
+let cooldownInterval = null;
+let sessionTimeoutInterval = null;
+let warningTimeoutInterval = null;
+
+const $ = id => document.getElementById(id);
+const months = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agt','Sep','Okt','Nov','Des'];
+
+const labels = {
+  id: 'ID',
+  no_reg: 'No. Registrasi',
+  nama: 'Nama',
+  jk: 'JK',
+  tpt_lhr: 'Tempat Lahir',
+  tgl_lhr: 'Tanggal Lahir',
+  tpt_nkh: 'Tempat Nikah',
+  tgl_nkh: 'Tanggal Nikah',
+  alamat: 'Alamat',
+  ling_pel: 'Lingkungan Pelayanan',
+  status: 'Status',
+  no_telp: 'No. Telepon'
+};
+
+function showStatus(msg, type="success"){
+  const el = $("status");
+  el.textContent = msg;
+  el.className = "status show " + type;
+}
+
+function esc(v){
+  const d = document.createElement("div");
+  d.textContent = v == null ? "" : String(v);
+  return d.innerHTML;
+}
+
+function dateObj(v){
+  if(v==null||String(v).trim()==="")return null;
+  let x=String(v).trim();
+  if(x==="0000-00-00"||x==="0000-00-00 00:00:00")return null;
+  let m;
+  if((m=x.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/))){return new Date(Number(m[1]),Number(m[2])-1,Number(m[3]));}
+  if((m=x.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/))){return new Date(Number(m[3]),Number(m[2])-1,Number(m[1]));}
+  const d=new Date(x);
+  return isNaN(d)?null:d;
+}
+
+function dateToISO(d){
+  if(!d)return "";
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+
+function dateID(v){
+  const d = dateObj(v);
+  return d ? d.toLocaleDateString("id-ID",{day:"2-digit",month:"long",year:"numeric"}) : "-";
+}
+
+function age(v){
+  const d = dateObj(v);
+  if(!d)return "-";
+  const n = new Date();
+  let a = n.getFullYear() - d.getFullYear();
+  const m = n.getMonth() - d.getMonth();
+  if(m < 0 || (m === 0 && n.getDate() < d.getDate())) a--;
+  return a;
+}
+
+function cleanPhone(phone){
+  if(!phone)return "";
+  let p = String(phone).replace(/\D/g,"");
+  if(p.startsWith("0")) p = "62" + p.slice(1);
+  if(!p.startsWith("62")) p = "62" + p;
+  return p;
+}
+
+function getFamilyPhone(members){
+  const phoneMember = members.find(r => String(r.no_telp ?? "").trim() !== "");
+  return phoneMember ? String(phoneMember.no_telp).trim() : "";
+}
+
+function goToStatistik(){
+  window.location.href='perjamuanstats.html';
+}
+
+function getBirthdayFamilyInfo(birthdayMember){
+  const reg=String(birthdayMember.no_reg??"").trim();
+  if(!reg)return null;
+  const familyMembers=allData.filter(r=>String(r.no_reg??"").trim()===reg);
+  const kk=familyMembers.find(r=>String(r.status??"").trim().toUpperCase()==="KK");
+  if(!kk)return null;
+  const kkPhone=String(kk.no_telp??"").trim();
+  if(!kkPhone)return null;
+  const birthdayName=String(birthdayMember.nama??"").trim()||"-";
+  const birthdayAge=age(birthdayMember.tgl_lhr);
+  const birthDate=dateObj(birthdayMember.tgl_lhr);
+  if(!birthDate)return null;
+  const currentYear=new Date().getFullYear();
+  const birthdayThisYear=new Date(currentYear,birthDate.getMonth(),birthDate.getDate());
+  const birthdayDateThisYear=birthdayThisYear.toLocaleDateString("id-ID",{day:"numeric",month:"long",year:"numeric"});
+  const cake=String.fromCodePoint(0x1F382);
+  const party=String.fromCodePoint(0x1F389);
+  const pray=String.fromCodePoint(0x1F64F);
+  const message=`${cake} *SELAMAT ULANG TAHUN* ${party}\n\nSelamat ulang tahun untuk *${birthdayName}* yang ke-${birthdayAge} tahun.\n\nKiranya Tuhan senantiasa memberikan kesehatan, sukacita, damai sejahtera, serta berkat yang melimpah dalam setiap langkah kehidupan.\n\n${pray} Tuhan memberkati dan menyertai selalu.\n\n:: ${birthdayDateThisYear} ::\nMPHJ GKE BUKIT HINDU`;
+  const url=`https://wa.me/${cleanPhone(kkPhone)}?text=${encodeURIComponent(message)}`;
+  return {kkName:String(kk.nama??"").trim(),url};
+}
+
+function getMarriageFamilyInfo(group){
+  const reg=String(group[0]?.no_reg??"").trim();
+  let familyMembers=reg?allData.filter(r=>String(r.no_reg??"").trim()===reg):group;
+  const kk=familyMembers.find(r=>String(r.status??"").trim().toUpperCase()==="KK");
+  if(!kk)return null;
+  const kkPhone=String(kk.no_telp??"").trim();
+  if(!kkPhone)return null;
+  const d=dateObj(group[0]?.tgl_nkh);
+  if(!d)return null;
+  const currentYear=new Date().getFullYear();
+  const anniversaryThisYear=new Date(currentYear,d.getMonth(),d.getDate());
+  const anniversaryDateThisYear=anniversaryThisYear.toLocaleDateString("id-ID",{day:"numeric",month:"long",year:"numeric"});
+  const years=Math.max(0,currentYear-d.getFullYear()-((new Date().getMonth()<d.getMonth()||(new Date().getMonth()===d.getMonth()&&new Date().getDate()<d.getDate()))?1:0));
+  const names=group.map(r=>String(r.nama??"").trim()).filter(Boolean).join(" & ");
+  const ring=String.fromCodePoint(0x1F48D);
+  const party=String.fromCodePoint(0x1F389);
+  const pray=String.fromCodePoint(0x1F64F);
+  const message=`${ring} *SELAMAT ULANG TAHUN PERNIKAHAN* ${party}\n\nSelamat ulang tahun pernikahan ke-${years} untuk *${names}*.\n\nKiranya Tuhan senantiasa memberkati keluarga anda, memberikan kasih, sukacita, kesehatan, damai sejahtera, dan kekuatan untuk terus berjalan bersama dalam kasih dan penyertaan-Nya.\n\n${pray} Tuhan memberkati dan menyertai keluarga ini selalu.\n\nTanggal: *${anniversaryDateThisYear}*\n\nMPHJ GKE BUKIT HINDU`;
+  return {url:`https://wa.me/${cleanPhone(kkPhone)}?text=${encodeURIComponent(message)}`};
+}
+
+// ============= LOGIN FUNCTIONS =============
+const loginOverlay = $('loginOverlay');
+const loginCard = $('loginCard');
+const form = $('loginForm');
+const usernameInput = $('usernameInput');
+const passwordInput = $('passwordInput');
+const loginBtn = $('loginBtn');
+const errorMessage = $('loginErrorMessage');
+const successMessage = $('loginSuccessMessage');
+const cooldownMessage = $('cooldownMessage');
+const cooldownTimer = $('cooldownTimer');
+const sessionTimeoutWarning = $('sessionTimeoutWarning');
+const extendSessionBtn = $('extendSessionBtn');
+const warningTimer = $('warningTimer');
+
+function isUserLoggedIn(){
+  return sessionStorage.getItem('loginSuccess') === 'true';
+}
+
+function isSessionValid(){
+  const startTime = parseInt(sessionStorage.getItem(SESSION_START_KEY) || '0');
+  if(!startTime)return false;
+  const elapsed = Date.now() - startTime;
+  return elapsed < SESSION_TIMEOUT;
+}
+
+function getRemainingSessionTime(){
+  const startTime = parseInt(sessionStorage.getItem(SESSION_START_KEY) || '0');
+  if(!startTime)return SESSION_TIMEOUT;
+  const elapsed = Date.now() - startTime;
+  return Math.max(0, SESSION_TIMEOUT - elapsed);
+}
+
+function logoutUser(){
+  sessionStorage.removeItem('loginSuccess');
+  sessionStorage.removeItem(SESSION_START_KEY);
+  loginOverlay.classList.remove('hidden');
+  sessionTimeoutWarning.classList.remove('show');
+  form.style.display = 'block';
+  successMessage.classList.remove('show');
+  loginCard.classList.remove('fade-out');
+  usernameInput.value = '';
+  passwordInput.value = '';
+  errorMessage.textContent = 'Sesi Anda telah berakhir. Silakan login kembali.';
+  errorMessage.classList.add('show');
+  if(sessionTimeoutInterval)clearInterval(sessionTimeoutInterval);
+  if(warningTimeoutInterval)clearInterval(warningTimeoutInterval);
+}
+
+function startSessionTimeout(){
+  if(sessionTimeoutInterval)clearInterval(sessionTimeoutInterval);
+  if(warningTimeoutInterval)clearInterval(warningTimeoutInterval);
+  sessionStorage.setItem(SESSION_START_KEY, Date.now().toString());
+  const warningShowTime = SESSION_TIMEOUT - WARNING_TIME;
+  warningTimeoutInterval = setTimeout(() => {
+    sessionTimeoutWarning.classList.add('show');
+    let remainingMs = WARNING_TIME;
+    warningTimeoutInterval = setInterval(() => {
+      remainingMs -= 1000;
+      const minutes = Math.floor(remainingMs / 60000);
+      const seconds = Math.floor((remainingMs % 60000) / 1000);
+      warningTimer.textContent = `${minutes}:${String(seconds).padStart(2, '0')}`;
+      if(remainingMs <= 0)clearInterval(warningTimeoutInterval);
+    }, 1000);
+  }, warningShowTime);
+  sessionTimeoutInterval = setTimeout(() => logoutUser(), SESSION_TIMEOUT);
+}
+
+function checkCooldown(){
+  const lastAttempt = localStorage.getItem(STORAGE_KEY);
+  if(!lastAttempt)return null;
+  const lastTime = parseInt(lastAttempt);
+  const now = Date.now();
+  const elapsed = Math.floor((now - lastTime) / 1000);
+  const remaining = COOLDOWN_DURATION - elapsed;
+  if(remaining > 0)return remaining;
+  localStorage.removeItem(STORAGE_KEY);
+  return null;
+}
+
+function updateCooldownDisplay(remaining){
+  const minutes = Math.floor(remaining / 60);
+  const seconds = remaining % 60;
+  cooldownTimer.textContent = `${minutes}:${String(seconds).padStart(2, '0')}`;
+}
+
+function startCooldown(){
+  localStorage.setItem(STORAGE_KEY, Date.now().toString());
+  cooldownMessage.classList.add('show');
+  loginBtn.disabled = true;
+  form.style.opacity = '0.5';
+  form.style.pointerEvents = 'none';
+  let remaining = COOLDOWN_DURATION;
+  cooldownInterval = setInterval(() => {
+    remaining--;
+    updateCooldownDisplay(remaining);
+    if(remaining <= 0){
+      clearInterval(cooldownInterval);
+      cooldownMessage.classList.remove('show');
+      loginBtn.disabled = false;
+      form.style.opacity = '1';
+      form.style.pointerEvents = 'auto';
+      errorMessage.classList.remove('show');
+    }
+  }, 1000);
+}
+
+form.addEventListener('submit', (e) => {
+  e.preventDefault();
+  const username = usernameInput.value.trim();
+  const password = passwordInput.value;
+  errorMessage.classList.remove('show');
+  if(!username || !password){
+    errorMessage.textContent = 'Username dan password harus diisi';
+    errorMessage.classList.add('show');
+    return;
+  }
+  const cooldownRemaining = checkCooldown();
+  if(cooldownRemaining){
+    updateCooldownDisplay(cooldownRemaining);
+    startCooldown();
+    errorMessage.textContent = `Terlalu banyak percobaan login. Coba lagi dalam ${cooldownRemaining} detik`;
+    errorMessage.classList.add('show');
+    return;
+  }
+  if(password !== correctPassword){
+    errorMessage.textContent = 'Username atau password salah';
+    errorMessage.classList.add('show');
+    startCooldown();
+    return;
+  }
+  successMessage.classList.add('show');
+  loginCard.classList.add('fade-out');
+  form.style.display = 'none';
+  cooldownMessage.classList.remove('show');
+  loginBtn.disabled = true;
+  sessionStorage.setItem('loginSuccess', 'true');
+  setTimeout(() => {
+    startSessionTimeout();
+    loginOverlay.classList.add('hidden');
+    loadAllData();
+  }, 1500);
+});
+
+extendSessionBtn.addEventListener('click', () => {
+  sessionTimeoutWarning.classList.remove('show');
+  startSessionTimeout();
+});
+
+window.addEventListener('load', () => {
+  if(isUserLoggedIn()){
+    if(isSessionValid()){
+      loginOverlay.classList.add('hidden');
+      const remaining = getRemainingSessionTime();
+      startSessionTimeout();
+      loadAllData();
+    } else {
+      logoutUser();
+    }
+    return;
+  }
+  const remainingCooldown = checkCooldown();
+  if(remainingCooldown){
+    updateCooldownDisplay(remainingCooldown);
+    loginBtn.disabled = true;
+    form.style.opacity = '0.5';
+    form.style.pointerEvents = 'none';
+    cooldownMessage.classList.add('show');
+    let remaining = remainingCooldown;
+    cooldownInterval = setInterval(() => {
+      remaining--;
+      updateCooldownDisplay(remaining);
+      if(remaining <= 0){
+        clearInterval(cooldownInterval);
+        cooldownMessage.classList.remove('show');
+        loginBtn.disabled = false;
+        form.style.opacity = '1';
+        form.style.pointerEvents = 'auto';
+      }
+    }, 1000);
+  }
+});
+
+// ============= DATABASE FUNCTIONS =============
+async function loadAllData(){
+  showStatus("Memuat seluruh data jemaat...","loading");
+  allData=[];
+  let from=0,batch=1000;
+  try{
+    while(true){
+      const {data,error}=await db.from("jemaat").select("*").order("id",{ascending:true}).range(from,from+batch-1);
+      if(error)throw error;
+      const rows=data||[];
+      allData.push(...rows);
+      showStatus("Memuat data... "+allData.length+" data","loading");
+      if(rows.length<batch)break;
+      from+=batch;
+    }
+    filtered=[...allData];
+    page=1;
+    updateStats();
+    updateLPFilter();
+    populateMonthSelects();
+    renderAll();
+    showStatus("Berhasil memuat "+allData.length.toLocaleString("id-ID")+" data.","success");
+  }catch(e){
+    console.error(e);
+    showStatus("Gagal memuat data: "+e.message,"error");
+  }
+}
+
+function updateLPFilter(){
+  const select=$("lpFilter");
+  const current=select.value;
+  const lps=[...new Set(allData.map(r=>String(r.ling_pel??"").trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b,"id"));
+  select.innerHTML='<option value="">Semua LP</option>'+lps.map(lp=>`<option value="${esc(lp)}">${esc(lp)}</option>`).join("");
+  if(lps.includes(current))select.value=current;
+}
+
+function updateStats(sourceData=allData){
+  const data=sourceData||[];
+  const total=data.length;
+  const l=data.filter(x=>String(x.jk||"").toUpperCase()==="L").length;
+  const p=data.filter(x=>String(x.jk||"").toUpperCase()==="P").length;
+  const env=new Set(data.map(x=>String(x.ling_pel||"").trim()).filter(Boolean)).size;
+  const ageGroups=[{label:"0-13 TH",min:0,max:13},{label:"14-24 TH",min:14,max:24},{label:"25-59 TH",min:25,max:59},{label:"> 60 TH",min:60,max:Infinity}];
+  const ageCounts=ageGroups.map(g=>data.filter(r=>{const a=age(r.tgl_lhr);return a!=="-" && a>=g.min && a<=g.max;}).length);
+  $("stats").innerHTML=`<div class="card"><div class="label">Total Jemaat</div><div class="value">${total}</div></div><div class="card"><div class="label">Laki-laki</div><div class="value">${l}</div></div><div class="card"><div class="label">Perempuan</div><div class="value">${p}</div></div><div class="card"><div class="label">Lingkungan</div><div class="value">${env}</div></div>`;
+  $("ageGroups").innerHTML=ageGroups.map((g,i)=>`<div class="age-card"><div class="age-label">${g.label}</div><div class="age-value">${ageCounts[i]} jiwa</div></div>`).join("");
+}
+
+function applyFilters(){
+  const q=$("search").value.toLowerCase().trim();
+  const lp=$("lpFilter").value;
+  filtered=allData.filter(row=>{
+    const okQ=!q||Object.values(row).some(v=>String(v??"").toLowerCase().includes(q));
+    const okLP=!lp||String(row.ling_pel??"").trim()===lp;
+    return okQ&&okLP;
+  });
+  page=1;
+  updateStats(filtered);
+  renderAll();
+}
+
+function renderAll(){
+  const familyKey=r=>String(r.no_reg??"").trim()||"Belum ada nomor registrasi";
+  const map=new Map();
+  filtered.forEach(r=>{const k=familyKey(r);if(!map.has(k)){map.set(k,[]);}map.get(k).push(r);});
+  const familyGroups=[...map.values()];
+  if(familyGroups.length===0){$("empty").classList.remove("hidden");$("tbody").innerHTML="";$("pagination").innerHTML="";return;}
+  $("empty").classList.add("hidden");
+  const displayHeaders=["no_reg","nama","jk","tpt_lhr","tgl_lhr","tpt_nkh","tgl_nkh","alamat","ling_pel","status","no_telp"];
+  const pages=[];let current=[];let count=0;
+  familyGroups.forEach(group=>{if(current.length && count+group.length>PER_PAGE){pages.push(current);current=[];count=0;}current.push(group);count+=group.length;});
+  if(current.length)pages.push(current);
+  const totalPages=pages.length;if(page>totalPages)page=totalPages;
+  const groupsForPage=pages[page-1]||[];let htmlRows="";
+  groupsForPage.forEach(members=>{const family=familyKey(members[0]);const kepalaKeluarga=members.find(r=>String(r.status??"").trim().toUpperCase()==="KK"||String(r.status??"").trim()==="Kepala Keluarga");const namaKepalaKeluarga=kepalaKeluarga?String(kepalaKeluarga.nama??"").trim():"";const phone=getFamilyPhone(members);const phoneClean=cleanPhone(phone);const addressMember=members.find(r=>String(r.alamat??"").trim()!=="");const familyAddress=addressMember?String(addressMember.alamat).trim():"";let phoneHtml="";if(phone){phoneHtml=`<div class="family-phone"><a href="tel:${esc(phoneClean)}" class="phone-btn"><i class="fa-solid fa-phone"></i></a><a href="https://wa.me/${esc(phoneClean)}" target="_blank" rel="noopener" class="wa-btn"><i class="fa-brands fa-whatsapp"></i></a></div>`;}htmlRows+=`<tr class="family-row"><td colspan="${displayHeaders.length+1}"><div class="family-header"><div><strong>👨‍👩‍👧‍👦 Keluarga${namaKepalaKeluarga?` (${esc(namaKepalaKeluarga)})`:" "} / No. Registrasi: ${esc(family)}</strong><span class="badge">Anggota: ${members.length}</span></div>${phoneHtml}${familyAddress?`<div class="family-address">📍 ${esc(familyAddress)}</div>`:""}</div></td></tr>`;members.forEach(r=>{htmlRows+=`<tr class="member-row">${displayHeaders.map(h=>{const v=r[h];const empty=v==null||String(v).trim()===""||v==="0000-00-00";const label=labels[h]||h;const display=empty?"-":(h.includes("tgl_")?dateID(v):v);return `<td data-label="${esc(label)}"${empty?' class="empty-cell"':''}>${esc(display)}</td>`;}).join("")}<td data-label="AKSI"><button class="edit-btn" type="button" onclick="openEditById(${JSON.stringify(r.id)})">✏️ Edit</button></td></tr>`;});});
+  $("tbody").innerHTML=htmlRows;renderPagination(totalPages);
+}
+
+function renderPagination(total){
+  if(total<=1){$("pagination").innerHTML="";return;}
+  let html=`<button onclick="gotoPage(1)">«</button><button onclick="gotoPage(${Math.max(1,page-1)})">‹</button>`;
+  let s=Math.max(1,page-2),e=Math.min(total,page+2);
+  for(let i=s;i<=e;i++)html+=`<button class="${i===page?"active":""}" onclick="gotoPage(${i})">${i}</button>`;
+  html+=`<button onclick="gotoPage(${Math.min(total,page+1)})">›</button><button onclick="gotoPage(${total})">»</button>`;
+  $("pagination").innerHTML=html;
+}
+
+window.gotoPage=function(n){
+  const familyKey=r=>String(r.no_reg??"").trim()||"Belum ada nomor registrasi";
+  const groups=[];const map=new Map();
+  filtered.forEach(r=>{const key=familyKey(r);if(!map.has(key)){const group=[];map.set(key,group);groups.push(group);}map.get(key).push(r);});
+  let total=0;let count=0;
+  groups.forEach(group=>{if(count>0 && count+group.length>PER_PAGE){total++;count=0;}count+=group.length;});
+  if(count>0)total++;if(n<1||n>total)return;page=n;renderAll();window.scrollTo({top:0,behavior:"smooth"});
+};
+
+function populateMonthSelects(){
+  let html='<option value="">Semua Bulan</option>';
+  months.forEach((m,i)=>{html+=`<option value="${i}">${m}</option>`;});
+  $('birthMonth').innerHTML=html;
+  $('marriageMonth').innerHTML=html;
+  // Set bulan aktif saat ini
+  const currentMonth = new Date().getMonth();
+  $('birthMonth').value = currentMonth;
+  $('marriageMonth').value = currentMonth;
+}
+
+window.loadBirthdayData=function(){
+  const selected=parseInt($('birthMonth').value);
+  let rows=allData.filter(r=>dateObj(r.tgl_lhr));
+  if(selected>=0)rows=rows.filter(r=>dateObj(r.tgl_lhr).getMonth()===selected);
+  
+  rows.sort((a,b)=>{
+    const da=dateObj(a.tgl_lhr),db=dateObj(b.tgl_lhr);
+    return da.getDate()-db.getDate()||String(a.nama||"").localeCompare(String(b.nama||""),"id");
+  });
+  
+  const rowsHtml=rows.map(r=>{
+    const wa=getBirthdayFamilyInfo(r);
+    return `<tr><td data-label="NAMA">${esc(r.nama||"-")}</td><td data-label="LP" style="text-align:center">${esc(r.ling_pel||"-")}</td><td data-label="HUT KE" style="text-align:center">${age(r.tgl_lhr)}</td><td data-label="TANGGAL" style="text-align:center">${dateID(r.tgl_lhr)}${wa?`<br><a class="birthday-wa-btn" href="${esc(wa.url)}" target="_blank" rel="noopener"><i class="fa-brands fa-whatsapp"></i> Ucapan ke KK</a>`:""}</td></tr>`;
+  }).join("");
+  
+  const displayMonth=selected<0?"Semua Bulan":months[selected];
+  const html=`<div class="celebration-heading">${displayMonth} • ${rows.length} orang</div><div class="celebration-table-wrap"><table class="celebration-table"><thead><tr><th>NAMA</th><th>LP</th><th>HUT KE</th><th>TANGGAL</th></tr></thead><tbody>${rowsHtml||'<tr><td colspan="4" style="text-align:center;padding:20px">Tidak ada data ulang tahun pada bulan yang dipilih.</td></tr>'}</tbody></table></div>`;
+  $('birthdayContent').innerHTML=html;
+};
+
+window.loadMarriageData=function(){
+  const selected=parseInt($('marriageMonth').value);
+  const groups=new Map();
+  
+  allData.forEach(r=>{
+    const d=dateObj(r.tgl_nkh);
+    if(!d)return;
+    if(selected>=0&&d.getMonth()!==selected)return;
+    const reg=String(r.no_reg??"").trim();
+    const dateKey=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+    const key=reg?`${reg}|${dateKey}`:`__DATE_ONLY__|${dateKey}`;
+    if(!groups.has(key))groups.set(key,[]);
+    groups.get(key).push(r);
+  });
+  
+  const pairs=[...groups.values()].filter(group=>group.length>=2).sort((a,b)=>{
+    const da=dateObj(a[0].tgl_nkh),db=dateObj(b[0].tgl_nkh);
+    return da.getDate()-db.getDate()||da.getMonth()-db.getMonth()||String(a[0].nama||"").localeCompare(String(b[0].nama||""),"id");
+  });
+  
+  const pairData=pairs.map(group=>{
+    const d=dateObj(group[0].tgl_nkh);
+    const today=new Date();
+    const years=Math.max(0,today.getFullYear()-d.getFullYear()-(today.getMonth()<d.getMonth()||(today.getMonth()===d.getMonth()&&today.getDate()<d.getDate())?1:0));
+    const names=group.map(r=>String(r.nama||"").trim()).filter(Boolean).join(" & ");
+    const lp=String(group[0].ling_pel??"").trim()||"-";
+    const address=String(group.find(r=>String(r.alamat??"").trim())?.alamat??"").trim()||"-";
+    const wa=getMarriageFamilyInfo(group);
+    return {names,lp,years,date:dateID(group[0].tgl_nkh),address,wa};
+  });
+  
+  const rowsHtml=pairData.map(x=>`<tr><td data-label="NAMA">${esc(x.names)}</td><td data-label="LP" style="text-align:center">${esc(x.lp)}</td><td data-label="HUT KE" style="text-align:center">${x.years}</td><td data-label="TANGGAL" style="text-align:center">${esc(x.date)}${x.wa?`<br><a class="birthday-wa-btn" href="${esc(x.wa.url)}" target="_blank" rel="noopener"><i class="fa-brands fa-whatsapp"></i> Ucapan ke KK</a>`:""}</td><td data-label="ALAMAT">${esc(x.address)}</td></tr>`).join("");
+  
+  const displayMonth=selected<0?"Semua Bulan":months[selected];
+  const html=`<div class="celebration-heading">${displayMonth} • ${pairData.length} pasangan</div><div class="celebration-table-wrap"><table class="celebration-table"><thead><tr><th>NAMA</th><th>LP</th><th>HUT KE</th><th>TANGGAL</th><th>ALAMAT</th></tr></thead><tbody>${rowsHtml||'<tr><td colspan="5" style="text-align:center;padding:20px">Tidak ada pasangan yang memiliki tanggal pernikahan pada bulan yang dipilih.</td></tr>'}</tbody></table></div>`;
+  $('marriageContent').innerHTML=html;
+};
+
+function switchView(view){
+  currentView=view;
+  document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("active",b.dataset.view===view));
+  $("view-all").classList.toggle("hidden",view!=="all");
+  $("view-birthday").classList.toggle("hidden",view!=="birthday");
+  $("view-marriage").classList.toggle("hidden",view!=="marriage");
+  $("search").closest(".panel").classList.toggle("view-special-hidden",view!=="all");
+  if(view==="birthday")loadBirthdayData();
+  if(view==="marriage")loadMarriageData();
+}
+
+document.querySelectorAll("nav button[data-view]").forEach(b=>b.addEventListener("click",()=>switchView(b.dataset.view)));
+$("search").addEventListener("input",applyFilters);
+$("lpFilter").addEventListener("change",applyFilters);
+$("birthMonth").addEventListener("change",loadBirthdayData);
+$("marriageMonth").addEventListener("change",loadMarriageData);
+
+window.resetFilters=function(){$("search").value="";$("lpFilter").value="";applyFilters();};
+
+// ============= EDIT FUNCTIONALITY =============
+const editFields=[
+  ['no_reg','No. Registrasi','text'],
+  ['nama','Nama','text'],
+  ['jk','JK','text'],
+  ['tpt_lhr','Tempat Lahir','text'],
+  ['tgl_lhr','Tanggal Lahir','date'],
+  ['tpt_nkh','Tempat Nikah','text'],
+  ['tgl_nkh','Tanggal Nikah','date'],
+  ['alamat','Alamat','text'],
+  ['ling_pel','Lingkungan Pelayanan','text'],
+  ['status','Status','text'],
+  ['no_telp','No. Telepon','text']
+];
+
+window.openEditById=function(id){
+  const row=allData.find(r=>String(r.id)===String(id));
+  if(!row){console.error("Data tidak ditemukan");return;}
+  $("editId").value=row.id;
+  $("editError").classList.remove('show');
+  $("editSuccess").classList.remove('show');
+  $("editFields").innerHTML=editFields.map(([k,l,t])=>{let v=row[k]??'';if(t==='date'){const d=dateObj(v);v=d?dateToISO(d):'';}return `<div class="edit-field"><label for="edit_${k}">${esc(l)}</label><input id="edit_${k}" type="${t}" value="${esc(v)}"></div>`;}).join('');
+  $("editModal").classList.add('show');
+};
+
+window.closeEdit=function(){$("editModal").classList.remove('show');};
+
+window.saveEdit=async function(e){
+  e.preventDefault();
+  const id=$("editId").value;
+  const btn=$("editSaveBtn");
+  const errorEl=$("editError");
+  const successEl=$("editSuccess");
+  if(!id){errorEl.textContent='ID data tidak valid';errorEl.classList.add('show');return false;}
+  const payload={};
+  editFields.forEach(([k,_,t])=>{let val=$("edit_"+k).value.trim()||null;if(t==='date'&&val){const d=dateObj(val);if(d){val=dateToISO(d);}}payload[k]=val;});
+  btn.disabled=true;btn.textContent='⏳ Menyimpan...';errorEl.classList.remove('show');successEl.classList.remove('show');
+  try{const {data,error}=await db.from('jemaat').update(payload).eq('id',id).select();if(error){console.error("Supabase error:",error);throw new Error(error.message||'Gagal menyimpan data');}successEl.textContent='✓ Data berhasil disimpan ke Supabase!';successEl.classList.add('show');setTimeout(()=>{closeEdit();loadAllData();},1500);}catch(x){console.error("Error:",x);errorEl.textContent='❌ Gagal menyimpan: '+(x?.message||String(x));errorEl.classList.add('show');}finally{btn.disabled=false;btn.textContent='💾 Simpan';}
+  return false;
+};
+
+$("editModal").addEventListener('click',e=>{if(e.target===$("editModal"))closeEdit();});
+
+// Expose to global scope for inline onclick handlers
+window.logoutUser = logoutUser;
+window.loadAllData = loadAllData;
+
+})();
+</script>
+
+</body>
+</html>
