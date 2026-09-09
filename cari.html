@@ -241,7 +241,7 @@ function reportViaWhatsApp(){
  const noReg=document.getElementById('errorMessage').dataset.noReg;
  const kk=document.getElementById('errorMessage').dataset.kk;
  if(!msg){ alert('Tuliskan kesalahan dulu'); return; }
- const admin='082256541998';
+ const admin='+6282256541998';
  const text=encodeURIComponent(`🔔 Laporan Kesalahan Data Jemaat\n\n👤 KK: ${kk}\n🆔 No Reg: ${noReg}\n\n📝 Kesalahan:\n${msg}`);
  window.open(`https://wa.me/${admin}?text=${text}`,'_blank');
  closeDetailModal();
