@@ -118,6 +118,10 @@ tr:hover td{background:#f8fbff}
 .login-group label{display:block;font-size:13px;font-weight:700;color:#546e7a;margin-bottom:6px}
 .login-group input{width:100%;padding:12px;border:1px solid #ccd6df;border-radius:10px;font-size:14px;font-family:inherit}
 .login-group input:focus{outline:none;border-color:#1976d2;box-shadow:0 0 0 3px #1976d214}
+.login-password-wrapper{position:relative;display:flex;align-items:center}
+.login-password-wrapper input{padding-right:42px}
+.login-toggle-password{position:absolute;right:10px;background:none;border:none;cursor:pointer;color:#607d8b;font-size:16px;padding:0;display:flex;align-items:center;justify-content:center;width:34px;height:34px;transition:color .2s}
+.login-toggle-password:hover{color:#1976d2}
 .login-error,.login-success,.cooldown-message{padding:12px;border-radius:10px;margin-bottom:16px;font-size:13px;display:none}
 .login-error{background:#ffebee;color:#c62828;border-left:3px solid #c62828}
 .login-success{background:#e8f5e9;color:#2e7d32;border-left:3px solid #2e7d32}
@@ -200,7 +204,10 @@ tr:hover td{background:#f8fbff}
       </div>
       <div class="login-group">
         <label for="passwordInput">Password</label>
-        <input type="password" id="passwordInput" placeholder="Masukkan password" autocomplete="off">
+        <div class="login-password-wrapper">
+          <input type="password" id="passwordInput" placeholder="Masukkan password" autocomplete="off">
+          <button type="button" class="login-toggle-password" id="togglePasswordMimin" tabindex="-1" aria-label="Lihat password"><i class="fa-solid fa-eye"></i></button>
+        </div>
       </div>
       <button type="submit" class="login-btn" id="loginBtn">🔓 Login</button>
       <div class="login-success" id="loginSuccessMessage">✓ Login berhasil! Memuat data...</div>
@@ -474,6 +481,24 @@ const cooldownTimer = $('cooldownTimer');
 const sessionTimeoutWarning = $('sessionTimeoutWarning');
 const extendSessionBtn = $('extendSessionBtn');
 const warningTimer = $('warningTimer');
+const togglePasswordMimin = $('togglePasswordMimin');
+
+// Toggle intip password
+if(togglePasswordMimin){
+  togglePasswordMimin.addEventListener('click', (e)=>{
+    e.preventDefault();
+    const icon = togglePasswordMimin.querySelector('i');
+    if(passwordInput.type === 'password'){
+      passwordInput.type = 'text';
+      icon.classList.remove('fa-eye');
+      icon.classList.add('fa-eye-slash');
+    }else{
+      passwordInput.type = 'password';
+      icon.classList.remove('fa-eye-slash');
+      icon.classList.add('fa-eye');
+    }
+  });
+}
 
 function isUserLoggedIn(){
   return sessionStorage.getItem('loginSuccess') === 'true';
