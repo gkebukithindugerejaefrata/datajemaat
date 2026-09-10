@@ -1060,6 +1060,16 @@ const m=n.getMonth()-d.getMonth();
 if(m<0||(m===0&&n.getDate()<d.getDate()))a--;
 return a;
 }
+function hutAge(v){
+const d=dateObj(v);if(!d)return "-";
+const n=new Date();
+return Math.max(0,n.getFullYear()-d.getFullYear());
+}
+function hutMarriageAge(v){
+const d=dateObj(v);if(!d)return "-";
+const n=new Date();
+return Math.max(0,n.getFullYear()-d.getFullYear());
+}
 
 /* Supabase REST/PostgREST biasanya mengembalikan maksimal 1000 baris.
    Kita ambil bertahap menggunakan range() sampai batch terakhir. */
@@ -1202,7 +1212,7 @@ function getBirthdayFamilyInfo(birthdayMember){
   const birthdayName =
     String(birthdayMember.nama ?? "").trim() || "-";
 
-  const birthdayAge = age(birthdayMember.tgl_lhr);
+  const birthdayAge = hutAge(birthdayMember.tgl_lhr);
 
   // ================================
   // TANGGAL ULANG TAHUN TAHUN BERJALAN
@@ -1469,7 +1479,7 @@ const rowsHtml=rows.map(r=>{
   return `<tr>
 <td data-label="NAMA">${esc(r.nama||"-")}</td>
 <td data-label="LP">${esc(r.ling_pel||"-")}</td>
-<td data-label="HUT KE" style="text-align:center">${age(r.tgl_lhr)}</td>
+<td data-label="HUT KE" style="text-align:center">${hutAge(r.tgl_lhr)}</td>
 <td data-label="TANGGAL" style="text-align:center">
   ${dateID(r.tgl_lhr)}
   ${wa?`<br><a class="birthday-wa-btn" href="${esc(wa.url)}" target="_blank" rel="noopener"><i class="fa-brands fa-whatsapp"></i> Ucapkan ke KK</a>`:""}
@@ -1483,7 +1493,7 @@ const mobileCards=rows.map(r=>{
 <div class="birthday-card-name">${esc(r.nama||"-")}</div>
 <div class="birthday-card-row">
 <span>LP: <strong>${esc(r.ling_pel||"-")}</strong></span>
-<span class="birthday-card-hut">${age(r.tgl_lhr)}</span>
+<span class="birthday-card-hut">${hutAge(r.tgl_lhr)}</span>
 </div>
 <div class="birthday-card-row">
 <span>Tanggal lahir</span><strong>${dateID(r.tgl_lhr)}</strong>
@@ -1517,7 +1527,7 @@ function getMarriageFamilyInfo(group){
   const currentYear=new Date().getFullYear();
   const anniversaryThisYear=new Date(currentYear,d.getMonth(),d.getDate());
   const anniversaryDateThisYear=anniversaryThisYear.toLocaleDateString("id-ID",{day:"numeric",month:"long",year:"numeric"});
-  const years=Math.max(0,currentYear-d.getFullYear()-((new Date().getMonth()<d.getMonth()||(new Date().getMonth()===d.getMonth()&&new Date().getDate()<d.getDate()))?1:0));
+  const years=Math.max(0,currentYear-d.getFullYear());
   const names=group.map(r=>String(r.nama??"").trim()).filter(Boolean).join(" & ");
   const ring=String.fromCodePoint(0x1F48D), party=String.fromCodePoint(0x1F389), pray=String.fromCodePoint(0x1F64F), calendar=String.fromCodePoint(0x1F4C5);
   const message=`${ring} *SELAMAT ULANG TAHUN PERNIKAHAN* ${party}
@@ -1561,9 +1571,7 @@ String(a[0].nama||"").localeCompare(String(b[0].nama||""),"id");
 const pairData=pairs.map(group=>{
 const d=dateObj(group[0].tgl_nkh);
 const today=new Date();
-const years=Math.max(0,today.getFullYear()-d.getFullYear()-
-(today.getMonth()<d.getMonth()||
-(today.getMonth()===d.getMonth()&&today.getDate()<d.getDate())?1:0));
+const years=Math.max(0,today.getFullYear()-d.getFullYear());
 const names=group.map(r=>String(r.nama||"").trim()).filter(Boolean).join(" & ");
 const lp=String(group[0].ling_pel??"").trim() || "-";
 const address=String(group.find(r=>String(r.alamat??"").trim())?.alamat??"").trim() || "-";
