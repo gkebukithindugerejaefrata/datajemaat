@@ -386,6 +386,18 @@ function age(v){
   if(m < 0 || (m === 0 && n.getDate() < d.getDate())) a--;
   return a;
 }
+function hutAge(v){
+  const d = dateObj(v);
+  if(!d)return "-";
+  const n = new Date();
+  return Math.max(0, n.getFullYear() - d.getFullYear());
+}
+function hutMarriageAge(v){
+  const d = dateObj(v);
+  if(!d)return "-";
+  const n = new Date();
+  return Math.max(0, n.getFullYear() - d.getFullYear());
+}
 
 function cleanPhone(phone){
   if(!phone)return "";
@@ -413,7 +425,7 @@ function getBirthdayFamilyInfo(birthdayMember){
   const kkPhone=String(kk.no_telp??"").trim();
   if(!kkPhone)return null;
   const birthdayName=String(birthdayMember.nama??"").trim()||"-";
-  const birthdayAge=age(birthdayMember.tgl_lhr);
+  const birthdayAge=hutAge(birthdayMember.tgl_lhr);
   const birthDate=dateObj(birthdayMember.tgl_lhr);
   if(!birthDate)return null;
   const currentYear=new Date().getFullYear();
@@ -439,7 +451,7 @@ function getMarriageFamilyInfo(group){
   const currentYear=new Date().getFullYear();
   const anniversaryThisYear=new Date(currentYear,d.getMonth(),d.getDate());
   const anniversaryDateThisYear=anniversaryThisYear.toLocaleDateString("id-ID",{day:"numeric",month:"long",year:"numeric"});
-  const years=Math.max(0,currentYear-d.getFullYear()-((new Date().getMonth()<d.getMonth()||(new Date().getMonth()===d.getMonth()&&new Date().getDate()<d.getDate()))?1:0));
+  const years=Math.max(0,currentYear-d.getFullYear());
   const names=group.map(r=>String(r.nama??"").trim()).filter(Boolean).join(" & ");
   const ring=String.fromCodePoint(0x1F48D);
   const party=String.fromCodePoint(0x1F389);
@@ -750,7 +762,7 @@ window.loadBirthdayData=function(){
   
   const rowsHtml=rows.map(r=>{
     const wa=getBirthdayFamilyInfo(r);
-    return `<tr><td data-label="NAMA">${esc(r.nama||"-")}</td><td data-label="LP" style="text-align:center">${esc(r.ling_pel||"-")}</td><td data-label="HUT KE" style="text-align:center">${age(r.tgl_lhr)}</td><td data-label="TANGGAL" style="text-align:center">${dateID(r.tgl_lhr)}${wa?`<br><a class="birthday-wa-btn" href="${esc(wa.url)}" target="_blank" rel="noopener"><i class="fa-brands fa-whatsapp"></i> Ucapan ke KK</a>`:""}</td></tr>`;
+    return `<tr><td data-label="NAMA">${esc(r.nama||"-")}</td><td data-label="LP" style="text-align:center">${esc(r.ling_pel||"-")}</td><td data-label="HUT KE" style="text-align:center">${hutAge(r.tgl_lhr)}</td><td data-label="TANGGAL" style="text-align:center">${dateID(r.tgl_lhr)}${wa?`<br><a class="birthday-wa-btn" href="${esc(wa.url)}" target="_blank" rel="noopener"><i class="fa-brands fa-whatsapp"></i> Ucapan ke KK</a>`:""}</td></tr>`;
   }).join("");
   
   const displayMonth=selected<0?"Semua Bulan":months[selected];
@@ -781,7 +793,7 @@ window.loadMarriageData=function(){
   const pairData=pairs.map(group=>{
     const d=dateObj(group[0].tgl_nkh);
     const today=new Date();
-    const years=Math.max(0,today.getFullYear()-d.getFullYear()-(today.getMonth()<d.getMonth()||(today.getMonth()===d.getMonth()&&today.getDate()<d.getDate())?1:0));
+    const years=Math.max(0,today.getFullYear()-d.getFullYear());
     const names=group.map(r=>String(r.nama||"").trim()).filter(Boolean).join(" & ");
     const lp=String(group[0].ling_pel??"").trim()||"-";
     const address=String(group.find(r=>String(r.alamat??"").trim())?.alamat??"").trim()||"-";
