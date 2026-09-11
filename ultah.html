@@ -21,7 +21,6 @@ select{padding:11px 13px;border:1px solid #ccd6df;border-radius:9px;font-size:14
 button.action{padding:11px 15px;border:0;border-radius:9px;background:#1976d2;color:white;cursor:pointer;font-weight:600;display:inline-flex;align-items:center;gap:7px}
 button.action.secondary{background:#607d8b}
 button.action:hover{filter:brightness(.92)}
-
 .landing-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-bottom:18px}
 @media(max-width:700px){.landing-grid{grid-template-columns:1fr}}
 .choice-card{background:#fff;border-radius:18px;padding:22px;box-shadow:0 8px 24px rgba(23,50,77,.08);border:1px solid #dbe7f1;cursor:pointer;transition:all .25s;position:relative;overflow:hidden}
@@ -42,21 +41,20 @@ button.action:hover{filter:brightness(.92)}
 .choice-btn:hover{filter:brightness(.9)}
 .back-btn{background:#e8eef5;color:#34495e;border:0;padding:9px 14px;border-radius:9px;cursor:pointer;font-weight:600;display:inline-flex;align-items:center;gap:7px;margin-bottom:12px}
 .back-btn:hover{background:#dbe6f1}
-
 .celebration-table-wrap{position:relative;overflow:auto;background:linear-gradient(145deg,#ffffff,#f7fbff);border:1px solid #dbe7f1;border-radius:16px;box-shadow:0 8px 24px rgba(23,50,77,.08)}
 .celebration-table{width:100%;border-collapse:separate;border-spacing:0;min-width:720px;background:transparent}
 .celebration-table th{padding:13px 14px;border:0;border-bottom:2px solid #d9e6f0;background:linear-gradient(180deg,#f8fbfe,#eef5fa);color:#35566f;font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;text-align:center}
 .celebration-table th:first-child{border-top-left-radius:15px}
 .celebration-table th:last-child{border-top-right-radius:15px}
-.celebration-table td{padding:13px 14px;border:0;border-bottom:1px solid #e7eef4;background:rgba(255,255,255,.86);color:#263238;font-size:13px;transition:background .18s ease}
+.celebration-table td{padding:13px 14px;border:0;border-bottom:1px solid #e7eef4;background:rgba(255,255,255,.86);color:#263238;font-size:13px}
 .celebration-table tbody tr:last-child td{border-bottom:0}
 .celebration-table tbody tr:hover td{background:#f3f9ff}
 .celebration-table tbody tr td:first-child{font-weight:700;color:#17324d}
-.celebration-heading{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:6px 0 10px;padding:12px 14px;border-radius:12px;background:linear-gradient(135deg,#eef7ff,#f9fcff);border:1px solid #dbeaf5;box-shadow:0 4px 12px rgba(25,118,210,.06);color:#17324d;font-size:15px;font-weight:800}
-.birthday-wa-btn{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;background:#25d366;color:white;border:none;border-radius:8px;font-size:12px;font-weight:700;text-decoration:none;cursor:pointer;transition:all 0.2s;margin-top:6px}
-.birthday-wa-btn:hover{background:#1eaa50;transform:translateY(-1px);box-shadow:0 3px 8px rgba(0,0,0,.15)}
+.celebration-heading{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:6px 0 10px;padding:12px 14px;border-radius:12px;background:linear-gradient(135deg,#eef7ff,#f9fcff);border:1px solid #dbeaf5;color:#17324d;font-size:15px;font-weight:800}
+.birthday-wa-btn{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;background:#25d366;color:white;border:none;border-radius:8px;font-size:12px;font-weight:700;text-decoration:none;cursor:pointer}
+.birthday-wa-btn:hover{background:#1eaa50}
 .hidden{display:none !important}
-.section-title{font-size:18px;font-weight:800;margin-bottom:12px;color:#17324d;display:flex;align-items:center;gap:8px}
+.section-title{font-size:18px;font-weight:800;margin-bottom:12px;color:#17324d}
 .empty{text-align:center;padding:30px;color:#90a4ae;background:#fff;border-radius:12px;border:1px dashed #dbe7f1}
 .birthday-mobile-cards{display:none}
 @media(max-width:900px){
@@ -70,13 +68,13 @@ button.action:hover{filter:brightness(.92)}
   .celebration-table td::before{content:attr(data-label);position:absolute;left:0;top:8px;width:34%;color:#78909c;font-size:9px;font-weight:800;text-transform:uppercase}
 }
 .birthday-card{background:#fff;border:1px solid #e3eaf0;border-radius:14px;padding:13px 14px;box-shadow:0 3px 12px #00000010;background:linear-gradient(135deg,#fff 0%,#fff3cd 100%)}
-.birthday-card-name{font-weight:800;color:#17324d;font-size:16px;line-height:1.3}
+.birthday-card-name{font-weight:800;color:#17324d;font-size:16px}
 .birthday-card-row{display:flex;justify-content:space-between;gap:10px;margin-top:9px;color:#607d8b;font-size:12px}
 .birthday-card-row strong{color:#263238;font-size:13px}
 .birthday-card-hut{font-size:25px;font-weight:900;color:#1976d2}
 @media(max-width:900px){.birthday-desktop{display:none}.birthday-mobile-cards{display:grid;grid-template-columns:1fr;gap:9px}}
 
-/* TODAY BAR + BUTTON */
+/* SATU TOMBOL AKSES POPUP - Today Bar */
 .today-bar{background:linear-gradient(135deg,#fff3cd,#fff8e1);border:1px solid #ffe082;border-radius:14px;padding:14px 16px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;box-shadow:0 4px 12px rgba(255,193,7,.15)}
 .today-bar-left{display:flex;align-items:center;gap:12px}
 .today-bar-icon{width:44px;height:44px;border-radius:11px;background:linear-gradient(135deg,#ff6b6b,#ffa502);color:#fff;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
@@ -84,39 +82,33 @@ button.action:hover{filter:brightness(.92)}
 .today-bar-text p{font-size:12px;color:#8d6e63;margin-top:2px}
 .today-action-btn{padding:11px 18px;border:0;border-radius:10px;background:linear-gradient(135deg,#ff6b6b,#ff8a65);color:#fff;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;gap:8px;box-shadow:0 4px 12px rgba(255,107,107,.3);transition:.2s;white-space:nowrap}
 .today-action-btn:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(255,107,107,.4)}
-.today-action-btn.secondary{background:#fff;color:#5d4037;border:1px solid #ffe082;box-shadow:none}
 .today-action-btn .badge-count{background:#fff;color:#ff6b6b;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:900;margin-left:4px}
 
-/* TODAY POPUP */
+/* POPUP - gabungan lahir + nikah */
 .today-popup-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;z-index:99999;padding:16px;opacity:0;visibility:hidden;transition:all .3s ease}
 .today-popup-overlay.show{opacity:1;visibility:visible}
 .today-popup-card{background:#fff;border-radius:22px;width:min(560px,100%);max-height:88vh;overflow:hidden;box-shadow:0 24px 64px rgba(0,0,0,.35);transform:scale(.9) translateY(20px);transition:transform .35s cubic-bezier(.34,1.56,.64,1);display:flex;flex-direction:column}
 .today-popup-overlay.show .today-popup-card{transform:scale(1) translateY(0)}
-.today-popup-header{background:linear-gradient(135deg,#1976d2,#42a5f5);color:#fff;padding:20px 22px;position:relative}
-.today-popup-header.marriage-only{background:linear-gradient(135deg,#e91e63,#f48fb1)}
-.today-popup-header.both{background:linear-gradient(135deg,#7b1fa2,#42a5f5)}
-.today-popup-header.both-marriage{background:linear-gradient(135deg,#ff6b6b,#e91e63)}
+.today-popup-header{background:linear-gradient(135deg,#7b1fa2,#42a5f5);color:#fff;padding:20px 22px;position:relative}
 .today-popup-header h2{font-size:20px;font-weight:800;display:flex;align-items:center;gap:10px}
 .today-popup-header p{font-size:13px;opacity:.9;margin-top:6px}
-.today-popup-close{position:absolute;top:14px;right:14px;width:36px;height:36px;border-radius:50%;border:0;background:rgba(255,255,255,.2);color:#fff;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;transition:.2s}
+.today-popup-close{position:absolute;top:14px;right:14px;width:36px;height:36px;border-radius:50%;border:0;background:rgba(255,255,255,.2);color:#fff;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center}
 .today-popup-close:hover{background:rgba(255,255,255,.35)}
 .today-popup-body{padding:18px 18px 6px;overflow:auto;flex:1}
 .today-popup-section{margin-bottom:18px}
 .today-popup-section-title{font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:#546e7a;margin-bottom:10px;display:flex;align-items:center;gap:7px}
 .today-popup-item{background:#f7fbff;border:1px solid #dbe7f1;border-radius:12px;padding:12px 14px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;gap:10px}
 .today-popup-item.marriage{background:#fdf2f8;border-color:#f8bbd0}
-.today-popup-item-name{font-weight:700;color:#17324d;font-size:14px;line-height:1.3}
+.today-popup-item-name{font-weight:700;color:#17324d;font-size:14px}
 .today-popup-item-meta{font-size:11px;color:#78909c;margin-top:3px}
 .today-popup-item-hut{font-size:22px;font-weight:900;color:#1976d2;flex-shrink:0}
 .today-popup-item.marriage .today-popup-item-hut{color:#e91e63}
 .today-popup-footer{padding:12px 18px 18px;display:flex;gap:10px}
-.today-popup-footer button{flex:1;padding:11px;border:0;border-radius:10px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;transition:.2s}
+.today-popup-footer button{flex:1;padding:11px;border:0;border-radius:10px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px}
 .btn-close-popup{background:#e8eef5;color:#34495e}
-.btn-close-popup:hover{background:#dbe6f1}
 .btn-go-birthday{background:#1976d2;color:#fff}
-.btn-go-birthday:hover{filter:brightness(.9)}
-.today-popup-empty{text-align:center;padding:30px 20px;color:#90a4ae}
 .confetti{position:absolute;top:0;left:0;right:0;height:6px;background:repeating-linear-gradient(90deg,#ff6b6b 0 16px,#ffd93d 16px 32px,#6bcf7f 32px 48px,#4d96ff 48px 64px)}
+.today-popup-empty{text-align:center;padding:30px 20px;color:#90a4ae}
 </style>
 </head>
 <body>
@@ -126,15 +118,12 @@ button.action:hover{filter:brightness(.92)}
     <h1><i class="fa-solid fa-cake-candles"></i> GKE Bukit Hindu - Ulang Tahun</h1>
     <div class="subtitle">Data Ulang Tahun Kelahiran & Pernikahan Jemaat</div>
   </div>
-  <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-    <div style="font-size:12px;color:#78909c"><i class="fa-solid fa-calendar-check"></i> <span id="todayLabel"></span></div>
-    <button class="today-action-btn" style="padding:8px 14px;font-size:12px" onclick="showTodayPopup(true)"><i class="fa-solid fa-gift"></i> Hari Ini <span class="badge-count" id="headerTodayCount">0</span></button>
-  </div>
+  <div style="font-size:12px;color:#78909c"><i class="fa-solid fa-calendar-check"></i> <span id="todayLabel"></span></div>
 </header>
 
 <div id="status" class="status"></div>
 
-<!-- TODAY BAR - tombol akses popup -->
+<!-- SATU TOMBOL AKSES POPUP HARI INI (gabungan lahir+nikah) -->
 <div id="todayBar" class="today-bar">
   <div class="today-bar-left">
     <div class="today-bar-icon"><i class="fa-solid fa-gift"></i></div>
@@ -149,7 +138,6 @@ button.action:hover{filter:brightness(.92)}
   </button>
 </div>
 
-<!-- LANDING -->
 <section id="view-landing">
   <div class="landing-grid">
     <div class="choice-card birthday" onclick="switchView('birthday')">
@@ -177,36 +165,21 @@ button.action:hover{filter:brightness(.92)}
   </div>
 </section>
 
-<!-- BIRTHDAY -->
 <section id="view-birthday" class="hidden">
   <button class="back-btn" onclick="switchView('landing')"><i class="fa-solid fa-arrow-left"></i> Kembali ke Menu</button>
-  <div class="section-title">🎂 Ulang Tahun Kelahiran <button class="today-action-btn" style="margin-left:auto;padding:8px 12px;font-size:12px" onclick="showTodayPopup(true)"><i class="fa-solid fa-gift"></i> Hari Ini</button></div>
-  <div class="panel">
-    <div class="controls">
-      <label for="birthMonth" style="font-size:13px;font-weight:700;color:#546e7a">Filter Bulan:</label>
-      <select id="birthMonth"></select>
-      <button class="action secondary" onclick="renderBirthdays()"><i class="fa-solid fa-rotate"></i> Refresh</button>
-    </div>
-  </div>
+  <div class="section-title">🎂 Ulang Tahun Kelahiran</div>
+  <div class="panel"><div class="controls"><label for="birthMonth" style="font-size:13px;font-weight:700;color:#546e7a">Filter Bulan:</label><select id="birthMonth"></select><button class="action secondary" onclick="renderBirthdays()"><i class="fa-solid fa-rotate"></i> Refresh</button></div></div>
   <div id="birthdays"></div>
 </section>
 
-<!-- MARRIAGE -->
 <section id="view-marriage" class="hidden">
   <button class="back-btn" onclick="switchView('landing')"><i class="fa-solid fa-arrow-left"></i> Kembali ke Menu</button>
-  <div class="section-title">💍 Ulang Tahun Pernikahan <button class="today-action-btn" style="margin-left:auto;padding:8px 12px;font-size:12px;background:linear-gradient(135deg,#e91e63,#f48fb1)" onclick="showTodayPopup(true)"><i class="fa-solid fa-gift"></i> Hari Ini</button></div>
-  <div class="panel">
-    <div class="controls">
-      <label for="marriageMonth" style="font-size:13px;font-weight:700;color:#546e7a">Filter Bulan:</label>
-      <select id="marriageMonth"></select>
-      <button class="action secondary" onclick="renderMarriages()"><i class="fa-solid fa-rotate"></i> Refresh</button>
-    </div>
-  </div>
+  <div class="section-title">💍 Ulang Tahun Pernikahan</div>
+  <div class="panel"><div class="controls"><label for="marriageMonth" style="font-size:13px;font-weight:700;color:#546e7a">Filter Bulan:</label><select id="marriageMonth"></select><button class="action secondary" onclick="renderMarriages()"><i class="fa-solid fa-rotate"></i> Refresh</button></div></div>
   <div id="marriages"></div>
 </section>
 </div>
 
-<!-- TODAY POPUP - Gabungan Lahir + Nikah -->
 <div id="todayPopup" class="today-popup-overlay" onclick="if(event.target===this) closeTodayPopup()">
   <div class="today-popup-card">
     <div class="confetti"></div>
@@ -228,287 +201,122 @@ button.action:hover{filter:brightness(.92)}
 const SUPABASE_URL="https://gpgjgplqsvyexumoljyo.supabase.co";
 const SUPABASE_KEY="sb_publishable_JaVgg3CuVmI9SczGkoaRZQ_EaYoV9z9";
 const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
-let allData=[];
-let todayBirthdays=[];
-let todayMarriages=[];
+let allData=[],todayBirthdays=[],todayMarriages=[];
 const $=id=>document.getElementById(id);
 const monthNames=["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
-
-function showStatus(msg,type="success"){
-  const el=$("status");el.textContent=msg;el.className="status show "+type;
-  if(type==="success"||type==="loading"){ setTimeout(()=>{el.className="status";},3000); }
-}
-function esc(v){ const d=document.createElement("div");d.textContent=v==null?"":String(v);return d.innerHTML; }
-function dateObj(v){
-  if(v==null||String(v).trim()==="")return null;
-  let x=String(v).trim();
-  if(x==="0000-00-00"||x==="0000-00-00 00:00:00")return null;
-  let m;
-  if((m=x.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/))) return new Date(Number(m[1]),Number(m[2])-1,Number(m[3]));
-  if((m=x.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/))) return new Date(Number(m[3]),Number(m[2])-1,Number(m[1]));
-  const d=new Date(x);
-  return isNaN(d)?null:d;
-}
-function dateID(v){ const d=dateObj(v);return d?d.toLocaleDateString("id-ID",{day:"2-digit",month:"long",year:"numeric"}):"-"; }
-function hutAge(v){
-  const d=dateObj(v);if(!d)return "-";
-  return Math.max(0,new Date().getFullYear()-d.getFullYear());
-}
-function cleanPhone(phone){
-  if(!phone)return "";
-  let p=String(phone).replace(/\D/g,"");
-  if(p.startsWith("0")) p="62"+p.slice(1);
-  if(!p.startsWith("62")) p="62"+p;
-  return p;
-}
+function showStatus(msg,type="success"){const el=$("status");el.textContent=msg;el.className="status show "+type;if(type==="success"||type==="loading"){setTimeout(()=>{el.className="status";},3000);}}
+function esc(v){const d=document.createElement("div");d.textContent=v==null?"":String(v);return d.innerHTML;}
+function dateObj(v){if(v==null||String(v).trim()==="")return null;let x=String(v).trim();if(x==="0000-00-00"||x==="0000-00-00 00:00:00")return null;let m;if((m=x.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/))) return new Date(Number(m[1]),Number(m[2])-1,Number(m[3]));if((m=x.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/))) return new Date(Number(m[3]),Number(m[2])-1,Number(m[1]));const d=new Date(x);return isNaN(d)?null:d;}
+function dateID(v){const d=dateObj(v);return d?d.toLocaleDateString("id-ID",{day:"2-digit",month:"long",year:"numeric"}):"-";}
+function hutAge(v){const d=dateObj(v);if(!d)return "-";return Math.max(0,new Date().getFullYear()-d.getFullYear());}
+function cleanPhone(phone){if(!phone)return "";let p=String(phone).replace(/\D/g,"");if(p.startsWith("0")) p="62"+p.slice(1);if(!p.startsWith("62")) p="62"+p;return p;}
 function getBirthdayFamilyInfo(birthdayMember){
-  const reg=String(birthdayMember.no_reg??"").trim();
-  if(!reg) return null;
+  const reg=String(birthdayMember.no_reg??"").trim();if(!reg) return null;
   const familyMembers=allData.filter(r=>String(r.no_reg??"").trim()===reg);
-  const kk=familyMembers.find(r=>String(r.status??"").trim().toUpperCase()==="KK");
-  if(!kk) return null;
-  const kkPhone=String(kk.no_telp??"").trim();
-  if(!kkPhone) return null;
-  const birthdayName=String(birthdayMember.nama??"").trim()||"-";
-  const birthdayAge=hutAge(birthdayMember.tgl_lhr);
-  const birthDate=dateObj(birthdayMember.tgl_lhr);
-  if(!birthDate) return null;
-  const currentYear=new Date().getFullYear();
-  const birthdayThisYear=new Date(currentYear,birthDate.getMonth(),birthDate.getDate());
+  const kk=familyMembers.find(r=>String(r.status??"").trim().toUpperCase()==="KK");if(!kk) return null;
+  const kkPhone=String(kk.no_telp??"").trim();if(!kkPhone) return null;
+  const birthdayName=String(birthdayMember.nama??"").trim()||"-";const birthdayAge=hutAge(birthdayMember.tgl_lhr);
+  const birthDate=dateObj(birthdayMember.tgl_lhr);if(!birthDate) return null;
+  const currentYear=new Date().getFullYear();const birthdayThisYear=new Date(currentYear,birthDate.getMonth(),birthDate.getDate());
   const birthdayDateThisYear=birthdayThisYear.toLocaleDateString("id-ID",{day:"numeric",month:"long",year:"numeric"});
-  const cake=String.fromCodePoint(0x1F382), party=String.fromCodePoint(0x1F389), pray=String.fromCodePoint(0x1F64F);
+  const cake=String.fromCodePoint(0x1F382),party=String.fromCodePoint(0x1F389),pray=String.fromCodePoint(0x1F64F);
   const message=`${cake} *SELAMAT ULANG TAHUN* ${party}\n\nSelamat ulang tahun untuk *${birthdayName}* yang ke-${birthdayAge} tahun.\n\nKiranya Tuhan senantiasa memberikan kesehatan, sukacita, damai sejahtera.\n\n${pray} Tuhan memberkati selalu.\n\n:: ${birthdayDateThisYear} ::\nMPHJ GKE BUKIT HINDU`;
-  const url=`https://wa.me/${cleanPhone(kkPhone)}?text=${encodeURIComponent(message)}`;
-  return {url};
+  return {url:`https://wa.me/${cleanPhone(kkPhone)}?text=${encodeURIComponent(message)}`};
 }
 function getMarriageFamilyInfo(group){
-  const reg=String(group[0]?.no_reg??"").trim();
-  let familyMembers=reg ? allData.filter(r=>String(r.no_reg??"").trim()===reg) : group;
-  const kk=familyMembers.find(r=>String(r.status??"").trim().toUpperCase()==="KK");
-  if(!kk)return null;
-  const kkPhone=String(kk.no_telp??"").trim();
-  if(!kkPhone)return null;
-  const d=dateObj(group[0]?.tgl_nkh);
-  if(!d)return null;
-  const currentYear=new Date().getFullYear();
-  const anniversaryThisYear=new Date(currentYear,d.getMonth(),d.getDate());
+  const reg=String(group[0]?.no_reg??"").trim();let familyMembers=reg?allData.filter(r=>String(r.no_reg??"").trim()===reg):group;
+  const kk=familyMembers.find(r=>String(r.status??"").trim().toUpperCase()==="KK");if(!kk)return null;
+  const kkPhone=String(kk.no_telp??"").trim();if(!kkPhone)return null;
+  const d=dateObj(group[0]?.tgl_nkh);if(!d)return null;
+  const currentYear=new Date().getFullYear();const anniversaryThisYear=new Date(currentYear,d.getMonth(),d.getDate());
   const anniversaryDateThisYear=anniversaryThisYear.toLocaleDateString("id-ID",{day:"numeric",month:"long",year:"numeric"});
-  const years=Math.max(0,currentYear-d.getFullYear());
-  const names=group.map(r=>String(r.nama??"").trim()).filter(Boolean).join(" & ");
-  const ring=String.fromCodePoint(0x1F48D), party=String.fromCodePoint(0x1F389), pray=String.fromCodePoint(0x1F64F);
+  const years=Math.max(0,currentYear-d.getFullYear());const names=group.map(r=>String(r.nama??"").trim()).filter(Boolean).join(" & ");
+  const ring=String.fromCodePoint(0x1F48D),party=String.fromCodePoint(0x1F389),pray=String.fromCodePoint(0x1F64F);
   const message=`${ring} *SELAMAT ULANG TAHUN PERNIKAHAN* ${party}\n\nSelamat ulang tahun pernikahan ke-${years} untuk *${names}*.\n\nKiranya Tuhan memberkati keluarga anda.\n\n${pray} Tuhan memberkati.\n\nTanggal: *${anniversaryDateThisYear}*\n\nMPHJ GKE BUKIT HINDU`;
   return {url:`https://wa.me/${cleanPhone(kkPhone)}?text=${encodeURIComponent(message)}`};
 }
 async function loadAllData(){
-  showStatus("Memuat data jemaat...","loading");
-  allData=[];
-  let from=0,batch=1000;
+  showStatus("Memuat data jemaat...","loading");allData=[];let from=0,batch=1000;
   try{
     while(true){
       const {data,error}=await db.from("jemaat").select("*").order("id",{ascending:true}).range(from,from+batch-1);
-      if(error) throw error;
-      const rows=data||[];
-      allData.push(...rows);
+      if(error) throw error;const rows=data||[];allData.push(...rows);
       showStatus("Memuat data... "+allData.length+" data","loading");
-      if(rows.length<batch) break;
-      from+=batch;
+      if(rows.length<batch) break;from+=batch;
     }
-    updateLandingCounts();
-    renderBirthdays();
-    renderMarriages();
-    checkTodayBirthdays();
+    updateLandingCounts();renderBirthdays();renderMarriages();checkTodayBirthdays();
     showStatus("Berhasil memuat "+allData.length.toLocaleString("id-ID")+" data.","success");
-  }catch(e){
-    console.error(e);
-    showStatus("Gagal memuat data: "+e.message,"error");
-  }
+  }catch(e){console.error(e);showStatus("Gagal memuat data: "+e.message,"error");}
 }
 function updateLandingCounts(){
-  const now=new Date();
-  const nowMonth=now.getMonth();
-  const nowDate=now.getDate();
+  const now=new Date();const nowMonth=now.getMonth();const nowDate=now.getDate();
   const bThisMonth=allData.filter(r=>{const d=dateObj(r.tgl_lhr);return d&&d.getMonth()===nowMonth;}).length;
   const bTotal=allData.filter(r=>dateObj(r.tgl_lhr)).length;
   todayBirthdays=allData.filter(r=>{const d=dateObj(r.tgl_lhr);return d&&d.getMonth()===nowMonth&&d.getDate()===nowDate;});
   const groups=new Map();
-  allData.forEach(r=>{
-    const d=dateObj(r.tgl_nkh); if(!d) return;
-    const reg=String(r.no_reg??"").trim();
-    const dateKey=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
-    const key=reg?`${reg}|${dateKey}`:`__DATE_ONLY__|${dateKey}`;
-    if(!groups.has(key)) groups.set(key,[]);
-    groups.get(key).push(r);
-  });
+  allData.forEach(r=>{const d=dateObj(r.tgl_nkh);if(!d) return;const reg=String(r.no_reg??"").trim();const dateKey=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;const key=reg?`${reg}|${dateKey}`:`__DATE_ONLY__|${dateKey}`;if(!groups.has(key)) groups.set(key,[]);groups.get(key).push(r);});
   const pairs=[...groups.values()].filter(g=>g.length>=2);
   const mThisMonth=pairs.filter(g=>{const d=dateObj(g[0].tgl_nkh);return d&&d.getMonth()===nowMonth;}).length;
   todayMarriages=pairs.filter(g=>{const d=dateObj(g[0].tgl_nkh);return d&&d.getMonth()===nowMonth&&d.getDate()===nowDate;});
-  $("countBirthday").textContent=bThisMonth;
-  $("totalBirthday").textContent=bTotal;
-  $("countMarriage").textContent=mThisMonth;
-  $("totalMarriage").textContent=pairs.length;
-  $("countTodayBirthday").textContent=todayBirthdays.length;
-  $("countTodayMarriage").textContent=todayMarriages.length;
-  const totalToday=todayBirthdays.length+todayMarriages.length;
-  $("countTodayTotal").textContent=totalToday;
-  $("headerTodayCount").textContent=totalToday;
-  // Update today bar
-  const todayBar=$("todayBar");
-  const titleEl=$("todayBarTitle");
-  const descEl=$("todayBarDesc");
-  if(totalToday>0){
-    titleEl.textContent=`🎉 Ada ${totalToday} yang berulang tahun hari ini!`;
-    descEl.textContent=`${todayBirthdays.length} kelahiran & ${todayMarriages.length} pernikahan - Klik untuk lihat & ucapkan`;
-    todayBar.style.display="flex";
-  }else{
-    titleEl.textContent=`Tidak ada yang berulang tahun hari ini`;
-    descEl.textContent=`${now.toLocaleDateString("id-ID",{weekday:"long",day:"numeric",month:"long"})} - Tetap cek daftar bulan ini`;
-    todayBar.style.display="flex";
-  }
+  $("countBirthday").textContent=bThisMonth;$("totalBirthday").textContent=bTotal;$("countMarriage").textContent=mThisMonth;$("totalMarriage").textContent=pairs.length;
+  $("countTodayBirthday").textContent=todayBirthdays.length;$("countTodayMarriage").textContent=todayMarriages.length;
+  const totalToday=todayBirthdays.length+todayMarriages.length;$("countTodayTotal").textContent=totalToday;
+  const titleEl=$("todayBarTitle");const descEl=$("todayBarDesc");
+  if(totalToday>0){titleEl.textContent=`🎉 Ada ${totalToday} yang berulang tahun hari ini!`;descEl.textContent=`${todayBirthdays.length} kelahiran & ${todayMarriages.length} pernikahan - Klik tombol di kanan untuk lihat`;}
+  else{titleEl.textContent=`Tidak ada yang berulang tahun hari ini`;descEl.textContent=`${now.toLocaleDateString("id-ID",{weekday:"long",day:"numeric",month:"long"})} - Tetap cek daftar bulan ini`;}
 }
 function populateMonthSelects(){
-  const birth=$("birthMonth"), marriage=$("marriageMonth");
-  const currentMonth=new Date().getMonth();
+  const birth=$("birthMonth"),marriage=$("marriageMonth");const currentMonth=new Date().getMonth();
   const options='<option value="-1">Semua Bulan</option>'+monthNames.map((m,i)=>`<option value="${i}">${m}</option>`).join("");
-  birth.innerHTML=options;
-  marriage.innerHTML=options;
-  birth.value=String(currentMonth);
-  marriage.value=String(currentMonth);
-  birth.addEventListener("change",renderBirthdays);
-  marriage.addEventListener("change",renderMarriages);
+  birth.innerHTML=options;marriage.innerHTML=options;birth.value=String(currentMonth);marriage.value=String(currentMonth);
+  birth.addEventListener("change",renderBirthdays);marriage.addEventListener("change",renderMarriages);
 }
 function renderBirthdays(){
-  const selected=Number($("birthMonth").value);
-  let rows=allData.filter(r=>dateObj(r.tgl_lhr));
+  const selected=Number($("birthMonth").value);let rows=allData.filter(r=>dateObj(r.tgl_lhr));
   if(selected>=0) rows=rows.filter(r=>dateObj(r.tgl_lhr).getMonth()===selected);
-  rows.sort((a,b)=>{
-    const da=dateObj(a.tgl_lhr),db=dateObj(b.tgl_lhr);
-    return da.getDate()-db.getDate() || String(a.nama||"").localeCompare(String(b.nama||""),"id");
-  });
-  const rowsHtml=rows.map(r=>{
-    const wa=getBirthdayFamilyInfo(r);
-    return `<tr><td data-label="NAMA">${esc(r.nama||"-")}</td><td data-label="LP">${esc(r.ling_pel||"-")}</td><td data-label="HUT KE" style="text-align:center">${hutAge(r.tgl_lhr)}</td><td data-label="TANGGAL" style="text-align:center">${dateID(r.tgl_lhr)}${wa?`<br><a class="birthday-wa-btn" href="${esc(wa.url)}" target="_blank"><i class="fa-brands fa-whatsapp"></i> Ucapkan ke KK</a>`:""}</td></tr>`;
-  }).join("");
-  const mobileCards=rows.map(r=>{
-    const wa=getBirthdayFamilyInfo(r);
-    return `<div class="birthday-card"><div class="birthday-card-name">${esc(r.nama||"-")}</div><div class="birthday-card-row"><span>LP: <strong>${esc(r.ling_pel||"-")}</strong></span><span class="birthday-card-hut">${hutAge(r.tgl_lhr)}</span></div><div class="birthday-card-row"><span>Tanggal lahir</span><strong>${dateID(r.tgl_lhr)}</strong></div>${wa?`<a class="birthday-wa-btn" href="${esc(wa.url)}" target="_blank"><i class="fa-brands fa-whatsapp"></i> Kirim Ucapan ke KK</a>`:""}</div>`;
-  }).join("");
+  rows.sort((a,b)=>{const da=dateObj(a.tgl_lhr),db=dateObj(b.tgl_lhr);return da.getDate()-db.getDate()||String(a.nama||"").localeCompare(String(b.nama||""),"id");});
+  const rowsHtml=rows.map(r=>{const wa=getBirthdayFamilyInfo(r);return `<tr><td data-label="NAMA">${esc(r.nama||"-")}</td><td data-label="LP">${esc(r.ling_pel||"-")}</td><td data-label="HUT KE" style="text-align:center">${hutAge(r.tgl_lhr)}</td><td data-label="TANGGAL" style="text-align:center">${dateID(r.tgl_lhr)}${wa?`<br><a class="birthday-wa-btn" href="${esc(wa.url)}" target="_blank"><i class="fa-brands fa-whatsapp"></i> Ucapkan ke KK</a>`:""}</td></tr>`;}).join("");
+  const mobileCards=rows.map(r=>{const wa=getBirthdayFamilyInfo(r);return `<div class="birthday-card"><div class="birthday-card-name">${esc(r.nama||"-")}</div><div class="birthday-card-row"><span>LP: <strong>${esc(r.ling_pel||"-")}</strong></span><span class="birthday-card-hut">${hutAge(r.tgl_lhr)}</span></div><div class="birthday-card-row"><span>Tanggal lahir</span><strong>${dateID(r.tgl_lhr)}</strong></div>${wa?`<a class="birthday-wa-btn" href="${esc(wa.url)}" target="_blank"><i class="fa-brands fa-whatsapp"></i> Kirim Ucapan ke KK</a>`:""}</div>`;}).join("");
   $("birthdays").innerHTML=`<div class="celebration-heading"><span>🎂 Ulang Tahun Kelahiran</span><span>${selected<0?"Semua Bulan":monthNames[selected]} • ${rows.length} orang</span></div><div class="celebration-table-wrap birthday-desktop"><table class="celebration-table"><thead><tr><th>NAMA</th><th>LP</th><th>HUT KE</th><th>TANGGAL</th></tr></thead><tbody>${rowsHtml||'<tr><td colspan="4" class="empty">Tidak ada data ulang tahun pada bulan yang dipilih.</td></tr>'}</tbody></table></div><div class="birthday-mobile-cards">${mobileCards||'<div class="empty">Tidak ada data ulang tahun pada bulan yang dipilih.</div>'}</div>`;
 }
 function renderMarriages(){
-  const selected=Number($("marriageMonth").value);
-  const groups=new Map();
-  allData.forEach(r=>{
-    const d=dateObj(r.tgl_nkh); if(!d) return;
-    if(selected>=0 && d.getMonth()!==selected) return;
-    const reg=String(r.no_reg??"").trim();
-    const dateKey=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
-    const key=reg?`${reg}|${dateKey}`:`__DATE_ONLY__|${dateKey}`;
-    if(!groups.has(key)) groups.set(key,[]);
-    groups.get(key).push(r);
-  });
-  const pairs=[...groups.values()].filter(g=>g.length>=2).sort((a,b)=>{
-    const da=dateObj(a[0].tgl_nkh),db=dateObj(b[0].tgl_nkh);
-    return da.getDate()-db.getDate() || da.getMonth()-db.getMonth() || String(a[0].nama||"").localeCompare(String(b[0].nama||""),"id");
-  });
-  const pairData=pairs.map(group=>{
-    const d=dateObj(group[0].tgl_nkh);
-    const years=Math.max(0,new Date().getFullYear()-d.getFullYear());
-    const names=group.map(r=>String(r.nama??"").trim()).filter(Boolean).join(" & ");
-    const lp=String(group[0].ling_pel??"").trim()||"-";
-    const address=String(group.find(r=>String(r.alamat??"").trim())?.alamat??"").trim()||"-";
-    const wa=getMarriageFamilyInfo(group);
-    return {names,lp,years,date:dateID(group[0].tgl_nkh),address,wa};
-  });
+  const selected=Number($("marriageMonth").value);const groups=new Map();
+  allData.forEach(r=>{const d=dateObj(r.tgl_nkh);if(!d) return;if(selected>=0&&d.getMonth()!==selected) return;const reg=String(r.no_reg??"").trim();const dateKey=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;const key=reg?`${reg}|${dateKey}`:`__DATE_ONLY__|${dateKey}`;if(!groups.has(key)) groups.set(key,[]);groups.get(key).push(r);});
+  const pairs=[...groups.values()].filter(g=>g.length>=2).sort((a,b)=>{const da=dateObj(a[0].tgl_nkh),db=dateObj(b[0].tgl_nkh);return da.getDate()-db.getDate()||da.getMonth()-db.getMonth()||String(a[0].nama||"").localeCompare(String(b[0].nama||""),"id");});
+  const pairData=pairs.map(group=>{const d=dateObj(group[0].tgl_nkh);const years=Math.max(0,new Date().getFullYear()-d.getFullYear());const names=group.map(r=>String(r.nama??"").trim()).filter(Boolean).join(" & ");const lp=String(group[0].ling_pel??"").trim()||"-";const address=String(group.find(r=>String(r.alamat??"").trim())?.alamat??"").trim()||"-";const wa=getMarriageFamilyInfo(group);return {names,lp,years,date:dateID(group[0].tgl_nkh),address,wa};});
   const rowsHtml=pairData.map(x=>`<tr><td data-label="NAMA">${esc(x.names)}</td><td data-label="LP" style="text-align:center">${esc(x.lp)}</td><td data-label="HUT KE" style="text-align:center">${x.years}</td><td data-label="TANGGAL" style="text-align:center">${esc(x.date)}${x.wa?`<br><a class="birthday-wa-btn" href="${esc(x.wa.url)}" target="_blank"><i class="fa-brands fa-whatsapp"></i> Ucapkan ke KK</a>`:""}</td><td data-label="ALAMAT">${esc(x.address)}</td></tr>`).join("");
   const mobileCards=pairData.map(x=>`<div class="birthday-card"><div class="birthday-card-name">${esc(x.names)}</div><div class="birthday-card-row"><span>LP: <strong>${esc(x.lp)}</strong></span><span class="birthday-card-hut">${x.years}</span></div><div class="birthday-card-row"><span>Tanggal</span><strong>${esc(x.date)}</strong></div><div class="birthday-card-row"><span>Alamat</span><strong style="text-align:right">${esc(x.address)}</strong></div>${x.wa?`<a class="birthday-wa-btn" href="${esc(x.wa.url)}" target="_blank"><i class="fa-brands fa-whatsapp"></i> Kirim Ucapan ke KK</a>`:""}</div>`).join("");
   $("marriages").innerHTML=`<div class="celebration-heading"><span>💍 Ulang Tahun Pernikahan</span><span>${selected<0?"Semua Bulan":monthNames[selected]} • ${pairData.length} pasangan</span></div><div class="celebration-table-wrap birthday-desktop"><table class="celebration-table"><thead><tr><th>NAMA</th><th>LP</th><th>HUT KE</th><th>TANGGAL</th><th>ALAMAT</th></tr></thead><tbody>${rowsHtml||'<tr><td colspan="5" class="empty">Tidak ada pasangan yang memiliki tanggal pernikahan yang sama pada bulan yang dipilih.</td></tr>'}</tbody></table></div><div class="birthday-mobile-cards">${mobileCards||'<div class="empty">Tidak ada pasangan yang memiliki tanggal pernikahan yang sama pada bulan yang dipilih.</div>'}</div>`;
 }
-function switchView(view){
-  $("view-landing").classList.toggle("hidden",view!=="landing");
-  $("view-birthday").classList.toggle("hidden",view!=="birthday");
-  $("view-marriage").classList.toggle("hidden",view!=="marriage");
-  window.scrollTo({top:0,behavior:"smooth"});
-}
-/* POPUP LOGIC */
-function checkTodayBirthdays(){
-  const totalToday=todayBirthdays.length+todayMarriages.length;
-  if(totalToday===0) return;
-  const todayKey=new Date().toISOString().slice(0,10);
-  const lastShown=localStorage.getItem("todayPopupShown");
-  if(lastShown===todayKey) return;
-  setTimeout(()=>{ showTodayPopup(false); }, 900);
-}
+function switchView(view){$("view-landing").classList.toggle("hidden",view!=="landing");$("view-birthday").classList.toggle("hidden",view!=="birthday");$("view-marriage").classList.toggle("hidden",view!=="marriage");window.scrollTo({top:0,behavior:"smooth"});}
+function checkTodayBirthdays(){const totalToday=todayBirthdays.length+todayMarriages.length;if(totalToday===0) return;const todayKey=new Date().toISOString().slice(0,10);const lastShown=localStorage.getItem("todayPopupShown");if(lastShown===todayKey) return;setTimeout(()=>{showTodayPopup(false);},900);}
 function showTodayPopup(force=false){
   const totalToday=todayBirthdays.length+todayMarriages.length;
-  const now=new Date();
-  const dateStr=now.toLocaleDateString("id-ID",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+  const now=new Date();const dateStr=now.toLocaleDateString("id-ID",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
   $("todayPopupDate").textContent=dateStr;
-  let headerClass="both";
-  if(todayBirthdays.length>0 && todayMarriages.length===0) headerClass="";
-  else if(todayBirthdays.length===0 && todayMarriages.length>0) headerClass="marriage-only";
-  else if(todayBirthdays.length>0 && todayMarriages.length>0) headerClass="both-marriage";
-  $("todayPopupHeader").className="today-popup-header "+headerClass;
-  
   if(totalToday===0){
     $("todayPopupTitle").textContent="Tidak ada yang ultah hari ini";
-    $("todayPopupBody").innerHTML=`<div class="today-popup-empty"><i class="fa-solid fa-calendar-xmark" style="font-size:32px;color:#90a4ae;margin-bottom:12px;display:block"></i><p>Tidak ada jemaat yang berulang tahun kelahiran atau pernikahan hari ini.</p><p style="font-size:12px;margin-top:8px;color:#78909c">Cek daftar bulan ini untuk persiapan ucapan.</p></div>`;
-    $("todayPopup").classList.add("show");
-    return;
+    $("todayPopupBody").innerHTML=`<div class="today-popup-empty"><i class="fa-solid fa-calendar-xmark" style="font-size:32px;color:#90a4ae;margin-bottom:12px;display:block"></i><p>Tidak ada jemaat yang berulang tahun kelahiran atau pernikahan hari ini.</p></div>`;
+    $("todayPopup").classList.add("show");return;
   }
-  
   $("todayPopupTitle").textContent=`${totalToday} yang Berulang Tahun Hari Ini`;
   let html="";
   if(todayBirthdays.length>0){
     html+=`<div class="today-popup-section"><div class="today-popup-section-title"><i class="fa-solid fa-cake-candles"></i> Ulang Tahun Kelahiran - ${todayBirthdays.length} orang</div>`;
-    todayBirthdays.forEach(person=>{
-      const info=getBirthdayFamilyInfo(person);
-      const age=hutAge(person.tgl_lhr);
-      html+=`<div class="today-popup-item"><div><div class="today-popup-item-name">${esc(person.nama||"-")}</div><div class="today-popup-item-meta">LP: ${esc(person.ling_pel||"-")} • ${dateID(person.tgl_lhr)} • HUT ke-${age}</div></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px"><div class="today-popup-item-hut">${age}</div>${info?`<a class="birthday-wa-btn" style="margin:0" href="${esc(info.url)}" target="_blank"><i class="fa-brands fa-whatsapp"></i> WA</a>`:""}</div></div>`;
-    });
+    todayBirthdays.forEach(person=>{const info=getBirthdayFamilyInfo(person);const age=hutAge(person.tgl_lhr);html+=`<div class="today-popup-item"><div><div class="today-popup-item-name">${esc(person.nama||"-")}</div><div class="today-popup-item-meta">LP: ${esc(person.ling_pel||"-")} • ${dateID(person.tgl_lhr)} • HUT ke-${age}</div></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px"><div class="today-popup-item-hut">${age}</div>${info?`<a class="birthday-wa-btn" style="margin:0" href="${esc(info.url)}" target="_blank"><i class="fa-brands fa-whatsapp"></i> WA</a>`:""}</div></div>`;});
     html+=`</div>`;
   }
   if(todayMarriages.length>0){
     html+=`<div class="today-popup-section"><div class="today-popup-section-title"><i class="fa-solid fa-ring"></i> Ulang Tahun Pernikahan - ${todayMarriages.length} pasangan</div>`;
-    todayMarriages.forEach(group=>{
-      const info=getMarriageFamilyInfo(group);
-      const d=dateObj(group[0].tgl_nkh);
-      const years=Math.max(0,new Date().getFullYear()-d.getFullYear());
-      const names=group.map(r=>String(r.nama||"").trim()).filter(Boolean).join(" & ");
-      html+=`<div class="today-popup-item marriage"><div><div class="today-popup-item-name">${esc(names)}</div><div class="today-popup-item-meta">HUT ke-${years} • ${dateID(group[0].tgl_nkh)} • LP: ${esc(group[0].ling_pel||"-")}</div></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px"><div class="today-popup-item-hut">${years}</div>${info?`<a class="birthday-wa-btn" style="margin:0;background:#e91e63" href="${esc(info.url)}" target="_blank"><i class="fa-brands fa-whatsapp"></i> WA</a>`:""}</div></div>`;
-    });
+    todayMarriages.forEach(group=>{const info=getMarriageFamilyInfo(group);const d=dateObj(group[0].tgl_nkh);const years=Math.max(0,new Date().getFullYear()-d.getFullYear());const names=group.map(r=>String(r.nama||"").trim()).filter(Boolean).join(" & ");html+=`<div class="today-popup-item marriage"><div><div class="today-popup-item-name">${esc(names)}</div><div class="today-popup-item-meta">HUT ke-${years} • ${dateID(group[0].tgl_nkh)} • LP: ${esc(group[0].ling_pel||"-")}</div></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px"><div class="today-popup-item-hut">${years}</div>${info?`<a class="birthday-wa-btn" style="margin:0;background:#e91e63" href="${esc(info.url)}" target="_blank"><i class="fa-brands fa-whatsapp"></i> WA</a>`:""}</div></div>`;});
     html+=`</div>`;
   }
-  $("todayPopupBody").innerHTML=html;
-  $("todayPopup").classList.add("show");
-  if(!force){
-    const todayKey=new Date().toISOString().slice(0,10);
-    localStorage.setItem("todayPopupShown", todayKey);
-  }
+  $("todayPopupBody").innerHTML=html;$("todayPopup").classList.add("show");
+  if(!force){const todayKey=new Date().toISOString().slice(0,10);localStorage.setItem("todayPopupShown", todayKey);}
 }
-function closeTodayPopup(){
-  $("todayPopup").classList.remove("show");
-  const todayKey=new Date().toISOString().slice(0,10);
-  localStorage.setItem("todayPopupShown", todayKey);
-}
-function goToTodayList(){
-  closeTodayPopup();
-  if(todayBirthdays.length>=todayMarriages.length){
-    switchView('birthday');
-    $("birthMonth").value=String(new Date().getMonth());
-    renderBirthdays();
-  }else{
-    switchView('marriage');
-    $("marriageMonth").value=String(new Date().getMonth());
-    renderMarriages();
-  }
-}
-function resetTodayPopup(){ localStorage.removeItem("todayPopupShown"); alert("Popup akan muncul lagi saat reload"); }
-
-(function init(){
-  $("todayLabel").textContent=new Date().toLocaleDateString("id-ID",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
-  populateMonthSelects();
-  loadAllData();
-})();
+function closeTodayPopup(){$("todayPopup").classList.remove("show");const todayKey=new Date().toISOString().slice(0,10);localStorage.setItem("todayPopupShown", todayKey);}
+function goToTodayList(){closeTodayPopup();if(todayBirthdays.length>=todayMarriages.length){switchView('birthday');$("birthMonth").value=String(new Date().getMonth());renderBirthdays();}else{switchView('marriage');$("marriageMonth").value=String(new Date().getMonth());renderMarriages();}}
+(function init(){$("todayLabel").textContent=new Date().toLocaleDateString("id-ID",{weekday:"long",day:"numeric",month:"long",year:"numeric"});populateMonthSelects();loadAllData();})();
 </script>
 </body>
 </html>
