@@ -108,6 +108,10 @@ button.action:hover{filter:brightness(.92)}
 .btn-close-popup{background:#e8eef5;color:#34495e}
 .btn-go-birthday{background:#1976d2;color:#fff}
 .confetti{position:absolute;top:0;left:0;right:0;height:6px;background:repeating-linear-gradient(90deg,#ff6b6b 0 16px,#ffd93d 16px 32px,#6bcf7f 32px 48px,#4d96ff 48px 64px)}
+.report-wrap{margin:-6px 0 16px;display:flex;justify-content:flex-end}
+.report-btn{padding:9px 14px;border:1px solid #c8e6c9;border-radius:10px;background:#fff;color:#2e7d32;font-weight:700;font-size:12.5px;cursor:pointer;display:inline-flex;align-items:center;gap:7px;transition:.2s}
+.report-btn:hover{background:#e8f5e9}
+@media(max-width:700px){.report-wrap{justify-content:stretch}.report-btn{width:100%;justify-content:center}}
 .today-popup-empty{text-align:center;padding:30px 20px;color:#90a4ae}
 </style>
 </head>
@@ -136,6 +140,10 @@ button.action:hover{filter:brightness(.92)}
     <i class="fa-solid fa-eye"></i> Lihat yang Ultah Hari Ini
     <span class="badge-count" id="countTodayTotal">0</span>
   </button>
+</div>
+
+<div class="report-wrap">
+  <button class="report-btn" onclick="reportDataError()"><i class="fa-brands fa-whatsapp"></i> Laporkan Kesalahan Data Ulang Tahun</button>
 </div>
 
 <section id="view-landing">
@@ -206,6 +214,9 @@ const monthNames=["Januari","Februari","Maret","April","Mei","Juni","Juli","Agus
 function showStatus(msg,type="success"){const el=$("status");el.textContent=msg;el.className="status show "+type;if(type==="success"||type==="loading"){setTimeout(()=>{el.className="status";},3000);}}
 function esc(v){const d=document.createElement("div");d.textContent=v==null?"":String(v);return d.innerHTML;}
 function dateObj(v){if(v==null||String(v).trim()==="")return null;let x=String(v).trim();if(x==="0000-00-00"||x==="0000-00-00 00:00:00")return null;let m;if((m=x.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/))) return new Date(Number(m[1]),Number(m[2])-1,Number(m[3]));if((m=x.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/))) return new Date(Number(m[3]),Number(m[2])-1,Number(m[1]));const d=new Date(x);return isNaN(d)?null:d;}
+function isLeap(y){return (y%4===0&&y%100!==0)||y%400===0;}
+function annivThisYear(d,year){year=year||new Date().getFullYear();let day=d.getDate();if(d.getMonth()===1&&day===29&&!isLeap(year))day=28;return new Date(year,d.getMonth(),day);}
+function localKey(){const n=new Date();return n.getFullYear()+"-"+String(n.getMonth()+1).padStart(2,"0")+"-"+String(n.getDate()).padStart(2,"0");}
 function dateID(v){const d=dateObj(v);return d?d.toLocaleDateString("id-ID",{day:"2-digit",month:"long",year:"numeric"}):"-";}
 function hutAge(v){const d=dateObj(v);if(!d)return "-";return Math.max(0,new Date().getFullYear()-d.getFullYear());}
 function cleanPhone(phone){if(!phone)return "";let p=String(phone).replace(/\D/g,"");if(p.startsWith("0")) p="62"+p.slice(1);if(!p.startsWith("62")) p="62"+p;return p;}
@@ -216,7 +227,7 @@ function getBirthdayFamilyInfo(birthdayMember){
   const kkPhone=String(kk.no_telp??"").trim();if(!kkPhone) return null;
   const birthdayName=String(birthdayMember.nama??"").trim()||"-";const birthdayAge=hutAge(birthdayMember.tgl_lhr);
   const birthDate=dateObj(birthdayMember.tgl_lhr);if(!birthDate) return null;
-  const currentYear=new Date().getFullYear();const birthdayThisYear=new Date(currentYear,birthDate.getMonth(),birthDate.getDate());
+  const currentYear=new Date().getFullYear();const birthdayThisYear=annivThisYear(birthDate,currentYear);
   const birthdayDateThisYear=birthdayThisYear.toLocaleDateString("id-ID",{day:"numeric",month:"long",year:"numeric"});
   const cake=String.fromCodePoint(0x1F382),party=String.fromCodePoint(0x1F389),pray=String.fromCodePoint(0x1F64F);
   const message=`${cake} *SELAMAT ULANG TAHUN* ${party}\n\nSelamat ulang tahun untuk *${birthdayName}* yang ke-${birthdayAge} tahun.\n\nKiranya Tuhan senantiasa memberikan kesehatan, sukacita, damai sejahtera.\n\n${pray} Tuhan memberkati selalu.\n\n:: ${birthdayDateThisYear} ::\nMPHJ GKE BUKIT HINDU`;
@@ -227,7 +238,7 @@ function getMarriageFamilyInfo(group){
   const kk=familyMembers.find(r=>String(r.status??"").trim().toUpperCase()==="KK");if(!kk)return null;
   const kkPhone=String(kk.no_telp??"").trim();if(!kkPhone)return null;
   const d=dateObj(group[0]?.tgl_nkh);if(!d)return null;
-  const currentYear=new Date().getFullYear();const anniversaryThisYear=new Date(currentYear,d.getMonth(),d.getDate());
+  const currentYear=new Date().getFullYear();const anniversaryThisYear=annivThisYear(d,currentYear);
   const anniversaryDateThisYear=anniversaryThisYear.toLocaleDateString("id-ID",{day:"numeric",month:"long",year:"numeric"});
   const years=Math.max(0,currentYear-d.getFullYear());const names=group.map(r=>String(r.nama??"").trim()).filter(Boolean).join(" & ");
   const ring=String.fromCodePoint(0x1F48D),party=String.fromCodePoint(0x1F389),pray=String.fromCodePoint(0x1F64F);
@@ -251,12 +262,12 @@ function updateLandingCounts(){
   const now=new Date();const nowMonth=now.getMonth();const nowDate=now.getDate();
   const bThisMonth=allData.filter(r=>{const d=dateObj(r.tgl_lhr);return d&&d.getMonth()===nowMonth;}).length;
   const bTotal=allData.filter(r=>dateObj(r.tgl_lhr)).length;
-  todayBirthdays=allData.filter(r=>{const d=dateObj(r.tgl_lhr);return d&&d.getMonth()===nowMonth&&d.getDate()===nowDate;});
+  todayBirthdays=allData.filter(r=>{const d=dateObj(r.tgl_lhr);if(!d)return false;const a=annivThisYear(d);return a.getMonth()===nowMonth&&a.getDate()===nowDate;});
   const groups=new Map();
   allData.forEach(r=>{const d=dateObj(r.tgl_nkh);if(!d) return;const reg=String(r.no_reg??"").trim();const dateKey=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;const key=reg?`${reg}|${dateKey}`:`__DATE_ONLY__|${dateKey}`;if(!groups.has(key)) groups.set(key,[]);groups.get(key).push(r);});
   const pairs=[...groups.values()].filter(g=>g.length>=2);
   const mThisMonth=pairs.filter(g=>{const d=dateObj(g[0].tgl_nkh);return d&&d.getMonth()===nowMonth;}).length;
-  todayMarriages=pairs.filter(g=>{const d=dateObj(g[0].tgl_nkh);return d&&d.getMonth()===nowMonth&&d.getDate()===nowDate;});
+  todayMarriages=pairs.filter(g=>{const d=dateObj(g[0].tgl_nkh);if(!d)return false;const a=annivThisYear(d);return a.getMonth()===nowMonth&&a.getDate()===nowDate;});
   $("countBirthday").textContent=bThisMonth;$("totalBirthday").textContent=bTotal;$("countMarriage").textContent=mThisMonth;$("totalMarriage").textContent=pairs.length;
   $("countTodayBirthday").textContent=todayBirthdays.length;$("countTodayMarriage").textContent=todayMarriages.length;
   const totalToday=todayBirthdays.length+todayMarriages.length;$("countTodayTotal").textContent=totalToday;
@@ -273,7 +284,7 @@ function populateMonthSelects(){
 function renderBirthdays(){
   const selected=Number($("birthMonth").value);let rows=allData.filter(r=>dateObj(r.tgl_lhr));
   if(selected>=0) rows=rows.filter(r=>dateObj(r.tgl_lhr).getMonth()===selected);
-  rows.sort((a,b)=>{const da=dateObj(a.tgl_lhr),db=dateObj(b.tgl_lhr);return da.getDate()-db.getDate()||String(a.nama||"").localeCompare(String(b.nama||""),"id");});
+  rows.sort((a,b)=>{const da=dateObj(a.tgl_lhr),db=dateObj(b.tgl_lhr);return annivThisYear(da).getDate()-annivThisYear(db).getDate()||String(a.nama||"").localeCompare(String(b.nama||""),"id");});
   const rowsHtml=rows.map(r=>{const wa=getBirthdayFamilyInfo(r);return `<tr><td data-label="NAMA">${esc(r.nama||"-")}</td><td data-label="LP">${esc(r.ling_pel||"-")}</td><td data-label="HUT KE" style="text-align:center">${hutAge(r.tgl_lhr)}</td><td data-label="TANGGAL" style="text-align:center">${dateID(r.tgl_lhr)}${wa?`<br><a class="birthday-wa-btn" href="${esc(wa.url)}" target="_blank"><i class="fa-brands fa-whatsapp"></i> Ucapkan ke KK</a>`:""}</td></tr>`;}).join("");
   const mobileCards=rows.map(r=>{const wa=getBirthdayFamilyInfo(r);return `<div class="birthday-card"><div class="birthday-card-name">${esc(r.nama||"-")}</div><div class="birthday-card-row"><span>LP: <strong>${esc(r.ling_pel||"-")}</strong></span><span class="birthday-card-hut">${hutAge(r.tgl_lhr)}</span></div><div class="birthday-card-row"><span>Tanggal lahir</span><strong>${dateID(r.tgl_lhr)}</strong></div>${wa?`<a class="birthday-wa-btn" href="${esc(wa.url)}" target="_blank"><i class="fa-brands fa-whatsapp"></i> Kirim Ucapan ke KK</a>`:""}</div>`;}).join("");
   $("birthdays").innerHTML=`<div class="celebration-heading"><span>🎂 Ulang Tahun Kelahiran</span><span>${selected<0?"Semua Bulan":monthNames[selected]} • ${rows.length} orang</span></div><div class="celebration-table-wrap birthday-desktop"><table class="celebration-table"><thead><tr><th>NAMA</th><th>LP</th><th>HUT KE</th><th>TANGGAL</th></tr></thead><tbody>${rowsHtml||'<tr><td colspan="4" class="empty">Tidak ada data ulang tahun pada bulan yang dipilih.</td></tr>'}</tbody></table></div><div class="birthday-mobile-cards">${mobileCards||'<div class="empty">Tidak ada data ulang tahun pada bulan yang dipilih.</div>'}</div>`;
@@ -281,14 +292,18 @@ function renderBirthdays(){
 function renderMarriages(){
   const selected=Number($("marriageMonth").value);const groups=new Map();
   allData.forEach(r=>{const d=dateObj(r.tgl_nkh);if(!d) return;if(selected>=0&&d.getMonth()!==selected) return;const reg=String(r.no_reg??"").trim();const dateKey=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;const key=reg?`${reg}|${dateKey}`:`__DATE_ONLY__|${dateKey}`;if(!groups.has(key)) groups.set(key,[]);groups.get(key).push(r);});
-  const pairs=[...groups.values()].filter(g=>g.length>=2).sort((a,b)=>{const da=dateObj(a[0].tgl_nkh),db=dateObj(b[0].tgl_nkh);return da.getDate()-db.getDate()||da.getMonth()-db.getMonth()||String(a[0].nama||"").localeCompare(String(b[0].nama||""),"id");});
+  const pairs=[...groups.values()].filter(g=>g.length>=2).sort((a,b)=>{const da=dateObj(a[0].tgl_nkh),db=dateObj(b[0].tgl_nkh);return annivThisYear(da).getDate()-annivThisYear(db).getDate()||da.getMonth()-db.getMonth()||String(a[0].nama||"").localeCompare(String(b[0].nama||""),"id");});
   const pairData=pairs.map(group=>{const d=dateObj(group[0].tgl_nkh);const years=Math.max(0,new Date().getFullYear()-d.getFullYear());const names=group.map(r=>String(r.nama??"").trim()).filter(Boolean).join(" & ");const lp=String(group[0].ling_pel??"").trim()||"-";const address=String(group.find(r=>String(r.alamat??"").trim())?.alamat??"").trim()||"-";const wa=getMarriageFamilyInfo(group);return {names,lp,years,date:dateID(group[0].tgl_nkh),address,wa};});
   const rowsHtml=pairData.map(x=>`<tr><td data-label="NAMA">${esc(x.names)}</td><td data-label="LP" style="text-align:center">${esc(x.lp)}</td><td data-label="HUT KE" style="text-align:center">${x.years}</td><td data-label="TANGGAL" style="text-align:center">${esc(x.date)}${x.wa?`<br><a class="birthday-wa-btn" href="${esc(x.wa.url)}" target="_blank"><i class="fa-brands fa-whatsapp"></i> Ucapkan ke KK</a>`:""}</td><td data-label="ALAMAT">${esc(x.address)}</td></tr>`).join("");
   const mobileCards=pairData.map(x=>`<div class="birthday-card"><div class="birthday-card-name">${esc(x.names)}</div><div class="birthday-card-row"><span>LP: <strong>${esc(x.lp)}</strong></span><span class="birthday-card-hut">${x.years}</span></div><div class="birthday-card-row"><span>Tanggal</span><strong>${esc(x.date)}</strong></div><div class="birthday-card-row"><span>Alamat</span><strong style="text-align:right">${esc(x.address)}</strong></div>${x.wa?`<a class="birthday-wa-btn" href="${esc(x.wa.url)}" target="_blank"><i class="fa-brands fa-whatsapp"></i> Kirim Ucapan ke KK</a>`:""}</div>`).join("");
   $("marriages").innerHTML=`<div class="celebration-heading"><span>💍 Ulang Tahun Pernikahan</span><span>${selected<0?"Semua Bulan":monthNames[selected]} • ${pairData.length} pasangan</span></div><div class="celebration-table-wrap birthday-desktop"><table class="celebration-table"><thead><tr><th>NAMA</th><th>LP</th><th>HUT KE</th><th>TANGGAL</th><th>ALAMAT</th></tr></thead><tbody>${rowsHtml||'<tr><td colspan="5" class="empty">Tidak ada pasangan yang memiliki tanggal pernikahan yang sama pada bulan yang dipilih.</td></tr>'}</tbody></table></div><div class="birthday-mobile-cards">${mobileCards||'<div class="empty">Tidak ada pasangan yang memiliki tanggal pernikahan yang sama pada bulan yang dipilih.</div>'}</div>`;
 }
+function reportDataError(){
+  const pesan="Halo, saya ingin melaporkan kesalahan data Ulang Tahun di aplikasi GKE Bukit Hindu.\n\nNama jemaat: \nJenis (Kelahiran / Pernikahan): \nData yang salah: \nData yang benar: \n\nTerima kasih.";
+  window.open("https://wa.me/6282256541998?text="+encodeURIComponent(pesan),"_blank");
+}
 function switchView(view){$("view-landing").classList.toggle("hidden",view!=="landing");$("view-birthday").classList.toggle("hidden",view!=="birthday");$("view-marriage").classList.toggle("hidden",view!=="marriage");window.scrollTo({top:0,behavior:"smooth"});}
-function checkTodayBirthdays(){const totalToday=todayBirthdays.length+todayMarriages.length;if(totalToday===0) return;const todayKey=new Date().toISOString().slice(0,10);const lastShown=localStorage.getItem("todayPopupShown");if(lastShown===todayKey) return;setTimeout(()=>{showTodayPopup(false);},900);}
+function checkTodayBirthdays(){const totalToday=todayBirthdays.length+todayMarriages.length;if(totalToday===0) return;const todayKey=localKey();const lastShown=localStorage.getItem("todayPopupShown");if(lastShown===todayKey) return;setTimeout(()=>{showTodayPopup(false);},900);}
 function showTodayPopup(force=false){
   const totalToday=todayBirthdays.length+todayMarriages.length;
   const now=new Date();const dateStr=now.toLocaleDateString("id-ID",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
@@ -311,9 +326,9 @@ function showTodayPopup(force=false){
     html+=`</div>`;
   }
   $("todayPopupBody").innerHTML=html;$("todayPopup").classList.add("show");
-  if(!force){const todayKey=new Date().toISOString().slice(0,10);localStorage.setItem("todayPopupShown", todayKey);}
+  if(!force){const todayKey=localKey();localStorage.setItem("todayPopupShown", todayKey);}
 }
-function closeTodayPopup(){$("todayPopup").classList.remove("show");const todayKey=new Date().toISOString().slice(0,10);localStorage.setItem("todayPopupShown", todayKey);}
+function closeTodayPopup(){$("todayPopup").classList.remove("show");const todayKey=localKey();localStorage.setItem("todayPopupShown", todayKey);}
 function goToTodayList(){closeTodayPopup();if(todayBirthdays.length>=todayMarriages.length){switchView('birthday');$("birthMonth").value=String(new Date().getMonth());renderBirthdays();}else{switchView('marriage');$("marriageMonth").value=String(new Date().getMonth());renderMarriages();}}
 (function init(){$("todayLabel").textContent=new Date().toLocaleDateString("id-ID",{weekday:"long",day:"numeric",month:"long",year:"numeric"});populateMonthSelects();loadAllData();})();
 </script>
