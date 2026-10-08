@@ -127,9 +127,55 @@
         .error-section { background:#fffbeb; border:1px solid #fde68a; border-radius:8px; padding:12px; margin-top:16px; }
         textarea { width:100%; min-height:70px; padding:10px; border:1.5px solid #e5e7eb; border-radius:8px; font-family:inherit; font-size:13px; }
         .loading { text-align:center; padding:20px; color:white; font-weight:600; }
+
+        /* ===== LOGIN ===== */
+        body.locked .container { display: none; }
+        .login-overlay { display: none; position: fixed; inset: 0; z-index: 2000; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); align-items: center; justify-content: center; padding: 16px; }
+        body.locked .login-overlay { display: flex; }
+        .login-box { background: white; border-radius: 12px; padding: 32px 28px 26px; width: 100%; max-width: 380px; box-shadow: 0 16px 40px rgba(0,0,0,0.25); }
+        .login-title { font-size: 20px; font-weight: 800; color: #111827; text-transform: uppercase; letter-spacing: 0.6px; text-align: center; }
+        .login-sub { font-size: 11px; font-weight: 600; color: #6b7280; letter-spacing: 1.2px; text-transform: uppercase; text-align: center; margin: 4px 0 24px; padding-bottom: 18px; border-bottom: 1px solid #e5e7eb; }
+        .login-field { margin-bottom: 14px; text-align: left; }
+        .login-field label { display: block; font-size: 12px; font-weight: 600; color: #374151; margin-bottom: 6px; }
+        .login-field input { width: 100%; }
+        .pass-wrap { position: relative; }
+        .pass-wrap input { padding-right: 96px; }
+        .pass-toggle { position: absolute; right: 6px; top: 50%; transform: translateY(-50%); background: none; color: #4f46e5; font-size: 12px; font-weight: 600; padding: 6px 10px; border-radius: 6px; }
+        .pass-toggle:hover { background: #eef2ff; }
+        .btn-login { width: 100%; margin-top: 6px; padding: 13px 20px; }
+        .login-error { display: none; background: #fef2f2; color: #b91c1c; border: 1px solid #fecaca; border-radius: 8px; padding: 9px 12px; font-size: 12.5px; margin-bottom: 14px; text-align: left; }
+        .login-help { margin-top: 20px; padding-top: 16px; border-top: 1px solid #e5e7eb; font-size: 12.5px; color: #6b7280; text-align: center; }
+        .btn-wa { display: block; margin-top: 10px; background: #fff; color: #15803d; border: 1px solid #86efac; text-decoration: none; padding: 10px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; }
+        .btn-wa:hover { background: #f0fdf4; }
     </style>
 </head>
-<body>
+<body class="locked">
+
+<!-- DIALOG LOGIN -->
+<div class="login-overlay" id="loginOverlay">
+    <div class="login-box">
+        <div class="login-title">Data Jemaat</div>
+        <div class="login-sub">GKE Bukit Hindu &middot; Palangka Raya</div>
+        <div class="login-error" id="loginError"></div>
+        <div class="login-field">
+            <label for="loginUser">Username</label>
+            <input type="text" id="loginUser" autocomplete="username" />
+        </div>
+        <div class="login-field">
+            <label for="loginPass">Password</label>
+            <div class="pass-wrap">
+                <input type="password" id="loginPass" autocomplete="current-password" />
+                <button type="button" class="pass-toggle" id="passToggle" onclick="togglePassword()">Tampilkan</button>
+            </div>
+        </div>
+        <button class="btn-primary btn-login" onclick="handleLogin()">Masuk</button>
+        <div class="login-help">
+            Belum mengetahui password?
+            <a class="btn-wa" id="btnWaAdmin" href="#" target="_blank" rel="noopener">Hubungi Admin via WhatsApp</a>
+        </div>
+    </div>
+</div>
+
 <div class="container">
 <header class="hero-header">
 <div class="hero-image-wrap">
@@ -160,6 +206,63 @@
 </div>
 </div>
 <script>
+// ===== LOGIN =====
+const ADMIN_WA = '6282256541998';
+const PASS_PREFIX = 'efrata';
+
+// Password hari ini: "efrata" + tanggal & bulan (DDMM), tanpa tahun. Contoh 8 Oktober -> efrata0810
+function getTodayPassword() {
+    const d = new Date();
+    const dd = String(d.getDate()).padStart(2, '0');
+    const mm = String(d.getMonth() + 1).padStart(2, '0');
+    return PASS_PREFIX + dd + mm;
+}
+function todayKey() {
+    const d = new Date();
+    return d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate();
+}
+function isLoggedInToday() {
+    try { return sessionStorage.getItem('jemaat_login_day') === todayKey(); } catch (e) { return false; }
+}
+function unlockPage() {
+    document.body.classList.remove('locked');
+    detectTable();
+}
+function showLoginError(msg) {
+    const el = document.getElementById('loginError');
+    el.textContent = msg;
+    el.style.display = 'block';
+}
+function togglePassword() {
+    const inp = document.getElementById('loginPass');
+    const btn = document.getElementById('passToggle');
+    const show = inp.type === 'password';
+    inp.type = show ? 'text' : 'password';
+    btn.textContent = show ? 'Sembunyikan' : 'Tampilkan';
+}
+function handleLogin() {
+    const user = document.getElementById('loginUser').value.trim();
+    const pass = document.getElementById('loginPass').value.trim();
+    if (!user) { showLoginError('Username wajib diisi (bebas).'); return; }
+    if (!pass) { showLoginError('Password wajib diisi.'); return; }
+    if (pass.toLowerCase() !== getTodayPassword()) {
+        showLoginError('Password salah. Hubungi admin via WhatsApp untuk mengetahui password.');
+        document.getElementById('loginPass').value = '';
+        return;
+    }
+    try { sessionStorage.setItem('jemaat_login_day', todayKey()); } catch (e) {}
+    unlockPage();
+}
+function initLogin() {
+    const msg = encodeURIComponent('Halo Admin, saya ingin menanyakan password untuk membuka Data Jemaat GKE Bukit Hindu.');
+    document.getElementById('btnWaAdmin').href = `https://wa.me/${ADMIN_WA}?text=${msg}`;
+    ['loginUser', 'loginPass'].forEach(id => {
+        document.getElementById(id).addEventListener('keydown', e => { if (e.key === 'Enter') handleLogin(); });
+    });
+    if (isLoggedInToday()) unlockPage();
+}
+
+// ===== DATA =====
 const SUPABASE_URL = "https://gpgjgplqsvyexumoljyo.supabase.co";
 const SUPABASE_KEY = "sb_publishable_JaVgg3CuVmI9SczGkoaRZQ_EaYoV9z9";
 const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -248,7 +351,7 @@ function reportViaWhatsApp(){
 }
 document.getElementById('searchNama').addEventListener('keydown', e=>{ if(e.key==='Enter') handleSearch(); });
 document.getElementById('detailModal').addEventListener('click', e=>{ if(e.target.id==='detailModal') closeDetailModal(); });
-window.addEventListener('DOMContentLoaded', detectTable);
+window.addEventListener('DOMContentLoaded', initLogin);
 </script>
 </body>
 </html>
